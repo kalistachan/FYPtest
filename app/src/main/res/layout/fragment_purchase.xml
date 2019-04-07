@@ -54,27 +54,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
 
-        <Button
-            android:id="@+id/btnTest"
-            android:text="Upload"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            android:id="@+id/btnTest2"
-            android:text="Upload3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            android:id="@+id/btnKalista"
-            android:text="Kalista"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-
     </LinearLayout>
 
     <ImageView
