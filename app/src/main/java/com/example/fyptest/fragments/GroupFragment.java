@@ -56,8 +56,6 @@ public class GroupFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //prodList.clear();
-
                 simpleList = (ListView) getActivity().findViewById(R.id.simpleListView);
                 prodList = new ArrayList<>();
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
@@ -68,7 +66,7 @@ public class GroupFragment extends Fragment {
 
                 CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), prodList);
                 Log.d("ADAPTER", "ADAP ACTIVITY: " + getActivity());
-                Log.d("PROD LIST", "PROD LIST: " + prodList.get(0).getProdName());
+             //   Log.d("PROD LIST", "PROD LIST: " + prodList.get(0).getProdName());
                 simpleList.setAdapter(adapter);
             }
 

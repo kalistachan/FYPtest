@@ -73,7 +73,7 @@ public class PurchaseFragment extends Fragment {
             String id = databaseProduct.push().getKey();
 
             Product product = new Product(id, prodNameText, prodPriceText);
-            Log.d("prodName", "test="+prodNameText);
+
             databaseProduct.child(id).setValue(product);
 
               Toast.makeText(getActivity().getApplicationContext(), "Product Added", Toast.LENGTH_LONG).show();
