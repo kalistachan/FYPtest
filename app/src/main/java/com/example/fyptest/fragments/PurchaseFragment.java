@@ -159,7 +159,6 @@ public class PurchaseFragment extends Fragment {
             final ProgressDialog progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-          //  Toast.makeText(getContext(), "Uploading...", Toast.LENGTH_SHORT).show();
 
             StorageReference ref = storageReference.child("images/"+ prodId);
             //StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
@@ -183,9 +182,8 @@ public class PurchaseFragment extends Fragment {
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
-                        //    Toast.makeText(getContext(), "Uploaded " +(int)progress+"%" , Toast.LENGTH_SHORT).show();
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                            progressDialog.dismiss();
+
                         }
                     });
         }
