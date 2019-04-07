@@ -1,5 +1,6 @@
 package com.example.fyptest.fragments;
 
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -41,13 +42,14 @@ public class GroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+        View groupView = inflater.inflate(R.layout.fragment_group, container, false);
+        simpleList = (ListView) groupView.findViewById(R.id.simpleListView);
+        return groupView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-       // MainActivity mA = new MainActivity();
-        displayProduct();
+          displayProduct();
     }
 
     public void displayProduct () {
@@ -56,24 +58,26 @@ public class GroupFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                simpleList = (ListView) getActivity().findViewById(R.id.simpleListView);
                 prodList = new ArrayList<>();
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     Product product = productSnapshot.getValue(Product.class);
-                    Log.d("PRODUCT NAME", "FROM DB " + product.getProdName());
+
                     prodList.add(product);
                 }
 
-                CustomAdapter adapter = new CustomAdapter(getActivity().getApplicationContext(), prodList);
-                Log.d("ADAPTER", "ADAP ACTIVITY: " + getActivity());
-             //   Log.d("PROD LIST", "PROD LIST: " + prodList.get(0).getProdName());
+                CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.fragment_group, prodList);
                 simpleList.setAdapter(adapter);
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
+
+
+
         });
 
     }

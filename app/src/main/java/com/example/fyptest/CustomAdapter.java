@@ -15,17 +15,20 @@ public class CustomAdapter extends ArrayAdapter<Product> {
     Context context;
     List<Product> productList;
     LayoutInflater inflter;
+    int resource;
 
-    public CustomAdapter(Context applicationContext, List<Product> productList) {
-        super(applicationContext, R.layout.fragment_group, productList);
-        this.context = context;
+    public CustomAdapter(Context applicationContext, int resource, List<Product> productList) {
+        super(applicationContext, resource, productList);
+        this.context = applicationContext;
+        this.resource = resource;
         this.productList = productList;
-        inflter = (LayoutInflater.from(applicationContext));
+      //  inflter = (LayoutInflater.from(applicationContext));
     }
 
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        inflter = LayoutInflater.from(context);
         view = inflter.inflate(R.layout.fragment_group, null);
         TextView prodName = (TextView) view.findViewById(R.id.prodNameViewName);
         TextView prodPrice = (TextView) view.findViewById(R.id.prodPriceViewName);
