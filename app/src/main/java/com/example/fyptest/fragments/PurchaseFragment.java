@@ -44,7 +44,6 @@ public class PurchaseFragment extends Fragment {
 
     private final int PICK_IMAGE_REQUEST = 71;
 
-
     public PurchaseFragment() {
         // Required empty public constructor
     }
