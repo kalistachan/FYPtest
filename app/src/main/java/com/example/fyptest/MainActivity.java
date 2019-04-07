@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
 import com.google.firebase.database.DatabaseReference;
 
@@ -38,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_watchlist:
                     //mTextMessage.setText(R.string.title_watchlists);
+                    return true;
+                case R.id.navigation_profile:
+                    fragment = new ProfileFragment();
+                    loadFragment(fragment);
                     return true;
             }
             return false;
