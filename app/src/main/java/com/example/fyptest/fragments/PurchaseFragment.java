@@ -36,7 +36,7 @@ public class PurchaseFragment extends Fragment {
     EditText editProductName;
     EditText editProductPrice;
     DatabaseReference databaseProduct;
-    Button btnChoose, btnUpload, btnAddProduct;
+    Button btnChoose, btnUpload, btnAddProduct, btnTest;
     ImageView imageView;
 
 
@@ -71,6 +71,7 @@ public class PurchaseFragment extends Fragment {
         btnUpload = (Button) getView().findViewById(R.id.btnUpload);
         imageView = (ImageView) getView().findViewById(R.id.imgView);
         btnAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
+        btnTest = (Button) getView().findViewById(R.id.btnTest);
 
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
