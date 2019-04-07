@@ -131,7 +131,7 @@ public class PurchaseFragment extends Fragment {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
-                Log.d("IMAGE: ", "image exist");
+                Log.d("IMAGE: ", "image exist " + bitmap);
             }
             catch (IOException e)
             {
