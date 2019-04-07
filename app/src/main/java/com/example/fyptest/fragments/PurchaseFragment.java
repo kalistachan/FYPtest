@@ -48,6 +48,7 @@ public class PurchaseFragment extends Fragment {
     ImageView imageView;
     FirebaseStorage storage;
     StorageReference storageReference;
+    String prodId;
 
     private Uri filePath;
 
@@ -111,11 +112,11 @@ public class PurchaseFragment extends Fragment {
         prodPrice.setText("");
 
         if (!TextUtils.isEmpty(prodNameText)) {
-            String id = databaseProduct.push().getKey();
+            prodId = databaseProduct.push().getKey();
 
-            Product product = new Product(id, prodNameText, prodPriceText);
+            Product product = new Product(prodId, prodNameText, prodPriceText);
 
-            databaseProduct.child(id).setValue(product);
+            databaseProduct.child(prodId).setValue(product);
 
               Toast.makeText(getActivity().getApplicationContext(), "Product Added", Toast.LENGTH_LONG).show();
         } else {
@@ -160,7 +161,8 @@ public class PurchaseFragment extends Fragment {
             progressDialog.show();
           //  Toast.makeText(getContext(), "Uploading...", Toast.LENGTH_SHORT).show();
 
-            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child("images/"+ prodId);
+            //StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
