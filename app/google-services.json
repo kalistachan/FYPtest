@@ -13,7 +13,16 @@
           "package_name": "com.example.fyptest"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "758192920758-asvtvbmhfb41pljp1rpmdub9je31jfv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fyptest",
+            "certificate_hash": "497ddd1c982e27af483e9593c994ed224b932476"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCEX6crQ9Ohry6y7E6ng9bZkgQAEFuf7r0"
