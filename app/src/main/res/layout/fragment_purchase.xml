@@ -39,6 +39,25 @@
             android:text="Add Product"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="16dp" />
+
+        <Button
+            android:id="@+id/btnChoose"
+            android:text="Choose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:text="Upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

@@ -1,7 +1,12 @@
 package com.example.fyptest.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -14,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +29,21 @@ import com.example.fyptest.database.Product;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
+
 
 public class PurchaseFragment extends Fragment {
     EditText editProductName;
     EditText editProductPrice;
     DatabaseReference databaseProduct;
+    Button btnChoose, btnUpload, btnAddProduct;
+    ImageView imageView;
+
+
+    private Uri filePath;
+
+    private final int PICK_IMAGE_REQUEST = 71;
+
 
     public PurchaseFragment() {
         // Required empty public constructor
@@ -51,13 +67,30 @@ public class PurchaseFragment extends Fragment {
 
         editProductName = (EditText) getView().findViewById(R.id.editProductName);
         editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
-        Button buttonAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
-        buttonAddProduct.setOnClickListener(new View.OnClickListener() {
+        btnChoose = (Button) getView().findViewById(R.id.btnChoose);
+        btnUpload = (Button) getView().findViewById(R.id.btnUpload);
+        imageView = (ImageView) getView().findViewById(R.id.imgView);
+        btnAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
+
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                addProduct(editProductName,editProductPrice);
             }
         });
+        btnChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //uploadImage();
+            }
+        });
+
     }
 
     public void addProduct (EditText prodName, EditText prodPrice) {
@@ -82,6 +115,29 @@ public class PurchaseFragment extends Fragment {
         }
     }
 
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+                Log.d("IMAGE: ", "image exist");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 }
