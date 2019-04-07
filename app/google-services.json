@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "758192920758",
+    "firebase_url": "https://fyptest-28d54.firebaseio.com",
+    "project_id": "fyptest-28d54",
+    "storage_bucket": "fyptest-28d54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758192920758:android:5000e60e0f0c7d2f",
+        "android_client_info": {
+          "package_name": "com.example.fyptest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEX6crQ9Ohry6y7E6ng9bZkgQAEFuf7r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758192920758-p3gjb27a1riu7ld1kaukl4m5b58grs2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

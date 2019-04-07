@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FYP test</string>
+    <string name="title_purchases">Purchases</string>
+    <string name="title_group">Group</string>
+    <string name="title_watchlists">Watchlist</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
