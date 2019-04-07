@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,10 +27,17 @@ import android.widget.Toast;
 import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 public class PurchaseFragment extends Fragment {
@@ -38,7 +46,8 @@ public class PurchaseFragment extends Fragment {
     DatabaseReference databaseProduct;
     Button btnChoose, btnUpload, btnAddProduct, btnTest;
     ImageView imageView;
-
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     private Uri filePath;
 
@@ -86,7 +95,7 @@ public class PurchaseFragment extends Fragment {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //uploadImage();
+                uploadImage();
             }
         });
 
@@ -137,6 +146,46 @@ public class PurchaseFragment extends Fragment {
             {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void uploadImage() {
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+          //  Toast.makeText(getContext(), "Uploading...", Toast.LENGTH_SHORT).show();
+
+            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                        //    Toast.makeText(getContext(), "Uploaded " +(int)progress+"%" , Toast.LENGTH_SHORT).show();
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            progressDialog.dismiss();
+                        }
+                    });
         }
     }
 }
