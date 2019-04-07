@@ -2,6 +2,7 @@ package com.example.fyptest.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,6 +39,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.UUID;
 
 
@@ -150,6 +153,12 @@ public class PurchaseFragment extends Fragment {
         }
     }
 
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContext().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
     private void uploadImage() {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -160,7 +169,7 @@ public class PurchaseFragment extends Fragment {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("images/"+ prodId);
+            StorageReference ref = storageReference.child("images/"+ prodId + "." + getFileExtension(filePath));
             //StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -186,6 +195,8 @@ public class PurchaseFragment extends Fragment {
 
                         }
                     });
+        } else {
+            Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
         }
     }
 }
