@@ -4,15 +4,17 @@ public class Product {
     String prodID;
     String prodName;
     String prodPrice;
+    String mImageUrl;
 
     public Product() {
 
     }
 
-    public Product(String prodID, String prodName, String prodPrice) {
+    public Product(String prodID, String prodName, String prodPrice, String mImageUrl) {
         this.prodID = prodID;
         this.prodName = prodName;
         this.prodPrice = prodPrice;
+        this.mImageUrl = mImageUrl;
     }
 
     public String getProdID() {
@@ -27,4 +29,11 @@ public class Product {
         return prodPrice;
     }
 
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
+    }
 }
