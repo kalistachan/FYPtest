@@ -145,7 +145,7 @@ public class registerActivity extends AppCompatActivity {
 
                 DatabaseReference dbUserType, dbUser, dbCreditCard;
                 dbUserType = FirebaseDatabase.getInstance().getReference();
-                dbUser = FirebaseDatabase.getInstance().getReference("User");
+                dbUser = FirebaseDatabase.getInstance().getReference("User").child("customer");
                 dbCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
 
                 String userID = dbUser.push().getKey();
@@ -160,12 +160,11 @@ public class registerActivity extends AppCompatActivity {
                 String cus_address = inputShippingAddress.getText().toString().trim();
                 String cus_postalCode = inputPostalCode.getText().toString();
                 int loyaltyPoint = 0;
-                String userType = "customer";
 
                 customerClass customerClass = new customerClass(userID, cus_email, cus_contactNum, cus_firstName,
                         cus_LastName, cus_password, cus_address, cus_postalCode,
-                        loyaltyPoint, userType);
-                dbUser.child(userType).setValue(customerClass);
+                        loyaltyPoint, "customer");
+                dbUser.child(userID).setValue(customerClass);
 
                 //Information for credit card
                 String ccnum = inputCCNum.getText().toString().trim();

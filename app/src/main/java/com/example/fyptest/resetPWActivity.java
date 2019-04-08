@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.database.customerClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,11 +53,30 @@ public class resetPWActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.child("cus_email").equals(emailString)) {
-                                String oldPW = snapshot.child("cus_password").getValue().toString();
+                            if (snapshot.child("cus_email").getValue().toString().equals(emailString)) {
+                                DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child("Customer").child(snapshot.child("cus_ID").getValue().toString());
                                 String newPW = autoGeneratePassword(8);
+
+                                String a = snapshot.child("cus_ID").getValue().toString();
+                                String b = snapshot.child("cus_email").getValue().toString();
+                                String d = snapshot.child("cus_contactNum").getValue().toString();
+                                String e = snapshot.child("cus_firstName").getValue().toString();
+                                String f = snapshot.child("cus_LastName").getValue().toString();
+                                String g = snapshot.child("cus_address").getValue().toString();
+                                String h = snapshot.child("cus_postalCode").getValue().toString();
+                                int i = snapshot.child("cus_loyaltyPoint").getValue(Integer.class);
+                                String j = snapshot.child("cus_ut_ID").getValue().toString();
+
+                                customerClass customerClass = new customerClass(a, b, d, e,
+                                        f, newPW, g, h, i, j);
+
+                                newDB.setValue(customerClass);
+                                //TextView resetPW = (TextView) findViewById(R.id.resetPW);
+                                //resetPW.setText(snapshot.child("cus_email").getValue().toString());
                             } else {
                                 enteredEmail.setError("Email not registered");
+                                //TextView resetPW = (TextView) findViewById(R.id.resetPW);
+                                //resetPW.setText(snapshot.child("cus_email").getValue().toString());
                             }
                         }}
                         @Override
