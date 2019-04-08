@@ -1,18 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbars="none">
 
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:text="This is Profile Fragment"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            app:srcCompat="@drawable/ic_account_circle_black_100dp"
+            android:layout_gravity="center"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/profileTitle1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Personal Information"
+            android:textFontWeight="1"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Last Name + First Name"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Number"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/profileTitle2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Credit Card Information"
+            android:textFontWeight="1"
+            android:textSize="20dp" />
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Card Holder Name"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Card Number"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="CVS Code"
+            android:textSize="16dp"/>
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/updateBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Update" />
+
+            <Button
+                android:id="@+id/logoutBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Logout" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
