@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".registerActivity"></activity>
+        <activity android:name=".resetPWActivity"></activity>
+        <activity android:name=".registerActivity" />
         <activity
             android:name=".loginActivity"
             android:label="@string/app_name">

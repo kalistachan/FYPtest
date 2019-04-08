@@ -1,5 +1,6 @@
 package com.example.fyptest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +31,7 @@ public class loginActivity extends AppCompatActivity {
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(loginActivity.this, resetPWActivity.class));
             }
         });
 
@@ -44,11 +45,10 @@ public class loginActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(loginActivity.this, registerActivity.class));
             }
         });
     }
-
 
     private boolean checkNull(EditText editText) {
         String text = editText.getText().toString().trim();
