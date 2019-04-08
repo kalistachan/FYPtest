@@ -145,7 +145,7 @@ public class registerActivity extends AppCompatActivity {
 
                 DatabaseReference dbUserType, dbUser, dbCreditCard;
                 dbUserType = FirebaseDatabase.getInstance().getReference();
-                dbUser = FirebaseDatabase.getInstance().getReference("User").child("customer");
+                dbUser = FirebaseDatabase.getInstance().getReference("User");
                 dbCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
 
                 String userID = dbUser.push().getKey();
@@ -173,9 +173,7 @@ public class registerActivity extends AppCompatActivity {
 
                 creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
                 dbCreditCard.child(userID).setValue(creditCardClass);
-
-
-
+                
             }
         });
 
