@@ -44,13 +44,23 @@ public class loginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkNull(emailEntered) || checkNull(passwordEntered)) {
                     if (checkNull(emailEntered) && checkNull(passwordEntered)) {
+                        final String email = emailEntered.getText().toString();
+                        final String pw = passwordEntered.getText().toString();
                         DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("User");
                         userDB.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    TextView textView1 = (TextView) findViewById(R.id.textView1);
-                                    textView1.setText(snapshot.child("cus_email").getValue().toString());
+                                    if (pw.equals(snapshot.child("cus_password").getValue().toString()) && email.equals(snapshot.child("email").getValue().toString())) {
+                                        String role = snapshot.child("cus_ut_ID").getValue().toString();
+                                        if (role.equals("customer")){
+                                            startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                        } else if (role.equals("admin")) {
+
+                                        } else if (role.equals("seller")) {
+
+                                        }
+                                    }
                                 }
                             }
                             @Override
