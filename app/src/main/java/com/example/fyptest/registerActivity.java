@@ -71,8 +71,9 @@ public class registerActivity extends AppCompatActivity {
         inputShippingAddress = (EditText) findViewById(R.id.inputShippingAddress);
         inputPostalCode = (EditText) findViewById(R.id.inputPostalCode);
         inputCCNum = (EditText) findViewById(R.id.inputCCNum);
-        inputExpiryDate = (TextView) findViewById(R.id.inputExpiryDate);
         inputCVV = (EditText) findViewById(R.id.inputCVV);
+
+        inputExpiryDate = (TextView) findViewById(R.id.inputExpiryDate);
 
         bottomSubmit = (Button) findViewById(R.id.bottomSubmit);
         bottomBack2Login = (Button) findViewById(R.id.bottomBack2Login);
@@ -115,71 +116,86 @@ public class registerActivity extends AppCompatActivity {
         bottomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean check1 = false; boolean check2 = false; boolean check3 = false;
-                boolean check4 = false; boolean check5 = false; boolean check6 = false;
-                boolean check7 = false; boolean check8 = false; boolean check9 = false;
+                String cus_email = "", cus_password = "", cus_firstName = "", cus_LastName = "",
+                        cus_address = "", cus_contactNum = "", cus_postalCode = "", ccnum = "", ccCVNum = "";
 
-                if (checkNull(inputEmail)) { if (isEmailValid(inputEmail)) { check1 = true; }}
+                if (checkNull(inputEmail)) {
+                    if (isEmailValid(inputEmail)){
+                        cus_email = inputEmail.getText().toString().trim();
+                    }
+                }
 
                 if (checkLength(inputPassword,8,16) || checkLength(inputPassword2, 8, 16)) {
                     if (checkLength(inputPassword,8,16) && checkLength(inputPassword2, 8, 16)) {
                         if (confirmingPassword(inputPassword,inputPassword2)) {
-                            check2 = true;
+                            cus_password = inputPassword.getText().toString().trim();
                         }
                     }
                 }
 
-                if (checkNull(inputFirstName)) { check3 = true; }
+                if (checkNull(inputFirstName)) {
+                    cus_firstName = inputFirstName.getText().toString().trim();
+                }
 
-                if (checkNull(inputLastName)) { check4 = true; }
+                if (checkNull(inputLastName)) {
+                    cus_LastName = inputLastName.getText().toString().trim();
+                }
 
-                if (checkNull(inputShippingAddress)) { check5 = true; }
+                if (checkNull(inputShippingAddress)) {
+                    cus_address = inputShippingAddress.getText().toString().trim();
+                }
 
-                if (!isPhoneNumValid(inputContactNo)) { check6 = true; }
+                if (isPhoneNumValid(inputContactNo)) {
+                    cus_contactNum = inputContactNo.getText().toString().trim();
+                }
 
-                if (checkLength(inputPostalCode,6,6)) { check7 = true; }
+                if (checkLength(inputPostalCode,6,6)) {
+                    cus_postalCode = inputPostalCode.getText().toString();
+                }
 
-                if (checkLength(inputCCNum,16,16)) { check8 = true; }
+                if (checkLength(inputCCNum,16,16)) {
+                    ccnum = inputCCNum.getText().toString().trim();
+                }
 
-                if (checkLength(inputCVV,3,3)) { check9 = true; }
+                if (checkLength(inputCVV,3,3)) {
+                    ccCVNum = inputCVV.getText().toString().trim();
+                }
 
-                DatabaseReference dbUserType, dbUser, dbCreditCard;
-                dbUserType = FirebaseDatabase.getInstance().getReference();
-                dbUser = FirebaseDatabase.getInstance().getReference("User");
-                dbCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
+                boolean result = validate(new String[] {cus_email, cus_password, cus_firstName, cus_LastName, cus_address,
+                        cus_contactNum, cus_postalCode, ccnum, ccCVNum});
 
-                String userID = dbUser.push().getKey();
-                String ccID = dbCreditCard.push().getKey();
+                if (result) {
+                    DatabaseReference dbUserType, dbUser, dbCreditCard;
+                    dbUserType = FirebaseDatabase.getInstance().getReference();
+                    dbUser = FirebaseDatabase.getInstance().getReference("User");
+                    dbCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
 
-                //Information for personal particular
-                String cus_email = inputEmail.getText().toString().trim();
-                String cus_contactNum = inputContactNo.getText().toString().trim();
-                String cus_firstName = inputFirstName.getText().toString().trim();
-                String cus_LastName = inputLastName.getText().toString().trim();
-                String cus_password = inputPassword.getText().toString().trim();
-                String cus_address = inputShippingAddress.getText().toString().trim();
-                String cus_postalCode = inputPostalCode.getText().toString();
-                int loyaltyPoint = 0;
+                    //generating unique ID for customer and credit card
+                    String userID = dbUser.push().getKey();
+                    String ccID = dbCreditCard.push().getKey();
 
-                customerClass customerClass = new customerClass(userID, cus_email, cus_contactNum, cus_firstName,
-                        cus_LastName, cus_password, cus_address, cus_postalCode,
-                        loyaltyPoint, "customer");
-                dbUser.child(userID).setValue(customerClass);
+                    //creating new loyalty point for customer
+                    int loyaltyPoint = 0;
 
-                //Information for credit card
-                String ccnum = inputCCNum.getText().toString().trim();
-                String ccCVNum = inputCVV.getText().toString().trim();
-                String expiry = inputExpiryDate.getText().toString();
+                    //Add customer to "customer" database
+                    customerClass customerClass = new customerClass(userID, cus_email, cus_contactNum, cus_firstName,
+                            cus_LastName, cus_password, cus_address, cus_postalCode,
+                            loyaltyPoint, "customer");
+                    dbUser.child(userID).setValue(customerClass);
 
-                creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
-                dbCreditCard.child(userID).setValue(creditCardClass);
-                
+                    //Getting expiry date
+                    String expiry = inputExpiryDate.getText().toString();
+
+                    //Adding credit card to "Credit Card" database with "userID" as its child
+                    creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
+                    dbCreditCard.child(userID).setValue(creditCardClass);
+                } else {System.out.println("Null");}
             }
         });
 
     }
 
-    public static boolean checkLength(EditText editText, int minLength, int maxLength) {
+    private static boolean checkLength(EditText editText, int minLength, int maxLength) {
         String text = editText.getText().toString().trim();
         editText.setError(null);
 
@@ -197,7 +213,7 @@ public class registerActivity extends AppCompatActivity {
 
     }
 
-    public static boolean checkNull(EditText editText) {
+    private static boolean checkNull(EditText editText) {
         String text = editText.getText().toString().trim();
         editText.setError(null);
 
@@ -209,19 +225,7 @@ public class registerActivity extends AppCompatActivity {
         }
     }
 
-    public static boolean checkTextView(TextView textView) {
-        String text = textView.getText().toString().trim();
-        textView.setError(null);
-
-        if (text.length() == 0) {
-            textView.setError("Field Required");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isPhoneNumValid(EditText editText){
+    private static boolean isPhoneNumValid(EditText editText){
         String phoneNum = editText.getText().toString().trim();
         String expression = "^[8,9]{1,1}+[0-9]{7,7}+$";
         Pattern pattern = Pattern.compile(expression);
@@ -234,24 +238,26 @@ public class registerActivity extends AppCompatActivity {
         }
     }
 
-    public static boolean isEmailValid(EditText editText) {
+    private static boolean isEmailValid(EditText editText) {
         String email = editText.getText().toString();
-        String expression1 = "^[a-zA-Z0-9_]{3}+@[hotmail]+\\.+[com, sg]+$";
-        String expression2 = "^[a-zA-Z0-9_]{3}+@[email, gmail, outlook]+\\.+[com]+$";
+        String expression1 = "^[a-zA-Z0-9_]+@[hotmail]+\\.+[com, sg]+$";
+        String expression2 = "^[a-zA-Z0-9_]+@[email, gmail, outlook]+\\.+[com]+$";
         Pattern pattern1 = Pattern.compile(expression1, Pattern.CASE_INSENSITIVE);
         Pattern pattern2 = Pattern.compile(expression2, Pattern.CASE_INSENSITIVE);
         Matcher matcher1 = pattern1.matcher(email);
         Matcher matcher2 = pattern2.matcher(email);
 
-        if (matcher1.matches() || matcher2.matches()) {
+        if (matcher1.matches()) {
             return true;
-        } else {
+        } if (matcher2.matches()) {
+            return true;
+        } if (!matcher1.matches() && !matcher2.matches()) {
             editText.setError("Invalid Input");
             return false;
-        }
+        } else {return true;}
     }
 
-    public static boolean confirmingPassword(EditText password, EditText confirmPassword) {
+    private static boolean confirmingPassword(EditText password, EditText confirmPassword) {
         String mainText = password.getText().toString().trim();
         String confirmationText = confirmPassword.getText().toString().trim();
         if (confirmationText.equals(mainText)) {
@@ -263,77 +269,25 @@ public class registerActivity extends AppCompatActivity {
         }
     }
 
-    public void addCustomer(final EditText email, final EditText contactNum, final EditText firstName, final EditText LastName,
-                            final EditText password, final EditText confirmPassword, final EditText address,
-                            final EditText postalCode) {
-        DatabaseReference databaseUserType = FirebaseDatabase.getInstance().getReference("User Type");
-        databaseUserType.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("ut_name").getValue().toString().equals("customer")) {
-                        String ut_ID = snapshot.child("ut_ID").getValue().toString();
-                        String ut_name = snapshot.child("ut_name").getValue().toString();
-                        DatabaseReference databaseUser = FirebaseDatabase.getInstance().getReference("User").child(ut_name);
-
-                        String cus_email = email.getText().toString().trim();
-                        String cus_contactNum = contactNum.getText().toString().trim();
-
-
-                        if (checkNull(firstName) || checkNull(LastName) || checkLength(password, 8, 16)
-                                || checkLength(confirmPassword, 8, 16) || checkNull(address) || checkLength(postalCode,6,6)) {
-                            if (checkNull(firstName) && checkNull(LastName) && checkLength(password, 8, 16) &&
-                                    checkLength(confirmPassword, 8, 16) && checkNull(address)
-                                    && isPhoneNumValid(contactNum) && isEmailValid(email) && checkLength(postalCode,6,6)) {
-                                if (confirmingPassword(password, confirmPassword)) {
-                                    String cus_firstName = firstName.getText().toString().trim();
-                                    String cus_LastName = LastName.getText().toString().trim();
-                                    String cus_password = password.getText().toString().trim();
-                                    String cus_address = address.getText().toString().trim();
-                                    String cus_gender = postalCode.getText().toString();
-                                    int cus_loyaltyPoint = 0;
-                                    String foreignKey = ut_ID;
-
-                                    String id = databaseUser.push().getKey();
-
-                                    //Add Credit Card
-
-                                    addCreditCard(inputCCNum, inputCVV, inputExpiryDate, cus_LastName + " " + cus_firstName, id);
-
-                                    //Add Customer
-                                    customerClass customerClass = new customerClass(id, cus_email, cus_contactNum,
-                                            cus_firstName, cus_LastName, cus_password,
-                                            cus_address, cus_gender, cus_loyaltyPoint, foreignKey);
-                                    databaseUser.child(ut_name).setValue(customerClass);
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
+    private boolean validate(String[] text) {
+        for (int i = 0; i < text.length; i++) {
+            String currentText = text[i];
+            if (currentText.length() <= 0) {
+                return false;
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+        }
+        return true;
     }
-    public void addCreditCard(EditText cc_num, EditText cc_CVM, TextView expiryDate, String cusName, String cusID) {
-        DatabaseReference databaseCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
-        if (checkLength(cc_num, 16, 16) || checkLength(cc_CVM, 3, 3) || checkTextView(expiryDate)) {
-            if (checkLength(cc_num, 16, 16) && checkLength(cc_CVM, 3, 3) && checkTextView(expiryDate)) {
 
-                String id = databaseCreditCard.push().getKey();
-                String ccnum = cc_num.getText().toString().trim();
-                String ccCVNum = cc_CVM.getText().toString().trim();
-                String expire = expiryDate.getText().toString();
+    private static boolean checkTextView(TextView textView) {
+        String text = textView.getText().toString().trim();
+        textView.setError(null);
 
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/YY");
-                String date = dateFormat.format(new Date());
-
-                creditCardClass creditCardClass = new creditCardClass(id, ccCVNum, expire, ccnum, cusName);
-                databaseCreditCard.child(cusID).setValue(creditCardClass);
-            } else {}
-        } else {}
+        if (text.length() == 0) {
+            textView.setError("Field Required");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

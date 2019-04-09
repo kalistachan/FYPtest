@@ -2,7 +2,7 @@ package com.example.fyptest.database;
 
 public class customerClass {
     private String cus_ID;
-    private String cus_email;
+    private String email;
     private String cus_contactNum;
     private String cus_firstName;
     private String cus_LastName;
@@ -16,11 +16,11 @@ public class customerClass {
 
     }
 
-    public customerClass(String cus_ID, String cus_email, String cus_contactNum, String cus_firstName,
-                         String cus_LastName, String cus_password, String cus_address, String cus_postalCode,
-                         int cus_loyaltyPoint, String cus_ut_ID) {
+    public customerClass(String cus_ID, String email, String cus_contactNum,
+                         String cus_firstName, String cus_LastName, String cus_password,
+                         String cus_address, String cus_postalCode, int cus_loyaltyPoint, String cus_ut_ID) {
         this.cus_ID = cus_ID;
-        this.cus_email = cus_email;
+        this.email = email;
         this.cus_contactNum = cus_contactNum;
         this.cus_firstName = cus_firstName;
         this.cus_LastName = cus_LastName;
@@ -35,8 +35,8 @@ public class customerClass {
         return cus_ID;
     }
 
-    public String getCus_email() {
-        return cus_email;
+    public String getEmail() {
+        return email;
     }
 
     public String getCus_contactNum() {
