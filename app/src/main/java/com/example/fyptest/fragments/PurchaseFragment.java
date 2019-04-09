@@ -105,15 +105,16 @@ public class PurchaseFragment extends Fragment {
 
     public void addProduct (EditText prodName, EditText prodPrice, Uri filePath) {
         final String prodNameText = prodName.getText().toString().trim();
-        prodName.setText("");
 
         final String prodPriceText = prodPrice.getText().toString().trim();
-        prodPrice.setText("");
 
         if (!TextUtils.isEmpty(prodNameText)) {
             if (!TextUtils.isEmpty(prodPriceText)) {
                 if(filePath != null) {
                     uploadImage(prodNameText, prodPriceText);
+                    prodName.setText("");
+                    prodPrice.setText("");
+                    imageView.setImageResource(0);
                 }  else {
                     Toast.makeText(getActivity().getApplicationContext(), "Please choose a product image", Toast.LENGTH_LONG).show();
                 }
@@ -202,7 +203,7 @@ public class PurchaseFragment extends Fragment {
                                 Product product = new Product(prodId, prodNameText, prodPriceText, imageUrl);
 
                                 databaseProduct.child(prodId).setValue(product);
-                                Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -219,7 +220,7 @@ public class PurchaseFragment extends Fragment {
                     double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                             .getTotalByteCount());
                     progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                    Toast.makeText(getActivity().getApplicationContext(), "Product Added", Toast.LENGTH_LONG).show();
+
                 }
             });
         } else {

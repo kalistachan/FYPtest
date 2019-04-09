@@ -61,10 +61,8 @@ public class GroupFragment extends Fragment {
                 prodList = new ArrayList<>();
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     Product product = productSnapshot.getValue(Product.class);
-
                     prodList.add(product);
                 }
-
                 CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.fragment_group, prodList);
                 simpleList.setAdapter(adapter);
 
