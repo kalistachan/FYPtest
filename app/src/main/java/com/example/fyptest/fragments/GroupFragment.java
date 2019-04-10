@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.MainActivity;
@@ -29,10 +32,10 @@ import java.util.List;
 
 
 public class GroupFragment extends Fragment {
-
+    RecyclerView mRecyclerView;
+    CustomAdapter mAdapter;
     DatabaseReference databaseProduct;
     List<Product> prodList;
-    ListView simpleList;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -43,7 +46,10 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View groupView = inflater.inflate(R.layout.fragment_group, container, false);
-        simpleList = (ListView) groupView.findViewById(R.id.simpleListView);
+
+        mRecyclerView = groupView.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return groupView;
     }
 
@@ -53,7 +59,8 @@ public class GroupFragment extends Fragment {
     }
 
     public void displayProduct () {
-        databaseProduct = FirebaseDatabase.getInstance().getReference("product");
+        prodList = new ArrayList<>();
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -63,22 +70,15 @@ public class GroupFragment extends Fragment {
                     Product product = productSnapshot.getValue(Product.class);
                     prodList.add(product);
                 }
-                CustomAdapter adapter = new CustomAdapter(getActivity(), R.layout.fragment_group, prodList);
-                simpleList.setAdapter(adapter);
-
-            }
+                mAdapter = new CustomAdapter(getContext(), prodList);
+                mRecyclerView.setAdapter(mAdapter);
+                          }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
-
-
-
-
         });
-
     }
-
-
 }
+
