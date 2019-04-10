@@ -1,6 +1,7 @@
 package com.example.fyptest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +23,8 @@ public class loginActivity extends AppCompatActivity {
     Button buttonLogin, buttonRegister;
     TextView forgotPassword;
 
+    SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,10 @@ public class loginActivity extends AppCompatActivity {
         forgotPassword = (TextView) findViewById(R.id.forgotPassword);
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
+
+        prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+
+        final int counter = 5;
 
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,15 +59,24 @@ public class loginActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    if (pw.equals(snapshot.child("cus_password").getValue().toString()) && email.equals(snapshot.child("email").getValue().toString())) {
-                                        String role = snapshot.child("cus_ut_ID").getValue().toString();
-                                        if (role.equals("customer")){
-                                            startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                        } else if (role.equals("admin")) {
-
-                                        } else if (role.equals("seller")) {
-
+                                    if (email.equals(snapshot.child("email").getValue().toString())) {
+                                        if (pw.equals(snapshot.child("cus_password").getValue().toString())) {
+                                            String role = snapshot.child("cus_ut_ID").getValue().toString();
+                                            String id = snapshot.child("cus_ID").getValue().toString();
+                                            if (role.equals("customer")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                            }
+                                        } else {
+                                            toast(2, counter);
+                                            if (counter == 0) {
+                                                blockAcc();
+                                                break;
+                                            }
                                         }
+                                    } else {
+                                        toast(1, counter);
                                     }
                                 }
                             }
@@ -89,5 +106,18 @@ public class loginActivity extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    private void toast(int a, int counter) {
+        if (a == 1) {
+            Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
+        } else if (a == 2) {
+            Toast.makeText(this, "Login Fails. You have " + counter + " left.", Toast.LENGTH_LONG).show();
+            counter = counter - 1;
+        }
+    }
+
+    private void blockAcc() {
+
     }
 }
