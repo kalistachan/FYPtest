@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,6 +115,7 @@ public class registerActivity extends AppCompatActivity {
                 startActivity(new Intent(registerActivity.this, loginActivity.class));
             }
         });
+
 
         bottomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
