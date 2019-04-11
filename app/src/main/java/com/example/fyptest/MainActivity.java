@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     Fragment fragment;
+    BottomNavigationView navigation;
 
 
     @Override
@@ -42,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        loadFragment(new PurchaseFragment());
+
+        //Catching Value thrown from login
+        SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+        String id = prefs.getString("userID", "UNKNOWN");
+        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+//--------------------------------------------------------------------------------------------------
         ImageButton homepagebutton = (ImageButton) findViewById(R.id.homepage);
         homepagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,17 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(gotohome);
             }
         });
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-
-        loadFragment(new PurchaseFragment());
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        //Catching Value thrown from login
-        SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
-        String id = prefs.getString("userID", "UNKNOWN");
-        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+//--------------------------------------------------------------------------------------------------
 
 //nav_drawer components-----------------------------------------------------------------------------
 
