@@ -62,34 +62,31 @@ public class loginActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     if (email.equals(snapshot.child("email").getValue().toString())) {
-                                        if (pw.equals(snapshot.child("cus_password").getValue().toString())) {
-                                            String role = snapshot.child("cus_ut_ID").getValue().toString();
-                                            String id = snapshot.child("cus_ID").getValue().toString();
+                                        if (pw.equals(snapshot.child("password").getValue().toString())) {
+                                            String role = snapshot.child("userType").getValue().toString();
+                                            String id = snapshot.child("userID").getValue().toString();
                                             if (role.equals("customer")) {
                                                 //Directing user to their main screen
                                                 prefs.edit().putString("userID", id).apply();
                                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                break;
+                                                return;
                                             } if (role.equals("seller")) {
-                                                break;
+                                                return;
                                             } if (role.equals("admin")) {
-                                                break;
+                                                return;
                                             }
-                                        } if (!pw.equals(snapshot.child("cus_password").getValue().toString())) {
+                                        } if (!pw.equals(snapshot.child("password").getValue().toString())) {
                                             if (counter == 0) {
-                                                blockAcc();
-                                                break;
-                                            } else {
+                                                blockAcc(emailEntered);
+                                                return;
+                                            } if (counter > 0) {
                                                 toast(2, counter);
                                                 counter --;
-                                                break;
+                                                return;
                                             }
                                         }
-                                    } if (!email.equals(snapshot.child("email").getValue().toString())) {
-                                        toast(1, counter);
-                                        break;
                                     }
-                                }
+                                } toast(1, counter);
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -127,7 +124,9 @@ public class loginActivity extends AppCompatActivity {
         }
     }
 
-    private void blockAcc() {
-
+    private void blockAcc(EditText editText) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Block Account");
     }
+
+    private void removeBlock(EditText editText) {}
 }

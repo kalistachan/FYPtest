@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.19999999"
-        app:srcCompat="@drawable/ic_logo_132dp_x_59dp"
+        app:srcCompat="@drawable/ic_logo"
         tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
