@@ -1,46 +1,28 @@
 package com.example.fyptest;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.nfc.Tag;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.fyptest.database.creditCardClass;
-import com.example.fyptest.database.customerClass;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.example.fyptest.database.customerInfoClass;
+import com.example.fyptest.database.userClass;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.net.IDN;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,17 +47,21 @@ public class registerActivity extends AppCompatActivity {
 
         final String selectedDate = "";
 
+        //Save to User Class
         inputEmail = (EditText) findViewById(R.id.inputEmail);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
         inputPassword2 = (EditText) findViewById(R.id.inputPassword2);
+        inputContactNo = (EditText) findViewById(R.id.inputContactNo);
+
+        //Save to Customer Class
         inputFirstName = (EditText) findViewById(R.id.inputFirstName);
         inputLastName = (EditText) findViewById(R.id.inputLastName);
-        inputContactNo = (EditText) findViewById(R.id.inputContactNo);
         inputShippingAddress = (EditText) findViewById(R.id.inputShippingAddress);
         inputPostalCode = (EditText) findViewById(R.id.inputPostalCode);
+
+        //Save to Credit Card Class
         inputCCNum = (EditText) findViewById(R.id.inputCCNum);
         inputCVV = (EditText) findViewById(R.id.inputCVV);
-
         inputExpiryDate = (TextView) findViewById(R.id.inputExpiryDate);
 
         bottomSubmit = (Button) findViewById(R.id.bottomSubmit);
@@ -116,7 +102,6 @@ public class registerActivity extends AppCompatActivity {
             }
         });
 
-
         bottomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,9 +110,7 @@ public class registerActivity extends AppCompatActivity {
 
                 if (checkNull(inputEmail)) {
                     if (isEmailValid(inputEmail)){
-                        if (chkExistingInDB(inputEmail, "email")) {
-                            cus_email = inputEmail.getText().toString().trim();
-                        }
+                        cus_email = inputEmail.getText().toString().trim();
                     }
                 }
 
@@ -137,6 +120,10 @@ public class registerActivity extends AppCompatActivity {
                             cus_password = inputPassword.getText().toString().trim();
                         }
                     }
+                }
+
+                if (isPhoneNumValid(inputContactNo)) {
+                    cus_contactNum = inputContactNo.getText().toString().trim();
                 }
 
                 if (checkNull(inputFirstName)) {
@@ -149,10 +136,6 @@ public class registerActivity extends AppCompatActivity {
 
                 if (checkNull(inputShippingAddress)) {
                     cus_address = inputShippingAddress.getText().toString().trim();
-                }
-
-                if (isPhoneNumValid(inputContactNo)) {
-                    cus_contactNum = inputContactNo.getText().toString().trim();
                 }
 
                 if (checkLength(inputPostalCode,6,6)) {
@@ -171,8 +154,8 @@ public class registerActivity extends AppCompatActivity {
                         cus_contactNum, cus_postalCode, ccnum, ccCVNum});
 
                 if (result) {
-                    DatabaseReference dbUserType, dbUser, dbCreditCard;
-                    dbUserType = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference dbCustomer, dbUser, dbCreditCard;
+                    dbCustomer = FirebaseDatabase.getInstance().getReference("Customer Information");
                     dbUser = FirebaseDatabase.getInstance().getReference("User");
                     dbCreditCard = FirebaseDatabase.getInstance().getReference("Credit Card Detail");
 
@@ -183,17 +166,17 @@ public class registerActivity extends AppCompatActivity {
                     //creating new loyalty point for customer
                     int loyaltyPoint = 0;
 
-                    //Add customer to "customer" database
-                    customerClass customerClass = new customerClass(userID, cus_email, cus_contactNum, cus_firstName,
-                            cus_LastName, cus_password, cus_address, cus_postalCode,
-                            loyaltyPoint, "customer");
-                    dbUser.child(userID).setValue(customerClass);
-
                     //Getting expiry date
                     String expiry = inputExpiryDate.getText().toString();
 
-                    //Adding credit card to "Credit Card" database with "userID" as its child
+                    //Constructing elements using data class file
+                    userClass userClass = new userClass(userID, cus_email, cus_password, cus_contactNum, "customer");
+                    customerInfoClass customerInfoClass = new customerInfoClass(userID, cus_firstName, cus_LastName, cus_address, cus_postalCode, loyaltyPoint, "customer");
                     creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
+
+                    //Adding value into database
+                    dbUser.child(userID).setValue(userClass);
+                    dbCustomer.child(userID).setValue(customerInfoClass);
                     dbCreditCard.child(userID).setValue(creditCardClass);
 
                     //Clear Form
@@ -204,6 +187,8 @@ public class registerActivity extends AppCompatActivity {
                     SharedPreferences prefs = getSharedPreferences("accCreated", MODE_PRIVATE);
                     prefs.edit().putString("Creation Status: ", "Account Created").commit();
                     startActivity(new Intent(registerActivity.this, loginActivity.class));
+                } if (!result) {
+                    test();
                 }
             }
         });
@@ -272,24 +257,6 @@ public class registerActivity extends AppCompatActivity {
         } else {return true;}
     }
 
-    private static boolean chkExistingInDB(final EditText editText, final String childType) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (editText.equals(snapshot.child(childType).getValue().toString())) {
-                        editText.setError("Input existed in Database");
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-        return false;
-    }
-
     private static boolean confirmingPassword(EditText password, EditText confirmPassword) {
         String mainText = password.getText().toString().trim();
         String confirmationText = confirmPassword.getText().toString().trim();
@@ -335,5 +302,9 @@ public class registerActivity extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    public void test() {
+        Toast.makeText(this, "Check Field", Toast.LENGTH_LONG).show();
     }
 }

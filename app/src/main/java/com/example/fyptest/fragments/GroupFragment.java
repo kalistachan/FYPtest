@@ -47,7 +47,7 @@ public class GroupFragment extends Fragment {
         // Inflate the layout for this fragment
         View groupView = inflater.inflate(R.layout.fragment_group, container, false);
 
-        mRecyclerView = groupView.findViewById(R.id.recycler_view);
+        //mRecyclerView = groupView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return groupView;
