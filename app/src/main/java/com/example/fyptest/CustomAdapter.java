@@ -66,7 +66,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         inflter = LayoutInflater.from(mContext);
-        view = inflter.inflate(R.layout.fragment_group, null);
+        view = inflter.inflate(R.layout.fragment_productlisting, null);
         TextView prodName = (TextView) view.findViewById(R.id.prodNameViewName);
         TextView prodPrice = (TextView) view.findViewById(R.id.prodPriceViewName);
         //ImageView icon = (ImageView) view.findViewById(R.id.icon);

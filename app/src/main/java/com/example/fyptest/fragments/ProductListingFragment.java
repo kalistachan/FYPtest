@@ -1,24 +1,16 @@
 package com.example.fyptest.fragments;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.CustomAdapter;
-import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
 import com.google.firebase.database.DataSnapshot;
@@ -31,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GroupFragment extends Fragment {
+public class ProductListingFragment extends Fragment {
     RecyclerView mRecyclerView;
     CustomAdapter mAdapter;
     DatabaseReference databaseProduct;
     List<Product> prodList;
 
-    public GroupFragment() {
+    public ProductListingFragment() {
         // Required empty public constructor
     }
 
@@ -45,7 +37,7 @@ public class GroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View groupView = inflater.inflate(R.layout.fragment_group, container, false);
+        View groupView = inflater.inflate(R.layout.fragment_productlisting, container, false);
 
         mRecyclerView = groupView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);

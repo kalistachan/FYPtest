@@ -2,22 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.GroupFragment">
+    tools:context=".fragments.ProductListingFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!--
-    <ListView
-        android:id="@+id/simpleListView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/material_blue_grey_800"
-        android:dividerHeight="1dp"
-        android:footerDividersEnabled="false" />
-    -->
 
 
 </FrameLayout>

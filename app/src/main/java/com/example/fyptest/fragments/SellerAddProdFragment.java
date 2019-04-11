@@ -39,7 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 
 
-public class PurchaseFragment extends Fragment {
+public class SellerAddProdFragment extends Fragment {
     EditText editProductName;
     EditText editProductPrice;
     DatabaseReference databaseProduct;
@@ -54,7 +54,7 @@ public class PurchaseFragment extends Fragment {
 
     private final int PICK_IMAGE_REQUEST = 71;
 
-    public PurchaseFragment() {
+    public SellerAddProdFragment() {
         // Required empty public constructor
     }
 
@@ -78,6 +78,7 @@ public class PurchaseFragment extends Fragment {
         editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
         btnChoose = (Button) getView().findViewById(R.id.btnChoose);
         imageView = (ImageView) getView().findViewById(R.id.imgView);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
         btnAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
@@ -106,15 +107,15 @@ public class PurchaseFragment extends Fragment {
                     uploadImage(prodNameText, prodPriceText);
                     prodName.setText("");
                     prodPrice.setText("");
-                    imageView.setImageResource(0);
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
                 }  else {
                     Toast.makeText(getActivity().getApplicationContext(), "Please choose a product image", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Please enter the product price", Toast.LENGTH_LONG).show();
+                prodPrice.setError("Empty Field");
             }
         } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter the product name", Toast.LENGTH_LONG).show();
+            prodName.setError("Empty Field");
         }
 
     }

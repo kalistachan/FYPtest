@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
-import com.example.fyptest.fragments.PurchaseFragment;
+import com.example.fyptest.fragments.SellerAddProdFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        loadFragment(new PurchaseFragment());
+        loadFragment(new ProductListingFragment());
 
         //Catching Value thrown from login
         SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
@@ -132,13 +132,11 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_purchase:
-                    //  mTextMessage.setText(R.string.title_purchases);
-                    fragment = new PurchaseFragment();
+                    fragment = new ProductListingFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_group:
-                    // mTextMessage.setText(R.string.title_group);
-                    fragment = new GroupFragment();
+                    fragment = new SellerAddProdFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_watchlist:
