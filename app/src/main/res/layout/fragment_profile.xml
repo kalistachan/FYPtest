@@ -38,15 +38,6 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
         <EditText
-            android:id="@+id/editText1"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Last Name + First Name"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
             android:id="@+id/email"
             android:layout_gravity="center"
             android:layout_width="300dp"
@@ -136,6 +127,8 @@
             android:text="Notification"
             android:textSize="20dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields"
+            android:textOff="Disable"
+            android:textOn="Enable"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"

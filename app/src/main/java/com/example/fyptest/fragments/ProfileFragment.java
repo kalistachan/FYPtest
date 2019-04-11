@@ -9,7 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.fyptest.R;
 import com.google.firebase.database.DataSnapshot;
@@ -18,16 +21,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 
 public class ProfileFragment extends Fragment {
 
-    ArrayList<String> list;
     SharedPreferences pref;
     String getStr;
 
-    EditText editText1, email, contactNo, Password, confirmPassword, address, ccExpiryDate, ccNum, ccCVV;
+    DatabaseReference dbUser, dbCusInfo, dbCC;
+
+    EditText email, contactNo, Password, confirmPassword, address, ccExpiryDate, ccNum, ccCVV;
+
+    TextView profileTitle1;
+
+    Switch notification;
+
+    Button update, logout;
 
 //    To save data to SharePreferences
 //    SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -39,27 +47,17 @@ public class ProfileFragment extends Fragment {
 //    String loadedString = prefs.getString(saveKey, null);
 //             txt_2.setText(loadedString);
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        list = new ArrayList<>();
-
         pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
         getStr = pref.getString("userID", "UNKNOWN");
 
-        editText1 = (EditText) view.findViewById(R.id.editText1);
+        dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr);
+        dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr);
+        dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr);
+
         email = (EditText) view.findViewById(R.id.email);
         contactNo = (EditText) view.findViewById(R.id.contactNo);
         Password = (EditText) view.findViewById(R.id.Password);
@@ -68,6 +66,28 @@ public class ProfileFragment extends Fragment {
         ccExpiryDate = (EditText) view.findViewById(R.id.ccExpiryDate);
         ccNum = (EditText) view.findViewById(R.id.ccNum);
         ccCVV = (EditText) view.findViewById(R.id.ccCVV);
+
+        notification = (Switch) view.findViewById(R.id.switch1);
+        update = (Button) view.findViewById(R.id.updateBtn);
+        logout = (Button) view.findViewById(R.id.logoutBtn);
+
+        profileTitle1 = (TextView) view.findViewById(R.id.profileTitle1);
+
+        notification.setText(notification.getTextOn());
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         return view;
     }
@@ -80,25 +100,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
-
-    }
-
-    public void getData(final String userID) {
-        DatabaseReference dbUser = FirebaseDatabase.getInstance().getReference("User").child(userID);
-        DatabaseReference dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(userID);
-        DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
-
         dbUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("userID").getValue().toString().equals(userID)) {
-                        list.add(snapshot.child("email").getValue().toString());
-                        list.add(snapshot.child("contactNum").getValue().toString());
-                    }
-                }
+                email.setHint(dataSnapshot.child("email").getValue().toString());
+                contactNo.setHint(dataSnapshot.child("contactNum").getValue().toString());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -109,14 +115,12 @@ public class ProfileFragment extends Fragment {
         dbCusInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("cus_ID").getValue().toString().equals(userID)) {
-                        list.add(snapshot.child("cus_fName").getValue().toString());
-                        list.add(snapshot.child("cus_lName").getValue().toString());
-                        list.add(snapshot.child("cus_shippingAddress").getValue().toString());
-                        list.add(snapshot.child("cus_userType").getValue().toString());
-                    }
-                }
+                String fName = dataSnapshot.child("cus_fName").getValue().toString();
+                String lName = dataSnapshot.child("cus_lName").getValue().toString();
+                profileTitle1.setText(lName + " " + fName + " Information");
+                String add = dataSnapshot.child("cus_shippingAddress").getValue().toString();
+                String postal = dataSnapshot.child("cus_postalCode").getValue().toString();
+                address.setHint(add + " Singapore " + postal);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -127,19 +131,18 @@ public class ProfileFragment extends Fragment {
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("cc_cus_ID").getValue().toString().equals(userID)) {
-                        list.add(snapshot.child("cc_Num").getValue().toString());
-                        list.add(snapshot.child("cc_ExpiryDate").getValue().toString());
-                        list.add(snapshot.child("cc_CVNum").getValue().toString());
-                    }
-                }
+                ccNum.setHint(dataSnapshot.child("cc_Num").getValue().toString());
+                ccExpiryDate.setHint(dataSnapshot.child("cc_ExpiryDate").getValue().toString());
+                ccCVV.setHint(dataSnapshot.child("cc_CVNum").getValue().toString());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 return;
-
             }
         });
+    }
+
+    public void getData(final String userID) {
+
     }
 }
