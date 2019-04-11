@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -28,6 +29,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     //private Toolbar maintoolbar;
     //will delete if not needed
-
+    Toolbar toolbar;
     Fragment fragment;
     //List<Product> prodList;
 
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         maintoolbar.setLogo(R.drawable.ic_logo_132dp_x_59dp);*/
         // will delete if not needed
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         ImageButton homepagebutton = (ImageButton) findViewById(R.id.homepage);
         homepagebutton.setOnClickListener(new View.OnClickListener() {
@@ -93,17 +96,23 @@ public class MainActivity extends AppCompatActivity {
 
         new DrawerBuilder().withActivity(this);
 
-        //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item_main = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_main);
-        SecondaryDrawerItem item_secondary = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_secondary);
+        //Primary = bold items, Secondary = normal items
+        SectionDrawerItem categories_header = new SectionDrawerItem().withName(R.string.drawer_section_categories);
+        PrimaryDrawerItem item_main_1 = new PrimaryDrawerItem().withName(R.string.drawer_main_1).withSelectable(false);
+        PrimaryDrawerItem item_main_2 = new PrimaryDrawerItem().withName(R.string.drawer_main_2).withSelectable(false);
+        SecondaryDrawerItem item_secondary = new SecondaryDrawerItem().withName(R.string.drawer_secondary).withSelectable(false);
 
         //create the drawer and remember the `Drawer` result object
         Drawer result = new DrawerBuilder()
                 .withSelectedItem(-1)
                 .withActivity(this)
+                .withToolbar(toolbar)
+                .withTranslucentStatusBar(false)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        item_main,
+                        categories_header,
+                        item_main_1,
+                        item_main_2,
                         new DividerDrawerItem(),
                         item_secondary,
                         new SecondaryDrawerItem()
@@ -112,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         //do funky stuff with clicked items :D
+                        //all switch cases are examples for future reference
+                        switch (position) {
+                            case 2:
+                                startActivity(new Intent(MainActivity.this, registerActivity.class));
+                                return true;
+                            case 3:
+                                startActivity(new Intent(MainActivity.this, loginActivity.class));
+                                return true;
+                        }
                         return false;
                     }
                 })
