@@ -10,23 +10,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
 import com.google.android.gms.tasks.Continuation;
@@ -41,10 +36,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.util.UUID;
 
 
 public class PurchaseFragment extends Fragment {
@@ -76,7 +68,7 @@ public class PurchaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_purchase, container, false);
+        return inflater.inflate(R.layout.fragment_addprod, container, false);
     }
 
     @Override
@@ -168,7 +160,7 @@ public class PurchaseFragment extends Fragment {
     private void uploadImage(final String prodNameText, final String prodPriceText) {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        databaseProduct = FirebaseDatabase.getInstance().getReference("product");
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
         prodId = databaseProduct.push().getKey();
 
         if(filePath != null)
@@ -227,4 +219,6 @@ public class PurchaseFragment extends Fragment {
             Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

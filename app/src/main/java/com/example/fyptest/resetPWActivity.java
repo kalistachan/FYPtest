@@ -54,9 +54,11 @@ public class resetPWActivity extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (emailString.equals(snapshot.child("cus_email").getValue().toString())) {
                                 DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(snapshot.child("cus_ID").getValue().toString());
-
+                                String newPW = autoGeneratePassword(8);
+                                //newDB.setValue(newPW);
+//
                                 String a = snapshot.child("cus_ID").getValue().toString();
-                                String b = snapshot.child("cus_email").getValue().toString();
+                                String b = snapshot.child("email").getValue().toString();
                                 String d = snapshot.child("cus_contactNum").getValue().toString();
                                 String e = snapshot.child("cus_firstName").getValue().toString();
                                 String f = snapshot.child("cus_LastName").getValue().toString();
@@ -64,8 +66,6 @@ public class resetPWActivity extends AppCompatActivity {
                                 String h = snapshot.child("cus_postalCode").getValue().toString();
                                 int i = snapshot.child("cus_loyaltyPoint").getValue(Integer.class);
                                 String j = snapshot.child("cus_ut_ID").getValue().toString();
-
-                                String newPW = autoGeneratePassword(8);
 
                                 customerClass customerClass = new customerClass(a, b, d, e,
                                             f, newPW, g, h, i, j);

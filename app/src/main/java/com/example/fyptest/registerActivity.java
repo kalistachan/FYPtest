@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.Tag;
@@ -12,10 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,6 +116,7 @@ public class registerActivity extends AppCompatActivity {
             }
         });
 
+
         bottomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +125,9 @@ public class registerActivity extends AppCompatActivity {
 
                 if (checkNull(inputEmail)) {
                     if (isEmailValid(inputEmail)){
-                        cus_email = inputEmail.getText().toString().trim();
+                        if (chkExistingInDB(inputEmail, "email")) {
+                            cus_email = inputEmail.getText().toString().trim();
+                        }
                     }
                 }
 
@@ -189,7 +195,16 @@ public class registerActivity extends AppCompatActivity {
                     //Adding credit card to "Credit Card" database with "userID" as its child
                     creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
                     dbCreditCard.child(userID).setValue(creditCardClass);
-                } else {System.out.println("Null");}
+
+                    //Clear Form
+                    clearForm((ViewGroup) findViewById(R.id.cus_register));
+                    inputExpiryDate.setText("Select Expiry Date");
+
+                    //Redirect user back to login screen
+                    SharedPreferences prefs = getSharedPreferences("accCreated", MODE_PRIVATE);
+                    prefs.edit().putString("Creation Status: ", "Account Created").commit();
+                    startActivity(new Intent(registerActivity.this, loginActivity.class));
+                }
             }
         });
 
@@ -257,6 +272,24 @@ public class registerActivity extends AppCompatActivity {
         } else {return true;}
     }
 
+    private static boolean chkExistingInDB(final EditText editText, final String childType) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (editText.equals(snapshot.child(childType).getValue().toString())) {
+                        editText.setError("Input existed in Database");
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        return false;
+    }
+
     private static boolean confirmingPassword(EditText password, EditText confirmPassword) {
         String mainText = password.getText().toString().trim();
         String confirmationText = confirmPassword.getText().toString().trim();
@@ -277,6 +310,19 @@ public class registerActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    private void clearForm(ViewGroup group) {
+        int count = group.getChildCount();
+        for (int i = 0; i < count; i ++) {
+            View view = group.getChildAt(i);
+            if (view instanceof EditText) {
+                ((EditText)view).setText("");
+            }
+            if (view instanceof ViewGroup && ((ViewGroup)view).getChildCount() > 0) {
+                clearForm((ViewGroup)view);
+            }
+        }
     }
 
     private static boolean checkTextView(TextView textView) {

@@ -110,7 +110,7 @@
         android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="Enters Email"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="@+id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.41"
