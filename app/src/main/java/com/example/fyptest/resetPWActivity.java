@@ -7,11 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.fyptest.R;
-import com.example.fyptest.database.customerClass;
+import com.example.fyptest.database.userClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,30 +49,26 @@ public class resetPWActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (emailString.equals(snapshot.child("cus_email").getValue().toString())) {
-                                DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(snapshot.child("cus_ID").getValue().toString());
-                                String newPW = autoGeneratePassword(8);
-                                //newDB.setValue(newPW);
+                            if (emailString.equals(snapshot.child("email").getValue().toString())) {
+                                String userID = snapshot.child("userID").getValue().toString();
+                                int pwLength = 8;
+                                DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID);
 //
-                                String a = snapshot.child("cus_ID").getValue().toString();
-                                String b = snapshot.child("email").getValue().toString();
-                                String d = snapshot.child("cus_contactNum").getValue().toString();
-                                String e = snapshot.child("cus_firstName").getValue().toString();
-                                String f = snapshot.child("cus_LastName").getValue().toString();
-                                String g = snapshot.child("cus_address").getValue().toString();
-                                String h = snapshot.child("cus_postalCode").getValue().toString();
-                                int i = snapshot.child("cus_loyaltyPoint").getValue(Integer.class);
-                                String j = snapshot.child("cus_ut_ID").getValue().toString();
+                                String email = snapshot.child("email").getValue().toString();
+                                String newPW = autoGeneratePassword(pwLength);
+                                String contactNum = snapshot.child("contactNum").getValue().toString();
+                                String userType = snapshot.child("userType").getValue().toString();
 
-                                customerClass customerClass = new customerClass(a, b, d, e,
-                                            f, newPW, g, h, i, j);
-                                newDB.setValue(customerClass);
+                                userClass userClass = new userClass(userID,email, newPW, contactNum, userType);
+                                newDB.setValue(userClass);
+                                startActivity(new Intent(resetPWActivity.this, loginActivity.class));
                                 break;
                                 }
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+                            return;
                         }
                     });
                 }
@@ -83,12 +76,13 @@ public class resetPWActivity extends AppCompatActivity {
     }
 
     public static String autoGeneratePassword(int passwordLength) {
-        String PASSWORD_CHARACTER ="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV@!&";
+        char[] chars = "qwer1tyui2opQW3ERTY4UIOPas5dfgh6jklASD7FGHJK8Lzxcv9bnmZ0XCVBNM@!&".toCharArray();
+        StringBuilder password = new StringBuilder();
         Random random = new Random();
-        StringBuilder password = new StringBuilder(passwordLength);
 
         for (int i = 0; i < passwordLength; i++) {
-            password.append(PASSWORD_CHARACTER.charAt(random.nextInt(PASSWORD_CHARACTER.length())));
+            char getChar = chars[random.nextInt(chars.length)];
+            password.append(getChar);
         }
         return password.toString();
     }

@@ -25,6 +25,8 @@ public class loginActivity extends AppCompatActivity {
 
     SharedPreferences prefs;
 
+    int counter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,7 @@ public class loginActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
 
-        final int counter = 5;
+        counter = 5;
 
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,16 +69,25 @@ public class loginActivity extends AppCompatActivity {
                                                 //Directing user to their main screen
                                                 prefs.edit().putString("userID", id).apply();
                                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                                break;
+                                            } if (role.equals("seller")) {
+                                                break;
+                                            } if (role.equals("admin")) {
+                                                break;
                                             }
-                                        } else {
-                                            toast(2, counter);
+                                        } if (!pw.equals(snapshot.child("cus_password").getValue().toString())) {
                                             if (counter == 0) {
                                                 blockAcc();
                                                 break;
+                                            } else {
+                                                toast(2, counter);
+                                                counter --;
+                                                break;
                                             }
                                         }
-                                    } else {
+                                    } if (!email.equals(snapshot.child("email").getValue().toString())) {
                                         toast(1, counter);
+                                        break;
                                     }
                                 }
                             }
@@ -113,7 +124,6 @@ public class loginActivity extends AppCompatActivity {
             Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
         } else if (a == 2) {
             Toast.makeText(this, "Login Fails. You have " + counter + " left.", Toast.LENGTH_LONG).show();
-            counter = counter - 1;
         }
     }
 
