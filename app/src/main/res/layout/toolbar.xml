@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color4GBTheme"
     android:elevation="10dp">
 
-
-
+    <ImageButton
+        android:id="@+id/homepage"
+        android:layout_height="59dip"
+        android:layout_width="132dip"
+        android:layout_gravity="start"
+        android:background="@drawable/ic_logo_132dp_x_59dp" />
 </android.support.v7.widget.Toolbar>
