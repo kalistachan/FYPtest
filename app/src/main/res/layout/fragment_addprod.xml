@@ -4,94 +4,103 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.SellerAddProdFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:scrollbars="none">
 
-        <Button
-            android:id="@+id/btnChoose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="10dp"
-            android:text="Choose" />
+        <!-- TODO: Update blank fragment layout -->
 
-        <ImageView
-            android:id="@+id/imgView"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            />
-
-        <EditText
-            android:id="@+id/editProductName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Product Name"
-            android:textSize="20dp"
-            tools:ignore="MissingConstraints"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"/>
-
-        <EditText
-            android:id="@+id/editProductPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Product Price"
-            android:inputType="numberDecimal"
-            android:textSize="20dp"
-            tools:ignore="MissingConstraints"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <Button
-                android:id="@+id/buttonAddProduct"
-                android:layout_width="0dp"
+                android:id="@+id/btnChoose"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="10dp"
+                android:text="Choose" />
+
+            <ImageView
+                android:id="@+id/imgView"
+                android:layout_width="380dip"
+                android:layout_height="200dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:scaleType="centerInside"
+                />
+
+            <EditText
+                android:id="@+id/editProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Product Name"
+                android:textSize="20dp"
+                tools:ignore="MissingConstraints"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_weight="1"
-                android:text="Update"
-                tools:ignore="ButtonStyle,HardcodedText" />
+                android:layout_marginRight="@dimen/activity_vertical_margin"/>
 
-            <Button
-                android:id="@+id/buttonCancelProduct"
-                android:layout_width="0dp"
+            <EditText
+                android:id="@+id/editProductPrice"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Enter Product Price"
+                android:inputType="numberDecimal"
+                android:textSize="20dp"
+                tools:ignore="MissingConstraints"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_weight="1"
-                android:text="Cancel"
-                tools:ignore="ButtonStyle,HardcodedText" />
+                android:layout_marginRight="@dimen/activity_vertical_margin"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonAddProduct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_weight="1"
+                    android:text="Update"
+                    tools:ignore="ButtonStyle,HardcodedText" />
+
+                <Button
+                    android:id="@+id/buttonCancelProduct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    tools:ignore="ButtonStyle,HardcodedText" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
+    </ScrollView>
 
 </FrameLayout>
