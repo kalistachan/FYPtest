@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.fragments.GroupFragment;
@@ -32,24 +31,15 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
-
-    //private Toolbar maintoolbar;
-    //will delete if not needed
     Toolbar toolbar;
     Fragment fragment;
-    //List<Product> prodList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*maintoolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(maintoolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        maintoolbar.setLogo(R.drawable.ic_logo_132dp_x_59dp);*/
-        // will delete if not needed
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         ImageButton homepagebutton = (ImageButton) findViewById(R.id.homepage);
@@ -61,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
         loadFragment(new PurchaseFragment());
