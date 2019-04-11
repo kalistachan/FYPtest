@@ -69,8 +69,6 @@ public class ProfileFragment extends Fragment {
         ccNum = (EditText) view.findViewById(R.id.ccNum);
         ccCVV = (EditText) view.findViewById(R.id.ccCVV);
 
-//        getData(getStr);
-
         return view;
     }
 
@@ -97,8 +95,8 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("userID").getValue().toString().equals(userID)) {
-                        email.setHint(snapshot.child("email").getValue().toString());
-                        contactNo.setHint(snapshot.child("contactNum").getValue().toString());
+                        list.add(snapshot.child("email").getValue().toString());
+                        list.add(snapshot.child("contactNum").getValue().toString());
                     }
                 }
             }
@@ -108,40 +106,40 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-//        dbCusInfo.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    if (snapshot.child("cus_ID").getValue().toString().equals(userID)) {
-//                        list.add(snapshot.child("cus_fName").getValue().toString());
-//                        list.add(snapshot.child("cus_lName").getValue().toString());
-//                        list.add(snapshot.child("cus_shippingAddress").getValue().toString());
-//                        list.add(snapshot.child("cus_userType").getValue().toString());
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                return;
-//            }
-//        });
-//
-//        dbCC.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    if (snapshot.child("cc_cus_ID").getValue().toString().equals(userID)) {
-//                        list.add(snapshot.child("cc_Num").getValue().toString());
-//                        list.add(snapshot.child("cc_ExpiryDate").getValue().toString());
-//                        list.add(snapshot.child("cc_CVNum").getValue().toString());
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                return;
-//
-//            }
-//        });
+        dbCusInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("cus_ID").getValue().toString().equals(userID)) {
+                        list.add(snapshot.child("cus_fName").getValue().toString());
+                        list.add(snapshot.child("cus_lName").getValue().toString());
+                        list.add(snapshot.child("cus_shippingAddress").getValue().toString());
+                        list.add(snapshot.child("cus_userType").getValue().toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                return;
+            }
+        });
+
+        dbCC.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("cc_cus_ID").getValue().toString().equals(userID)) {
+                        list.add(snapshot.child("cc_Num").getValue().toString());
+                        list.add(snapshot.child("cc_ExpiryDate").getValue().toString());
+                        list.add(snapshot.child("cc_CVNum").getValue().toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                return;
+
+            }
+        });
     }
 }
