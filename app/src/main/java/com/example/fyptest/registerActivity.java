@@ -292,18 +292,6 @@ public class registerActivity extends AppCompatActivity {
         }
     }
 
-    private static boolean checkTextView(TextView textView) {
-        String text = textView.getText().toString().trim();
-        textView.setError(null);
-
-        if (text.length() == 0) {
-            textView.setError("Field Required");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public void test() {
         Toast.makeText(this, "Check Field", Toast.LENGTH_LONG).show();
     }

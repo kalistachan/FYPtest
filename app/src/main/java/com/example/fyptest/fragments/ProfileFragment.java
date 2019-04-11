@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
 public class ProfileFragment extends Fragment {
@@ -37,6 +38,8 @@ public class ProfileFragment extends Fragment {
 
     Button update, logout;
 
+    ArrayList<String> list;
+
 //    To save data to SharePreferences
 //    SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 //             editor.putString(saveKey, stringToSave);
@@ -49,7 +52,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
         getStr = pref.getString("userID", "UNKNOWN");
@@ -75,9 +78,12 @@ public class ProfileFragment extends Fragment {
 
         notification.setText(notification.getTextOn());
 
+        list = new ArrayList<>();
+
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                contactNo = (EditText) view.findViewById(R.id.contactNo);
 
             }
         });
@@ -93,17 +99,13 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         dbUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 email.setHint(dataSnapshot.child("email").getValue().toString());
+                list.add("email");
                 contactNo.setHint(dataSnapshot.child("contactNum").getValue().toString());
             }
             @Override
@@ -140,9 +142,5 @@ public class ProfileFragment extends Fragment {
                 return;
             }
         });
-    }
-
-    public void getData(final String userID) {
-
     }
 }
