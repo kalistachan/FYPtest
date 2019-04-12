@@ -2,14 +2,87 @@ package com.example.fyptest.Data_Creation_Class;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.database.adminInfoClass;
+import com.example.fyptest.database.orderStatusClass;
+import com.example.fyptest.database.sellerInfoClass;
+import com.example.fyptest.database.userClass;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class dbDataConstructor extends AppCompatActivity {
+
+    EditText editText1, editText2, editText3, editText4,
+            editText5, editText6, editText7, editText8;
+
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_data_constructor);
+
+        editText1 = (EditText) findViewById(R.id.editText1);
+        editText2 = (EditText) findViewById(R.id.editText2);
+        editText3 = (EditText) findViewById(R.id.editText3);
+        editText4 = (EditText) findViewById(R.id.editText4);
+        editText5 = (EditText) findViewById(R.id.editText5);
+        editText6 = (EditText) findViewById(R.id.editText6);
+        editText7 = (EditText) findViewById(R.id.editText7);
+        editText8 = (EditText) findViewById(R.id.editText8);
+
+        button = (Button) findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAdmin();
+            }
+        });
+    }
+
+    public void addSeller() {
+        DatabaseReference userDB, sellerInfoDB;
+        userDB = FirebaseDatabase.getInstance().getReference("User");
+        sellerInfoDB = FirebaseDatabase.getInstance().getReference("Seller Information");
+
+        String userID = sellerInfoDB.push().getKey();
+
+        String email = editText1.getText().toString();
+        String pw = editText5.getText().toString();
+        String contactNum = editText2.getText().toString();
+        String fName = editText3.getText().toString();
+
+        userClass userClass = new userClass(userID, email, pw, contactNum, "seller");
+        sellerInfoClass sellerInfoClass = new sellerInfoClass(userID, fName, "seller");
+
+        userDB.child(userID).setValue(userClass);
+        sellerInfoDB.child(userID).setValue(sellerInfoClass);
+    }
+
+    public void addAdmin() {
+        DatabaseReference userDB, adminInfoDB;
+        userDB = FirebaseDatabase.getInstance().getReference("User");
+        adminInfoDB = FirebaseDatabase.getInstance().getReference("Admin Information");
+
+        String userID = adminInfoDB.push().getKey();
+
+        String email = editText1.getText().toString();
+        String pw = editText5.getText().toString();
+        String contactNum = editText2.getText().toString();
+        String fName = editText3.getText().toString();
+        String lName = editText4.getText().toString();
+
+        userClass userClass = new userClass(userID, email, pw, contactNum, "admin");
+        adminInfoClass adminInfoClass = new adminInfoClass(userID, fName, lName, "admin");
+
+        userDB.child(userID).setValue(userClass);
+        adminInfoDB.child(userID).setValue(adminInfoClass);
     }
 }

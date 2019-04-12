@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.Admin.AdminMainActivity;
+import com.example.fyptest.Seller.SellerMainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,8 +73,14 @@ public class loginActivity extends AppCompatActivity {
                                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
                                                 return;
                                             } if (role.equals("seller")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
                                                 return;
                                             } if (role.equals("admin")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
                                                 return;
                                             }
                                         } if (!pw.equals(snapshot.child("password").getValue().toString())) {
