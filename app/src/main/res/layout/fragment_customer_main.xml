@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.WatchListFragment">
+    tools:context=".fragments.CustomerMainFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="This Watch List"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textSize="32sp"/>
+        android:text="Main Catalogue"
+        android:textSize="32sp"
+        android:layout_gravity="center"
+        android:textAlignment="center"/>
 
 </FrameLayout>
