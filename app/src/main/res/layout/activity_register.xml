@@ -377,7 +377,6 @@
                 android:ems="10"
                 android:hint="Select expiry date"
                 android:inputType="datetime"
-                android:maxLength="5"
                 android:padding="5dp"
                 android:textSize="18sp"
                 tools:ignore="HardcodedText,TextFields" />
