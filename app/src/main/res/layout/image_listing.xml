@@ -9,7 +9,8 @@
         android:layout_width="401dp"
         android:layout_height="160dp"
         android:orientation="horizontal"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:id="@+id/parent_layout">
 
         <ImageView
             android:id="@+id/image_view_upload"

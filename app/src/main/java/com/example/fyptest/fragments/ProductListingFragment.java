@@ -64,7 +64,7 @@ public class ProductListingFragment extends Fragment {
                 }
                 mAdapter = new CustomAdapter(getContext(), prodList);
                 mRecyclerView.setAdapter(mAdapter);
-                          }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
