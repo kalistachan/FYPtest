@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.SellerAddProdFragment;
+import com.example.fyptest.fragments.WatchListFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -56,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         homepagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gotohome = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(gotohome);
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
             }
         });
 //--------------------------------------------------------------------------------------------------
@@ -135,15 +136,24 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ProductListingFragment();
                     loadFragment(fragment);
                     return true;
+
                 case R.id.navigation_group:
                     fragment = new SellerAddProdFragment();
                     loadFragment(fragment);
                     return true;
+
                 case R.id.navigation_watchlist:
-                    //mTextMessage.setText(R.string.title_watchlists);
+                    fragment = new WatchListFragment();
+                    loadFragment(fragment);
                     return true;
+
                 case R.id.navigation_profile:
                     fragment = new ProfileFragment();
+                    loadFragment(fragment);
+                    return true;
+
+                case R.id.homepage:
+                    fragment = new MainScreen();
                     //pushing userInfo out of current view
                     loadFragment(fragment);
                     return true;
