@@ -509,9 +509,9 @@
                 android:layout_marginRight="25dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/redbuttons"
+                android:background="@drawable/orangebuttons"
                 android:text="Back to Login"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
 
             <Button
@@ -526,9 +526,9 @@
                 android:layout_marginRight="25dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/greenbuttons"
+                android:background="@drawable/orangebuttons"
                 android:text="Submit"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
     </LinearLayout>

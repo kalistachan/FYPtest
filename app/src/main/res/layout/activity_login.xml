@@ -115,22 +115,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="60dp"
-            android:background="@drawable/greenbuttons"
+            android:layout_marginRight="25dp"
+            android:background="@color/orange"
             android:gravity="center"
             android:text="Login"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bluebuttons"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/orangebuttons"
             android:gravity="center"
             android:text="Register Now"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </LinearLayout>
 
