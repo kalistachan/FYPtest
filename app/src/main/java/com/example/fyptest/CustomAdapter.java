@@ -1,13 +1,19 @@
 package com.example.fyptest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.example.fyptest.database.Product;
 import com.squareup.picasso.Picasso;
@@ -49,9 +55,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
-        public TextView prodTextName;
-        public TextView prodTextPrice;
-        public ImageView imageView;
+         TextView prodTextName;
+         TextView prodTextPrice;
+         ImageView imageView;
+         Button grpBtn;
+         Button watchBtn;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -59,22 +67,72 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             prodTextName = itemView.findViewById(R.id.prodNameViewName);
             prodTextPrice = itemView.findViewById(R.id.prodPriceViewName);
             imageView = itemView.findViewById(R.id.image_view_upload);
+            grpBtn = itemView.findViewById(R.id.btn1);
+            watchBtn = itemView.findViewById(R.id.btn2);
+
+            String checkGroup ="exist";
+            if (checkGroup == "exist") {
+                grpBtn.setText("Join Group");
+                grpBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       ShowDialog();
+                    }
+                });
+            } else {
+                grpBtn.setText("Create Group");
+            }
+
+            String checkWatch ="exist";
+            if (checkWatch == "exist") {
+                watchBtn.setText("In Watchlist");
+                watchBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            } else {
+                watchBtn.setText("Add to Watchlist");
+            }
+        }
+
+        public void ShowDialog() {
+            final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
+            final SeekBar seek = new SeekBar(mContext);
+
+            seek.setMax(100);
+            popDialog.setIcon(android.R.drawable.btn_star_big_on);
+
+            popDialog.setTitle("Please Select Rank 1-100 ");
+
+            popDialog.setView(seek);
+
+            seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                    //Do something here with new value
+                    Log.d("Slider value: ", " " + progress);
+                    //txtView.setText("Value of : " + progress);
+                }
+
+                public void onStartTrackingTouch(SeekBar arg0) {
+                    // TODO Auto-generated method stub
+                }
+
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+                }
+            });
+
+            popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            popDialog.create();
+            popDialog.show();
         }
     }
-
-    /*
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        inflter = LayoutInflater.from(mContext);
-        view = inflter.inflate(R.layout.fragment_productlisting, null);
-        TextView prodName = (TextView) view.findViewById(R.id.prodNameViewName);
-        TextView prodPrice = (TextView) view.findViewById(R.id.prodPriceViewName);
-        //ImageView icon = (ImageView) view.findViewById(R.id.icon);
-        Product product = productList.get(i);
-
-        prodName.setText(product.getProdName());
-        prodPrice.setText(product.getProdPrice());
-
-        return view;
-    }*/
 }
