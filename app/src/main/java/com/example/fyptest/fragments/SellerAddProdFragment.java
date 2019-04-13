@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
@@ -37,18 +39,22 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 
 
 public class SellerAddProdFragment extends Fragment {
     EditText editProductName;
     EditText editProductPrice;
     DatabaseReference databaseProduct;
-    Button btnChoose, btnUpload, btnAddProduct, btnTest;
+    ImageButton btnChoose;
+    Button btnUpload, btnAddProduct, btnTest;
     ImageView imageView;
     FirebaseStorage storage;
     StorageReference storageReference;
     String prodId;
     String imageUrl;
+
+    Spinner dayOrWeek;
 
     private Uri filePath;
 
@@ -59,7 +65,7 @@ public class SellerAddProdFragment extends Fragment {
 
         editProductName = (EditText) getView().findViewById(R.id.editProductName);
         editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
-        btnChoose = (Button) getView().findViewById(R.id.btnChoose);
+        btnChoose = (ImageButton) getView().findViewById(R.id.imageButton);
         imageView = (ImageView) getView().findViewById(R.id.imgView);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
         btnAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
