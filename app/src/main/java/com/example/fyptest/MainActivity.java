@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 //--------------------------------------------------------------------------------------------------
 
 //nav_drawer components-----------------------------------------------------------------------------
-
         //account_header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
         new DrawerBuilder().withActivity(this);
 
         //Primary = bold items, Secondary = normal items
-        SectionDrawerItem categories_header = new SectionDrawerItem().withName(R.string.drawer_section_categories);
-        PrimaryDrawerItem item_main_1 = new PrimaryDrawerItem().withName(R.string.drawer_main_1).withSelectable(false);
-        PrimaryDrawerItem item_main_2 = new PrimaryDrawerItem().withName(R.string.drawer_main_2).withSelectable(false);
-        SecondaryDrawerItem item_secondary = new SecondaryDrawerItem().withName(R.string.drawer_secondary).withSelectable(false);
+        PrimaryDrawerItem item_categories = new PrimaryDrawerItem().withName("Categories").withSelectable(false).withIcon(R.drawable.ic_apps_black_24dp);
+        PrimaryDrawerItem item_notifications = new PrimaryDrawerItem().withName("Notifications").withSelectable(false).withIcon(R.drawable.ic_notifications_black_24dp);
+        PrimaryDrawerItem item_help_centre = new PrimaryDrawerItem().withName("Help Centre").withSelectable(false).withIcon(R.drawable.ic_help_outline_black_24dp);
+        PrimaryDrawerItem item_logout = new PrimaryDrawerItem().withName("Logout").withSelectable(false);
 
         //create the drawer and remember the `Drawer` result object
         Drawer result = new DrawerBuilder()
@@ -97,27 +97,31 @@ public class MainActivity extends AppCompatActivity {
                 .withTranslucentStatusBar(false)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        categories_header,
-                        item_main_1,
-                        item_main_2,
+                        //item position corresponds to listing of items here (includes dividers, etc.)
+                        item_categories,
+                        item_notifications,
                         new DividerDrawerItem(),
-                        item_secondary,
-                        new SecondaryDrawerItem()
+                        item_help_centre,
+                        new DividerDrawerItem(),
+                        item_logout
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         //do funky stuff with clicked items :D
-                        //all switch cases are examples for future reference
                         switch (position) {
+                            case 1:
+                                //startActivity(new Intent(MainActivity.this, registerActivity.class));
+                                fragment = new CategoriesFragment();
+                                loadFragment(fragment);
                             case 2:
-                                startActivity(new Intent(MainActivity.this, registerActivity.class));
-                                return true;
-                            case 3:
+                                startActivity(new Intent(MainActivity.this, resetPWActivity.class));
+                            case 4:
+                                break;
+                            case 6:
                                 startActivity(new Intent(MainActivity.this, loginActivity.class));
-                                return true;
                         }
-                        return false;
+                        return true;
                     }
                 })
                 .build();

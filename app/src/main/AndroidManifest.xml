@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Data_Creation_Class.addProduct"></activity>
+        <activity android:name=".Data_Creation_Class.addProduct" />
         <activity android:name=".Seller.SellerMainActivity" />
         <activity android:name=".Admin.AdminMainActivity" />
         <activity android:name=".resetPWActivity" />
