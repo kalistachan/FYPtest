@@ -21,7 +21,7 @@
             android:layout_height="159dp"
             android:layout_gravity="center"
             android:layout_marginTop="100dp"
-            app:srcCompat="@drawable/ic_logo"
+            app:srcCompat="@drawable/logo"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
         <LinearLayout
@@ -41,7 +41,7 @@
                 android:padding="6dp"
                 android:text="Email:"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -57,7 +57,8 @@
                 android:hint="Please enter your email"
                 android:inputType="textEmailAddress"
                 android:padding="6dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,15 +70,15 @@
                 android:id="@+id/tvPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
                 android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:padding="6dp"
                 android:text="Password:"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -93,7 +94,8 @@
                 android:hint="Please enter your password"
                 android:inputType="textPassword"
                 android:padding="6dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <TextView
@@ -106,7 +108,7 @@
             android:gravity="end"
             android:text="Forgot your password?"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/buttonLogin"

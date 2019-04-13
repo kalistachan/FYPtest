@@ -22,7 +22,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/ic_logo"
+            app:srcCompat="@drawable/logo"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
         <TextView
@@ -39,26 +39,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Email:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -68,32 +72,37 @@
                 android:hint="Enter your email address"
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Password:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -102,32 +111,37 @@
                 android:hint="Enter your password"
                 android:inputType="textPassword"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvConfirmPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Confirm Password:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputPassword2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -136,32 +150,37 @@
                 android:hint="Re-enter your password"
                 android:inputType="textPassword"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="First Name:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -170,6 +189,7 @@
                 android:hint="Enter your first name"
                 android:inputType="textPersonName"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -177,26 +197,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvLastName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Last Name:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputLastName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -205,6 +229,7 @@
                 android:hint="Enter your last name"
                 android:inputType="textPersonName"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -212,26 +237,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Phone No.:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputContactNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -240,32 +269,37 @@
                 android:hint="Enter your phone number"
                 android:inputType="phone"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Address:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputShippingAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -274,6 +308,7 @@
                 android:hint="Enter your address"
                 android:inputType="textPostalAddress"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -281,26 +316,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvPostal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Postal Code:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputPostalCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -309,6 +348,7 @@
                 android:hint="Enter your postal code"
                 android:inputType="number"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -316,26 +356,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvCardNum"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Card Number:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/inputCCNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -344,32 +388,37 @@
                 android:hint="Enter your credit card number"
                 android:inputType="number"
                 android:padding="5dp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvExpiry"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="Expiry Date:"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/inputExpiryDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -378,7 +427,7 @@
                 android:hint="Select expiry date"
                 android:inputType="datetime"
                 android:padding="5dp"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:ignore="HardcodedText,TextFields" />
 
         </LinearLayout>
@@ -386,25 +435,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvCVV"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="CVV:"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/inputCVV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="8"
@@ -412,7 +465,8 @@
                 android:ems="10"
                 android:hint="Enter your CVV"
                 android:inputType="number"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout

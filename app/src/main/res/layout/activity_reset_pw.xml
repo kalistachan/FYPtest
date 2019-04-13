@@ -16,7 +16,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/ic_logo"
+        app:srcCompat="@drawable/logo"
         tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_marginRight="25dp"
         android:text="Please enter your registration email."
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             android:gravity="center|start"
             android:text="Email:"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/enteredEmail"
@@ -66,8 +66,10 @@
             android:layout_weight="8"
             android:background="@color/white"
             android:ems="10"
+            android:hint="Please enter your registration email"
             android:inputType="textEmailAddress"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
