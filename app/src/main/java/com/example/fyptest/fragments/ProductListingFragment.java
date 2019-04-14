@@ -163,7 +163,7 @@ public class ProductListingFragment extends Fragment {
                     if (prodGroupList != null) {
                         if (productGroup.getPg_pro_ID().equalsIgnoreCase(prodID)) {
                             Log.d("prodid ", "value: " + prodID);
-                            Log.d("getpg_id ", "value: " + productGroup.getPg_pro_ID());
+                            Log.d("getPg_pro_ID; ", "value: " + productGroup.getPg_pro_ID());
                             pGStatus[0] = true;
                             break;
                         } else {
