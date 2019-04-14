@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parent_layout"
+    android:id="@+id/watchlist_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="1dp"
@@ -64,13 +64,11 @@
         android:id="@+id/timeRemain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/prodPriceViewName" />
 
@@ -99,12 +97,10 @@
         android:background="@drawable/yellowbuttons"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:text="Button 2"
+        android:text="Remove"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn1" />
-
-
 
 
 </android.support.constraint.ConstraintLayout>
