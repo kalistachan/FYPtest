@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
 import java.util.Calendar;
@@ -147,8 +148,8 @@ public class ProductListingFragment extends Fragment {
         alertdialog.show();
     }
 
-    public boolean checkProductGroup (String prodID) {
-        boolean pGStatus = false;
+    public boolean checkProductGroup (final String prodID) {
+        final boolean[] pGStatus = new boolean[1];
         prodGroupList = new ArrayList<>();
 
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
@@ -158,33 +159,37 @@ public class ProductListingFragment extends Fragment {
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     productGroupClass productGroup = productSnapshot.getValue(productGroupClass.class);
                     prodGroupList.add(productGroup);
+
+                    if (prodGroupList != null) {
+                        if (productGroup.getPg_pro_ID().equalsIgnoreCase(prodID)) {
+                            Log.d("prodid ", "value: " + prodID);
+                            Log.d("getpg_id ", "value: " + productGroup.getPg_pro_ID());
+                            pGStatus[0] = true;
+                            break;
+                        } else {
+                            pGStatus[0] = false;
+                        }
+                    } else {
+                        pGStatus[0] = false;
+                    }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
         });
 
-        if (prodGroupList != null) {
-            for (productGroupClass prodGpList: prodGroupList) {
-                if (prodGpList.getPg_ID() == prodID) {
-                    pGStatus = true;
-                } else {
-                    pGStatus = false;
-                }
-            }
-        } else {
-            pGStatus = false;
-        }
-        return pGStatus;
+        Log.d("pgStatus", "value: " + Arrays.toString(pGStatus));
+        return pGStatus[0];
     }
 
     public void insertProductGroup (String prodID) {
         /* if product is in product group table, get pg_id, else insert new product group (pg_id, pg_createdDate, prodID) and return pg_id,
             then call insertCustGroupDetails (pg_id)*/
         pgDateCreated = Calendar.getInstance().getTime();
-        Log.d("current date: ", "value: " +pgDateCreated);
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         prodGrpId = databaseProduct.push().getKey();
         productGroupClass productGroup = new productGroupClass(prodGrpId, pgDateCreated, null, prodID);
