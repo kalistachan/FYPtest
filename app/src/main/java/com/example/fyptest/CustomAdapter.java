@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import com.example.fyptest.database.Product;
+import com.example.fyptest.fragments.ProductListingFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,12 +24,10 @@ import java.util.List;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewHolder> {
     Context mContext;
     List<Product> productList;
-    LayoutInflater inflter;
 
     public CustomAdapter(Context applicationContext,  List<Product> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
-      //  inflter = (LayoutInflater.from(applicationContext));
     }
 
     @Override
@@ -61,7 +60,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
          Button grpBtn;
          Button watchBtn;
 
-        public ImageViewHolder(View itemView) {
+        public ImageViewHolder(final View itemView) {
             super(itemView);
 
             prodTextName = itemView.findViewById(R.id.prodNameViewName);
@@ -69,6 +68,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             imageView = itemView.findViewById(R.id.image_view_upload);
             grpBtn = itemView.findViewById(R.id.btn1);
             watchBtn = itemView.findViewById(R.id.btn2);
+            final ProductListingFragment pl = new ProductListingFragment();
 
             String checkGroup ="exist";
             if (checkGroup == "exist") {
@@ -76,7 +76,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                 grpBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       ShowDialog();
+                       pl.ShowDialog(mContext,itemView);
                     }
                 });
             } else {
@@ -96,43 +96,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                 watchBtn.setText("Add to Watchlist");
             }
         }
-
-        public void ShowDialog() {
-            final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
-            final SeekBar seek = new SeekBar(mContext);
-
-            seek.setMax(100);
-            popDialog.setIcon(android.R.drawable.btn_star_big_on);
-
-            popDialog.setTitle("Please Select Rank 1-100 ");
-
-            popDialog.setView(seek);
-
-            seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                    //Do something here with new value
-                    Log.d("Slider value: ", " " + progress);
-                    //txtView.setText("Value of : " + progress);
-                }
-
-                public void onStartTrackingTouch(SeekBar arg0) {
-                    // TODO Auto-generated method stub
-                }
-
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    // TODO Auto-generated method stub
-                }
-            });
-
-            popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            popDialog.create();
-            popDialog.show();
-        }
     }
+
 }
