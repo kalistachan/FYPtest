@@ -65,7 +65,7 @@ public class ProductListingFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-          displayProduct();
+        displayProduct();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ProductListingFragment extends Fragment {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
-               qtyText.setText(qtyChosenVal + "/" + seekBar.getMax());
+                qtyText.setText(qtyChosenVal + "/" + seekBar.getMax());
             }
         });
 
@@ -168,11 +168,11 @@ public class ProductListingFragment extends Fragment {
 
         if (prodGroupList != null) {
             for (productGroupClass prodGpList: prodGroupList) {
-                 if (prodGpList.getPg_ID() == prodID) {
-                     pGStatus = true;
-                 } else {
-                     pGStatus = false;
-                 }
+                if (prodGpList.getPg_ID() == prodID) {
+                    pGStatus = true;
+                } else {
+                    pGStatus = false;
+                }
             }
         } else {
             pGStatus = false;

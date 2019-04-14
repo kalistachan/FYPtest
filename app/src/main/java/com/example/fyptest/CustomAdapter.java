@@ -1,13 +1,19 @@
 package com.example.fyptest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.example.fyptest.database.Product;
 import com.example.fyptest.fragments.ProductListingFragment;
@@ -63,11 +69,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
-         TextView prodTextName;
-         TextView prodTextPrice;
-         ImageView imageView;
-         Button grpBtn;
-         Button watchBtn;
+        TextView prodTextName;
+        TextView prodTextPrice;
+        ImageView imageView;
+        Button grpBtn;
+        Button watchBtn;
 
         public ImageViewHolder(final View itemView) {
             super(itemView);
@@ -75,7 +81,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             prodTextName = itemView.findViewById(R.id.prodNameViewName);
             prodTextPrice = itemView.findViewById(R.id.prodPriceViewName);
             imageView = itemView.findViewById(R.id.image_view_upload);
-            grpBtn = itemView.findViewById(R.id.purchaseStatus);
+            grpBtn = itemView.findViewById(R.id.btn1);
             watchBtn = itemView.findViewById(R.id.btn2);
 
         }
