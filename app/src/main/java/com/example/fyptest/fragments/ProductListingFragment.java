@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
+import com.example.fyptest.database.productGroupClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,9 +36,9 @@ public class ProductListingFragment extends Fragment {
     CustomAdapter mAdapter;
     DatabaseReference databaseProduct;
     List<Product> prodList;
+    List<productGroupClass> prodGroupList;
     Context activity;
     int qtyChosenVal;
-    int finalQtyChosenVal;
     TextView qtyText;
 
     public ProductListingFragment() {
@@ -73,7 +74,6 @@ public class ProductListingFragment extends Fragment {
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                prodList = new ArrayList<>();
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     Product product = productSnapshot.getValue(Product.class);
                     prodList.add(product);
@@ -90,9 +90,7 @@ public class ProductListingFragment extends Fragment {
     }
 
     public void ShowDialog(Context context, View view) {
-
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
-
         LinearLayout linear = new LinearLayout(context);
 
         linear.setOrientation(LinearLayout.VERTICAL);
@@ -127,8 +125,8 @@ public class ProductListingFragment extends Fragment {
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finalQtyChosenVal = seek.getProgress();
-                Log.d("chosen qty", "value: " + finalQtyChosenVal);
+
+                Log.d("chosen qty", "value: " + qtyChosenVal);
             }
         });
 
@@ -141,7 +139,38 @@ public class ProductListingFragment extends Fragment {
 
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
+    }
 
+    public void insertProductGroup (String prodID) {
+        /* if product is in product group table, get pg_id, else insert new product group (pg_id, pg_createdDate, prodID) and return pg_id,
+            then call insertCustGroupDetails (pg_id)*/
+        prodGroupList = new ArrayList<>();
+
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
+        databaseProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
+                    productGroupClass productGroup = productSnapshot.getValue(productGroupClass.class);
+                    prodGroupList.add(productGroup);
+
+                    if (prodGroupList != null) {
+
+                    } else {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void insertCustGroupDetails (int prodGroupId) {
+        /* first, check if cust group detail table has this pg_id, if yes then dont insert, else insert (gd_id, gd_joinDate, cus_ID, pg_id)*/
     }
 }
 

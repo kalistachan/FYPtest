@@ -77,6 +77,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                     @Override
                     public void onClick(View v) {
                        pl.ShowDialog(mContext,itemView);
+                       // call insertProductGroup
+
+
                     }
                 });
             } else {
