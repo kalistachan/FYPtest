@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -84,7 +84,7 @@
                     android:id="@+id/dayOrWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:entries="@array/durationType" />
+                    android:entries="@array/durationValue" />
 
             </LinearLayout>
 
@@ -301,28 +301,4 @@
 
     </ScrollView>
 
-
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scrollbars="none">-->
-
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:padding="0dp">-->
-
-
-        <!--</RelativeLayout>-->
-
-
-            <!--<EditText-->
-                <!--android:id="@+id/oo"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="Enter Product Name"-->
-                <!--tools:ignore="MissingConstraints" />-->
-
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>
