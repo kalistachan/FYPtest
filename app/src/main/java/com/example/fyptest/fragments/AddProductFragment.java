@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +21,8 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
@@ -38,50 +41,58 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
+public class AddProductFragment extends Fragment {
 
-public class SellerAddProdFragment extends Fragment {
-    EditText editProductName;
-    EditText editProductPrice;
+    TextView textView;
+    EditText editProductName, editProductPrice;
+    Spinner spinner;
+    Button buttonAddProduct;
+
+    ImageView imgView;
     DatabaseReference databaseProduct;
-    Button btnChoose, btnUpload, btnAddProduct, btnTest;
-    ImageView imageView;
     FirebaseStorage storage;
     StorageReference storageReference;
     String prodId;
     String imageUrl;
 
     private Uri filePath;
-
     private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_add_product, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        imgView = (ImageView) getView().findViewById(R.id.imgView);
 
         editProductName = (EditText) getView().findViewById(R.id.editProductName);
         editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
-        btnChoose = (Button) getView().findViewById(R.id.btnChoose);
-        imageView = (ImageView) getView().findViewById(R.id.imgView);
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
-        btnAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
+        buttonAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
 
-        btnChoose.setOnClickListener(new View.OnClickListener() {
+        imgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              filePath =  chooseImage();
+                filePath =  chooseImage();
             }
         });
 
-        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+        buttonAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addProduct(editProductName,editProductPrice, filePath);
             }
         });
+
     }
 
     public void addProduct (EditText prodName, EditText prodPrice, Uri filePath) {
         final String prodNameText = prodName.getText().toString().trim();
-
         final String prodPriceText = prodPrice.getText().toString().trim();
 
         if (!TextUtils.isEmpty(prodNameText)) {
@@ -90,49 +101,10 @@ public class SellerAddProdFragment extends Fragment {
                     uploadImage(prodNameText, prodPriceText);
                     prodName.setText("");
                     prodPrice.setText("");
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
-                }  else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Please choose a product image", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                prodPrice.setError("Empty Field");
-            }
-        } else {
-            prodName.setError("Empty Field");
-        }
-
-    }
-
-    private Uri chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-        if (filePath != null) {
-            return filePath;
-        } else {
-            return null;
-        }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
-                && data != null && data.getData() != null )
-        {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-                Log.d("IMAGE: ", "image exist " + bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+                    imgView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
+                }  else { Toast.makeText(getActivity().getApplicationContext(), "Please choose a product image", Toast.LENGTH_LONG).show(); }
+            } else { prodPrice.setError("Empty Field"); }
+        } else { prodName.setError("Empty Field"); }
     }
 
     private String getFileExtension(Uri uri) {
@@ -196,7 +168,6 @@ public class SellerAddProdFragment extends Fragment {
                     double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                             .getTotalByteCount());
                     progressDialog.setMessage("Uploaded "+(int)progress+"%");
-
                 }
             });
         } else {
@@ -204,5 +175,35 @@ public class SellerAddProdFragment extends Fragment {
         }
     }
 
+    private Uri chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        if (filePath != null) {
+            return filePath;
+        } else {
+            return null;
+        }
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
+                imgView.setImageBitmap(bitmap);
+                Log.d("IMAGE: ", "image exist " + bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
