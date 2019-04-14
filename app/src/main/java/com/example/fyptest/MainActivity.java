@@ -15,10 +15,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 //import com.example.fyptest.fragments.CategoriesFragment;
+import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
-import com.example.fyptest.fragments.SellerAddProdFragment;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -27,8 +27,6 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -47,8 +45,16 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.getMenu().getItem(1).setChecked(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(new ProductListingFragment());
+
+
+
+        //Set to view main screen on application start-up
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_container, new MainScreen());
+        ft.commit();
 
         //Catching Value thrown from login
         SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_group:
-                    fragment = new SellerAddProdFragment();
+                    fragment = new AddProductFragment();
                     loadFragment(fragment);
                     return true;
 

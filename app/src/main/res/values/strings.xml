@@ -12,9 +12,16 @@
     <string name="account_header_user">User Name</string>
     <string name="account_header_email">example@4gb.com.sg</string>
     <string name="drawer_section_categories">Categories</string>
-    
+
     <array name="durationValue">
         <item>Days</item>
         <item>Weeks</item>
+    </array>
+
+    <array name="productType">
+        <item>cosmetic</item>
+        <item>toiletries</item>
+        <item>fashion</item>
+        <item>IT gadget</item>
     </array>
 </resources>

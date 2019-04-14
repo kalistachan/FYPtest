@@ -1,69 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SellerAddProdFragment">
+    tools:context=".fragments.AddProductFragment"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="34dp">
+        android:scrollbars="none"
+        tools:ignore="ScrollViewCount,UselessParent">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/linear0"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            tools:ignore="ScrollViewSize">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/imagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="0dp">
+
+                <!--<ImageButton-->
+                <!--android:id="@+id/imageButton"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_alignStart="@+id/imgView"-->
+                <!--android:layout_alignLeft="@+id/imgView"-->
+                <!--android:layout_alignTop="@+id/imgView"-->
+                <!--android:layout_alignBottom="@+id/imgView"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginStart="336dp"-->
+                <!--android:layout_marginLeft="336dp"-->
+                <!--android:layout_marginTop="1dp"-->
+                <!--android:layout_marginEnd="14dp"-->
+                <!--android:layout_marginRight="14dp"-->
+                <!--android:layout_marginBottom="200dp"-->
+                <!--android:elevation="10dp"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:src="@drawable/ic_edit_black_24dp"-->
+                <!--android:tint="@color/red" />-->
+
+                <ImageView
+                    android:id="@+id/imgView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="0dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_image_placeholder"
+                    tools:ignore="ContentDescription,UnusedAttribute" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imgView"
-                android:layout_alignBottom="@+id/imgView"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="end"
-                android:layout_marginStart="349dp"
-                android:layout_marginLeft="349dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="153dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_edit_black_24dp" />
-
-
-            <ImageView
-                android:id="@+id/imgView"
-                android:layout_width="380dip"
-                android:layout_height="200dip"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
                 android:layout_marginStart="17dp"
                 android:layout_marginLeft="17dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="17dp"
                 android:layout_marginRight="17dp"
                 android:layout_marginBottom="0dp"
-                android:scaleType="centerInside"
-                android:layout_alignParentEnd="true" />
-
-            <LinearLayout
-                android:id="@+id/linear1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imgView"
                 android:orientation="horizontal">
 
                 <EditText
@@ -71,12 +83,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter Product Name"
+                    android:layout_weight="1"
                     tools:ignore="HardcodedText,MissingConstraints" />
+
+                <Spinner
+                    android:id="@+id/productType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/productType"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear1"
+                android:orientation="horizontal"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp">
 
                 <EditText
                     android:id="@+id/duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
                     android:hint="Duration"
                     tools:ignore="Autofill,HardcodedText,TextFields" />
 
@@ -84,6 +121,8 @@
                     android:id="@+id/dayOrWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
                     android:entries="@array/durationValue" />
 
             </LinearLayout>
@@ -92,20 +131,33 @@
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/linear00"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:ems="10"
                 android:hint="Product Description"
                 android:inputType="textMultiLine"
                 android:keyboardNavigationCluster="true"
-                android:maxLines="10"
-                android:minLines="5"
-                tools:ignore="HardcodedText,UnusedAttribute"
-                android:layout_below="@+id/linear1"/>
+                android:maxLines="8"
+                android:minLines="4"
+                tools:ignore="HardcodedText,ObsoleteLayoutParam,UnusedAttribute" />
 
+            <!--Retail Price-->
             <LinearLayout
                 android:id="@+id/linear2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editText"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -116,29 +168,38 @@
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_weight="1"
                     android:text="Retail Price :"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
 
                 <EditText
                     android:id="@+id/editProductPrice"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:hint="Enter Product Price"
+                    android:layout_weight="1"
+                    android:hint="Retail Price"
                     android:inputType="numberDecimal"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
 
+            <!--Max Selling Price-->
             <LinearLayout
                 android:id="@+id/linear3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear2"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -149,28 +210,35 @@
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Retail Price :"
-                    android:textSize="20dp"/>
+                    android:text="Max Selling Price"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textViewPrice1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Final Dis Price"
+                    android:text="$0.00"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
 
+            <!--Min Selling Price-->
             <LinearLayout
                 android:id="@+id/linear4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear3"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -181,8 +249,8 @@
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Retail Price :"
-                    android:textSize="20dp"/>
+                    android:text="Min Selling Price"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textViewPrice2"
@@ -192,84 +260,129 @@
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Final Dis Price"
+                    android:text="$0.00"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
 
+            <!--Max Option-->
             <LinearLayout
                 android:id="@+id/linear5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear4"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/maxOP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Retail Price :"
-                    android:textSize="20dp"/>
+                    android:text="Max Option"
+                    android:textSize="20dp" />
 
-                <EditText
-                    android:id="@+id/editProductPrice1"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/maxTar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:hint="Enter Product Price"
+                    android:text="100%"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/maxDis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:hint="100%"
                     android:inputType="numberDecimal"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
 
+            <!--Min Option-->
             <LinearLayout
                 android:id="@+id/linear6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear5"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/minOP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="Retail Price :"
-                    android:textSize="20dp"/>
+                    android:text="Min Option"
+                    android:textSize="20dp" />
 
                 <EditText
-                    android:id="@+id/editProductPrice2"
-                    android:layout_width="match_parent"
+                    android:id="@+id/minTar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:hint="Enter Product Price"
+                    android:hint="100%"
+                    android:inputType="numberDecimal"
+                    android:textSize="20dp"
+                    tools:ignore="MissingConstraints" />
+
+                <EditText
+                    android:id="@+id/minDis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:hint="100%"
                     android:inputType="numberDecimal"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
 
+            <!--Buttons-->
             <LinearLayout
                 android:id="@+id/linear7"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@+id/linear6">
+                android:layout_below="@+id/linear6"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/buttonAddProduct"
@@ -280,7 +393,7 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_weight="1"
-                    android:text="Update"
+                    android:text="ADD"
                     tools:ignore="ButtonStyle,HardcodedText" />
 
                 <Button
@@ -292,13 +405,14 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_weight="1"
-                    android:text="Cancel"
+                    android:text="CANCEL"
                     tools:ignore="ButtonStyle,HardcodedText" />
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
+
 
     </ScrollView>
 
-</FrameLayout>
+</LinearLayout>
