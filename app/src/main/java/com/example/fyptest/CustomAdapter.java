@@ -37,8 +37,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-        Product uploadCurrent = productList.get(position);
+    public void onBindViewHolder(ImageViewHolder holder, final int position) {
+        final Product uploadCurrent = productList.get(position);
+        final String prodID = uploadCurrent.getProdID();
+        final ProductListingFragment pl = new ProductListingFragment();
         holder.prodTextName.setText(uploadCurrent.getProdName());
         holder.prodTextPrice.setText(uploadCurrent.getProdPrice());
         Picasso.get()
@@ -46,6 +48,27 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);
+
+        if (pl.checkProductGroup(prodID)== false) {
+            holder.grpBtn.setText("Create Group");
+            holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pl.ShowDialog(mContext);
+                    pl.insertProductGroup(prodID);
+                }
+            });
+        } else {
+            holder.grpBtn.setText("Join Group");
+        }
+
+        holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pl.ShowDialog(mContext);
+                pl.insertProductGroup(prodID);
+            }
+        });
     }
 
     @Override
@@ -68,36 +91,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             imageView = itemView.findViewById(R.id.image_view_upload);
             grpBtn = itemView.findViewById(R.id.btn1);
             watchBtn = itemView.findViewById(R.id.btn2);
-            final ProductListingFragment pl = new ProductListingFragment();
 
-            String checkGroup ="exist";
-            if (checkGroup == "exist") {
-                grpBtn.setText("Join Group");
-                grpBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       pl.ShowDialog(mContext,itemView);
-                       // call insertProductGroup
-
-
-                    }
-                });
-            } else {
-                grpBtn.setText("Create Group");
-            }
-
-            String checkWatch ="exist";
-            if (checkWatch == "exist") {
-                watchBtn.setText("In Watchlist");
-                watchBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-            } else {
-                watchBtn.setText("Add to Watchlist");
-            }
         }
     }
 
