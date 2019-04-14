@@ -55,14 +55,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         } else {
             holder.grpBtn.setText("Join Group");
         }
-
-        holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pl.ShowDialog(mContext);
-                pl.insertProductGroup(prodID);
-            }
-        });
     }
 
     @Override
