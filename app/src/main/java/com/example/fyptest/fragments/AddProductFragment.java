@@ -200,6 +200,8 @@ public class AddProductFragment extends Fragment {
                             pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
                             pro_productType, pro_s_ID);
 
+                } else {
+
                 }
 
             }
