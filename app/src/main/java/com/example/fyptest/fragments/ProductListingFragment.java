@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,7 @@ public class ProductListingFragment extends Fragment {
         linear.setOrientation(LinearLayout.VERTICAL);
         qtyText = new TextView(context);
         qtyText.setPadding(10, 10, 10, 10);
+        qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final SeekBar seek = new SeekBar(context);
         seek.setMax(10);
@@ -114,7 +116,7 @@ public class ProductListingFragment extends Fragment {
 
         popDialog.setView(linear);
 
-        popDialog.setTitle("Please Select The Quantity For " + prodName);
+        popDialog.setTitle("Please Select Quantity for " + prodName);
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
