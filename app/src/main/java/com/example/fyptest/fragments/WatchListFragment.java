@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
+import com.example.fyptest.database.productClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +31,7 @@ public class WatchListFragment extends Fragment {
     RecyclerView recycler_view_WatchList;
     DatabaseReference db1,db2;
     CustomAdapter mAdapter;
-    List<Product> prodList;
+    List<productClass> prodList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class WatchListFragment extends Fragment {
 //                        public void onCancelled(@NonNull DatabaseError databaseError) {
 //                        }
 //                    });
-                    Product product = snapshot1.getValue(Product.class);
+                    productClass product = snapshot1.getValue(productClass.class);
                     prodList.add(product);
                 }
                 mAdapter = new CustomAdapter(getContext(), prodList);

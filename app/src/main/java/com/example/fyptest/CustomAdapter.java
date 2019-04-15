@@ -18,6 +18,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import com.example.fyptest.database.Product;
+import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,11 +32,11 @@ import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewHolder> {
     Context mContext;
-    List<Product> productList;
+    List<productClass> productList;
     ArrayList<String> itemList;
     boolean[] value;
 
-    public CustomAdapter(Context applicationContext,  List<Product> productList) {
+    public CustomAdapter(Context applicationContext,  List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
         this.itemList = new ArrayList<>();
@@ -50,14 +51,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
-        final Product uploadCurrent = productList.get(position);
-        final String prodID = uploadCurrent.getProdID();
-        final String prodName = uploadCurrent.getProdName();
+        final productClass uploadCurrent = productList.get(position);
+        final String prodID = uploadCurrent.getPro_ID();
+        final String prodName = uploadCurrent.getPro_name();
         final ProductListingFragment pl = new ProductListingFragment();
         holder.prodTextName.setText(prodName);
-        holder.prodTextPrice.setText(uploadCurrent.getProdPrice());
+        holder.prodTextPrice.setText(uploadCurrent.getPro_retailPrice());
         Picasso.get()
-                .load(uploadCurrent.getImageUrl())
+                .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);

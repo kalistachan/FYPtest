@@ -23,6 +23,7 @@ import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
 import com.example.fyptest.database.groupDetailClass;
+import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,7 +43,7 @@ public class ProductListingFragment extends Fragment {
     RecyclerView mRecyclerView;
     CustomAdapter mAdapter;
     DatabaseReference databaseProduct;
-    List<Product> prodList;
+    List<productClass> prodList;
     Context mContext;
     int qtyChosenVal;
     TextView qtyText;
@@ -91,7 +92,7 @@ public class ProductListingFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
-                    Product product = productSnapshot.getValue(Product.class);
+                    productClass product = productSnapshot.getValue(productClass.class);
                     prodList.add(product);
                 }
                 mAdapter = new CustomAdapter(getActivity(), prodList);

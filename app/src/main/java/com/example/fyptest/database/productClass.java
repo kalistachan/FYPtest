@@ -15,22 +15,17 @@ public class productClass {
     private String pro_freeShippingAt;
     private String pro_durationForGroupPurchase;
     private String pro_Status;
-    private String pro_aproveBy;
+    private String pro_approveBy;
     private String pro_productType;
     private String pro_s_ID;
 
-    public void productClass() {
+    public productClass() {
 
     }
 
-    public productClass(String pro_ID, String pro_mImageUrl, String pro_name,
-                        String pro_description, String pro_retailPrice,
-                        String pro_maxOrderQtySellPrice, String pro_minOrderQtySellPrice,
-                        String pro_maxOrderDiscount, String pro_minOrderAccepted,
-                        String pro_minOrderDiscount, String pro_shippingCost,
-                        String pro_freeShippingAt, String pro_durationForGroupPurchase,
-                        String pro_Status, String pro_aproveBy, String pro_productType,
-                        String pro_s_ID) {
+    public productClass(String pro_ID, String pro_mImageUrl, String pro_name, String pro_description, String pro_retailPrice, String pro_maxOrderQtySellPrice, String pro_minOrderQtySellPrice, String pro_maxOrderDiscount,
+                        String pro_minOrderAccepted, String pro_minOrderDiscount, String pro_shippingCost, String pro_freeShippingAt, String pro_durationForGroupPurchase, String pro_Status, String pro_approveBy,
+                        String pro_productType, String pro_s_ID) {
         this.pro_ID = pro_ID;
         this.pro_mImageUrl = pro_mImageUrl;
         this.pro_name = pro_name;
@@ -45,7 +40,7 @@ public class productClass {
         this.pro_freeShippingAt = pro_freeShippingAt;
         this.pro_durationForGroupPurchase = pro_durationForGroupPurchase;
         this.pro_Status = pro_Status;
-        this.pro_aproveBy = pro_aproveBy;
+        this.pro_approveBy = pro_approveBy;
         this.pro_productType = pro_productType;
         this.pro_s_ID = pro_s_ID;
     }
@@ -106,8 +101,8 @@ public class productClass {
         return pro_Status;
     }
 
-    public String getPro_aproveBy() {
-        return pro_aproveBy;
+    public String getPro_approveBy() {
+        return pro_approveBy;
     }
 
     public String getPro_productType() {
@@ -116,5 +111,9 @@ public class productClass {
 
     public String getPro_s_ID() {
         return pro_s_ID;
+    }
+
+    public void setPro_mImageUrl(String pro_mImageUrl) {
+        this.pro_mImageUrl = pro_mImageUrl;
     }
 }

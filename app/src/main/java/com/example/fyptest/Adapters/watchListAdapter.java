@@ -43,14 +43,14 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        Product uploadCurrent = productList.get(i);
-        viewHolder.prodNameViewName.setText(uploadCurrent.getProdName());
-        viewHolder.prodPriceViewName.setText(uploadCurrent.getProdPrice());
-        Picasso.get()
-                .load(uploadCurrent.getImageUrl())
-                .fit()
-                .centerCrop()
-                .into(viewHolder.image_view_upload);
+//        Product uploadCurrent = productList.get(i);
+//        viewHolder.prodNameViewName.setText(uploadCurrent.getProdName());
+//        viewHolder.prodPriceViewName.setText(uploadCurrent.getProdPrice());
+//        Picasso.get()
+//                .load(uploadCurrent.getImageUrl())
+//                .fit()
+//                .centerCrop()
+//                .into(viewHolder.image_view_upload);
     }
 
     @Override

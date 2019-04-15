@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
 import com.example.fyptest.database.productClass;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -159,10 +160,10 @@ public class AddProductFragment extends Fragment {
         buttonAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String pro_mImageUrl = "", pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString().trim(),
-                        pro_minOrderQtySellPrice = textViewMinPrice.getText().toString().trim(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
-                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
-                        pro_productType = productType.toString().trim(), pro_s_ID = userIdentity;
+                String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
+                        pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
+                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "approved", pro_aproveBy = "admin1",
+                        pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity;
 
                 if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
 
@@ -187,18 +188,20 @@ public class AddProductFragment extends Fragment {
                 if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
 
                 if (checkBoxFreeShipment.isChecked()) {
-                    if (checkNull(editTextFreeShipCondition)) {}
+                    if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
                 } else { pro_freeShippingAt = null;}
 
+                boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
+                        pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
+                        pro_Status, pro_productType, pro_s_ID});
 
-//                String[] list = new String[]{pro_mImageUrl, pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice,
-//                        pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase,
-//                        pro_Status, pro_aproveBy, pro_productType, pro_s_ID};
+                if (result) {
+                    addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
+                            pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
+                            pro_productType, pro_s_ID);
 
+                }
 
-
-
-                //addProduct(editProductName,editProductPrice, filePath);
             }
         });
 
@@ -210,46 +213,21 @@ public class AddProductFragment extends Fragment {
         });
     }
 
-    private void addProd (String[] list) {
-
-    }
-
-    public void addProduct (EditText prodName, EditText prodPrice, Uri filePath) {
-        final String prodNameText = prodName.getText().toString().trim();
-        final String prodPriceText = prodPrice.getText().toString().trim();
-
-        if (!TextUtils.isEmpty(prodNameText)) {
-            if (!TextUtils.isEmpty(prodPriceText)) {
-                if(filePath != null) {
-                    uploadImage(prodNameText, prodPriceText);
-                    prodName.setText("");
-                    prodPrice.setText("");
-                    imgView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_placeholder));
-                }  else { Toast.makeText(getActivity().getApplicationContext(), "Please choose a product image", Toast.LENGTH_LONG).show(); }
-            } else { prodPrice.setError("Empty Field"); }
-        } else { prodName.setError("Empty Field"); }
-    }
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContext().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
-    private void uploadImage(final String prodNameText, final String prodPriceText) {
-        storage = FirebaseStorage.getInstance();
+    private void addProd (final String pro_name, final String pro_description, final String pro_retailPrice, final String pro_maxOrderQtySellPrice, final String pro_minOrderQtySellPrice,
+                          final String pro_maxOrderDiscount, final String pro_minOrderAccepted, final String pro_minOrderDiscount, final String pro_shippingCost,
+                          final String pro_freeShippingAt, final String pro_durationForGroupPurchase, final String pro_Status, final String pro_aproveBy, final String pro_productType,
+                          final String pro_s_ID) {
+        storage= FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
         prodId = databaseProduct.push().getKey();
 
-        if(filePath != null)
-        {
+        if(filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
             final StorageReference ref = storageReference.child("images/"+ prodId + "." + getFileExtension(filePath));
-            //StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
             final UploadTask uploadTask = ref.putFile(filePath);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -271,9 +249,11 @@ public class AddProductFragment extends Fragment {
                                 progressDialog.dismiss();
                                 imageUrl = task.getResult().toString();
 
-                                Product product = new Product(prodId, prodNameText, prodPriceText, imageUrl);
+                                productClass productClass = new productClass(prodId, imageUrl, pro_name, pro_description, pro_retailPrice,
+                                        pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
+                                        pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID);
 
-                                databaseProduct.child(prodId).setValue(product);
+                                databaseProduct.child(prodId).setValue(productClass);
                                 Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -296,6 +276,12 @@ public class AddProductFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContext().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private Uri chooseImage() {
@@ -341,4 +327,13 @@ public class AddProductFragment extends Fragment {
         }
     }
 
+    private boolean validate(String[] text) {
+        for (int i = 0; i < text.length; i++) {
+            String currentText = text[i];
+            if (currentText.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
