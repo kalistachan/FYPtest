@@ -57,7 +57,7 @@ public class ProfileFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        getStr = pref.getString("userID", "UNKNOWN");
+        getStr = pref.getString("userID", null);
 
         dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr);
         dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr);

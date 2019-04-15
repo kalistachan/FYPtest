@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--Image-->
             <RelativeLayout
                 android:id="@+id/imagePreview"
                 android:layout_width="match_parent"
@@ -66,6 +67,7 @@
 
             </RelativeLayout>
 
+            <!--Image Detail-->
             <LinearLayout
                 android:id="@+id/linear1"
                 android:layout_width="match_parent"
@@ -95,6 +97,7 @@
 
             </LinearLayout>
 
+            <!--Product Duration-->
             <LinearLayout
                 android:id="@+id/linear00"
                 android:layout_width="match_parent"
@@ -114,21 +117,23 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_weight="1"
+                    android:inputType="number"
                     android:hint="Duration"
                     tools:ignore="Autofill,HardcodedText,TextFields" />
 
-                <Spinner
+                <TextView
                     android:id="@+id/dayOrWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:entries="@array/durationValue" />
+                    android:layout_gravity="center"
+                    android:text="in Days" />
 
             </LinearLayout>
 
+            <!--Product Description-->
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/editTextProdDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear00"
@@ -214,7 +219,7 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/textViewPrice1"
+                    android:id="@+id/textViewMaxPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
@@ -253,7 +258,7 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/textViewPrice2"
+                    android:id="@+id/textViewMinPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_vertical_margin"
@@ -370,12 +375,88 @@
 
             </LinearLayout>
 
-            <!--Buttons-->
+            <!--Shipping-->
             <LinearLayout
                 android:id="@+id/linear7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear6"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewShipCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Shipping Cost"/>
+
+                <EditText
+                    android:id="@+id/editTextShipCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:hint="Enter Price"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear7"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    android:id="@+id/checkBoxFreeShipment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Free Shipping" />
+
+                <EditText
+                    android:id="@+id/editTextFreeShipCondition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:hint="Enter price to meet"/>
+
+            </LinearLayout>
+
+            <!--Buttons-->
+            <LinearLayout
+                android:id="@+id/linear9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear8"
                 android:layout_marginStart="17dp"
                 android:layout_marginLeft="17dp"
                 android:layout_marginTop="0dp"
@@ -411,7 +492,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
     </ScrollView>
 

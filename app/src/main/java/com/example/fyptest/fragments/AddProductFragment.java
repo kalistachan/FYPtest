@@ -1,10 +1,12 @@
 package com.example.fyptest.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,13 +14,16 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -27,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
+import com.example.fyptest.database.productClass;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,19 +47,27 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AddProductFragment extends Fragment {
 
-    TextView textView;
-    EditText editProductName, editProductPrice;
-    Spinner spinner;
-    Button buttonAddProduct;
-
     ImageView imgView;
+    EditText editProductName, editProductPrice, duration, editTextProdDesc, maxDis,
+            minTar, minDis, editTextShipCost, editTextFreeShipCondition;
+    Spinner productType;
+    TextView textViewMaxPrice, textViewMinPrice, maxTar, dayOrWeek;
+    CheckBox checkBoxFreeShipment;
+    Button buttonAddProduct, buttonCancelProduct;
+
     DatabaseReference databaseProduct;
     FirebaseStorage storage;
     StorageReference storageReference;
     String prodId;
     String imageUrl;
+
+    SharedPreferences prefs;
+    String userIdentity;
+
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
@@ -71,9 +85,69 @@ public class AddProductFragment extends Fragment {
 
         imgView = (ImageView) getView().findViewById(R.id.imgView);
 
+        productType = (Spinner) getView().findViewById(R.id.productType);
+
         editProductName = (EditText) getView().findViewById(R.id.editProductName);
         editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
+        duration = (EditText) getView().findViewById(R.id.duration);
+        editTextProdDesc = (EditText) getView().findViewById(R.id.editTextProdDesc);
+        maxDis = (EditText) getView().findViewById(R.id.maxDis);
+        minTar = (EditText) getView().findViewById(R.id.minTar);
+        minDis = (EditText) getView().findViewById(R.id.minDis);
+        editTextShipCost = (EditText) getView().findViewById(R.id.editTextShipCost);
+        editTextFreeShipCondition = (EditText) getView().findViewById(R.id.editTextFreeShipCondition);
+
+        textViewMaxPrice = (TextView) getView().findViewById(R.id.textViewMaxPrice);
+        textViewMinPrice = (TextView) getView().findViewById(R.id.textViewMinPrice);
+        maxTar = (TextView) getView().findViewById(R.id.maxTar);
+        dayOrWeek = (TextView) getView().findViewById(R.id.dayOrWeek);
+
+        checkBoxFreeShipment = (CheckBox) getView().findViewById(R.id.checkBoxFreeShipment);
+
         buttonAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
+        buttonCancelProduct = (Button) getView().findViewById(R.id.buttonCancelProduct);
+
+        prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
+        userIdentity = prefs.getString("userID", null);
+
+        if (!editProductPrice.getText().toString().equals("Retail Price")) {
+            maxDis.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void afterTextChanged(Editable s) {
+//                    String ori = maxDis.getText().toString() + "%";
+//                    maxDis.setText(ori);
+//                    float originalPrice = Float.parseFloat(editProductPrice.getText().toString());
+                    float discount = (Float.parseFloat(s.toString()) / 100);
+//                    float finalValue = originalPrice * discount;
+                    textViewMaxPrice.setText(Float.toString(discount));
+                }
+            });
+            minDis.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void afterTextChanged(Editable s) {
+//                    String ori = minDis.getText().toString() + "%";
+//                    minDis.setText(ori);
+//                    float originalPrice = Float.parseFloat(editProductPrice.getText().toString());
+                    float discount = (Float.parseFloat(s.toString()) / 100);
+//                    float finalValue = originalPrice * discount;
+                    textViewMinPrice.setText(Float.toString(discount));
+                }
+            });
+        }
 
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,9 +159,58 @@ public class AddProductFragment extends Fragment {
         buttonAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProduct(editProductName,editProductPrice, filePath);
+                String pro_mImageUrl = "", pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString().trim(),
+                        pro_minOrderQtySellPrice = textViewMinPrice.getText().toString().trim(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
+                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
+                        pro_productType = productType.toString().trim(), pro_s_ID = userIdentity;
+
+                if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
+
+                if (checkNull(editTextProdDesc)) {pro_description = editTextProdDesc.getText().toString().trim();}
+
+                if (checkNull(editProductPrice)) {pro_retailPrice = editProductPrice.getText().toString().trim();}
+
+                if (checkNull(duration)) {
+                    if (Integer.parseInt(duration.getText().toString()) < 4 || Integer.parseInt(duration.getText().toString()) > 30) {
+                        duration.setError("Invalid Duration");
+                    } else {
+                        pro_durationForGroupPurchase = duration.getText().toString().trim();
+                    }
+                }
+
+                if (checkNull(maxDis)) {pro_maxOrderDiscount = maxDis.getText().toString().trim();}
+
+                if (checkNull(minTar)) {pro_minOrderAccepted = minTar.getText().toString().trim();}
+
+                if (checkNull(minDis)) {pro_minOrderDiscount = minDis.getText().toString().trim();}
+
+                if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
+
+                if (checkBoxFreeShipment.isChecked()) {
+                    if (checkNull(editTextFreeShipCondition)) {}
+                } else { pro_freeShippingAt = null;}
+
+
+//                String[] list = new String[]{pro_mImageUrl, pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice,
+//                        pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase,
+//                        pro_Status, pro_aproveBy, pro_productType, pro_s_ID};
+
+
+
+
+                //addProduct(editProductName,editProductPrice, filePath);
             }
         });
+
+        buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void addProd (String[] list) {
 
     }
 
@@ -203,6 +326,18 @@ public class AddProductFragment extends Fragment {
             {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private static boolean checkNull(EditText editText) {
+        String text = editText.getText().toString().trim();
+        editText.setError(null);
+
+        if (text.length() == 0) {
+            editText.setError("Field Required");
+            return false;
+        } else {
+            return true;
         }
     }
 
