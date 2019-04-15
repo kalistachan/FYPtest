@@ -46,6 +46,7 @@ public class ProductListingFragment extends Fragment {
     String prodGrpId;
     Date pgDateCreated;
     Date pgDateEnd;
+    boolean[] abc;
 
 
     public ProductListingFragment() {
@@ -67,6 +68,7 @@ public class ProductListingFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         displayProduct();
+        abc = new boolean[1];
     }
 
     @Override
@@ -96,7 +98,8 @@ public class ProductListingFragment extends Fragment {
         });
     }
 
-    public void ShowDialog(Context context) {
+    public void ShowDialog(Context context, final String prodID, String prodName) {
+        final boolean dialogStatus = false;
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
         LinearLayout linear = new LinearLayout(context);
 
@@ -105,17 +108,21 @@ public class ProductListingFragment extends Fragment {
         qtyText.setPadding(10, 10, 10, 10);
 
         final SeekBar seek = new SeekBar(context);
-        seek.setMax(1000);
+        seek.setMax(10);
         linear.addView(seek);
         linear.addView(qtyText);
 
         popDialog.setView(linear);
 
-        popDialog.setTitle("Please Select Product Quantity ");
+        popDialog.setTitle("Please Select The Quantity For " + prodName);
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //Do something here with new value
+//                //Set min value for seek bar
+//                int minimum = 1;
+//                if (progress < minimum) {
+//                    seekBar.setProgress(minimum);
+//                }
                 qtyChosenVal = progress;
             }
 
@@ -134,6 +141,7 @@ public class ProductListingFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 Log.d("chosen qty", "value: " + qtyChosenVal);
+                insertProductGroup(prodID);
             }
         });
 
@@ -148,45 +156,7 @@ public class ProductListingFragment extends Fragment {
         alertdialog.show();
     }
 
-    public boolean checkProductGroup (final String prodID) {
-        final boolean[] pGStatus = new boolean[1];
-        prodGroupList = new ArrayList<>();
-
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
-        databaseProduct.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
-                    productGroupClass productGroup = productSnapshot.getValue(productGroupClass.class);
-                    prodGroupList.add(productGroup);
-
-                    if (prodGroupList != null) {
-                        if (productGroup.getPg_pro_ID().equalsIgnoreCase(prodID)) {
-                            Log.d("prodid ", "value: " + prodID);
-                            Log.d("getPg_pro_ID; ", "value: " + productGroup.getPg_pro_ID());
-                            pGStatus[0] = true;
-                            break;
-                        } else {
-                            pGStatus[0] = false;
-                        }
-                    } else {
-                        pGStatus[0] = false;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
-        Log.d("pgStatus", "value: " + Arrays.toString(pGStatus));
-        return pGStatus[0];
-    }
-
-    public void insertProductGroup (String prodID) {
+    private void insertProductGroup (String prodID) {
         /* if product is in product group table, get pg_id, else insert new product group (pg_id, pg_createdDate, prodID) and return pg_id,
             then call insertCustGroupDetails (pg_id)*/
         pgDateCreated = Calendar.getInstance().getTime();
