@@ -1,21 +1,14 @@
 package com.example.fyptest;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 import com.example.fyptest.database.Product;
 import com.example.fyptest.database.productClass;
@@ -51,6 +44,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+        final int[] qtyChosen = new int[1];
         final productClass uploadCurrent = productList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -71,9 +65,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                     holder.grpBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            pl.ShowDialog(mContext, prodID, prodName);
+                            qtyChosen[0] = pl.ShowDialog(mContext, prodID, prodName);
                         }
                     });
+                    if (qtyChosen[0] != 0) {
+                        holder.grpBtn.setText("View Group");
+                    }
                 } else {
                     for (String item : list) {
                         if (item.equalsIgnoreCase(prodID)) {
