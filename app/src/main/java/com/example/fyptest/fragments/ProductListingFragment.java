@@ -3,6 +3,7 @@ package com.example.fyptest.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.Product;
+import com.example.fyptest.database.groupDetailClass;
 import com.example.fyptest.database.productGroupClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,10 +31,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
 import java.util.Calendar;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class ProductListingFragment extends Fragment {
@@ -40,15 +43,17 @@ public class ProductListingFragment extends Fragment {
     CustomAdapter mAdapter;
     DatabaseReference databaseProduct;
     List<Product> prodList;
-    List<productGroupClass> prodGroupList;
-    Context activity;
+    Context mContext;
     int qtyChosenVal;
     TextView qtyText;
     String prodGrpId;
     Date pgDateCreated;
     Date pgDateEnd;
     boolean[] abc;
+    Date gdJoinDate;
+    String gdCusID;
 
+    SharedPreferences prefs;
 
     public ProductListingFragment() {
         // Required empty public constructor
@@ -68,14 +73,15 @@ public class ProductListingFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         displayProduct();
         abc = new boolean[1];
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        activity = getActivity();
     }
 
     public void displayProduct () {
@@ -100,16 +106,16 @@ public class ProductListingFragment extends Fragment {
     }
 
     public void ShowDialog(Context context, final String prodID, String prodName) {
-        final boolean dialogStatus = false;
-        final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
-        LinearLayout linear = new LinearLayout(context);
+        mContext = context;
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
+        LinearLayout linear = new LinearLayout(mContext);
 
         linear.setOrientation(LinearLayout.VERTICAL);
-        qtyText = new TextView(context);
+        qtyText = new TextView(mContext);
         qtyText.setPadding(10, 10, 10, 10);
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        final SeekBar seek = new SeekBar(context);
+        final SeekBar seek = new SeekBar(mContext);
         seek.setMax(10);
         linear.addView(seek);
         linear.addView(qtyText);
@@ -120,11 +126,6 @@ public class ProductListingFragment extends Fragment {
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                //Set min value for seek bar
-//                int minimum = 1;
-//                if (progress < minimum) {
-//                    seekBar.setProgress(minimum);
-//                }
                 qtyChosenVal = progress;
             }
 
@@ -141,8 +142,6 @@ public class ProductListingFragment extends Fragment {
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                Log.d("chosen qty", "value: " + qtyChosenVal);
                 insertProductGroup(prodID);
             }
         });
@@ -165,12 +164,18 @@ public class ProductListingFragment extends Fragment {
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         prodGrpId = databaseProduct.push().getKey();
         productGroupClass productGroup = new productGroupClass(prodGrpId, pgDateCreated, null, prodID);
-
         databaseProduct.child(prodGrpId).setValue(productGroup);
+        insertCustGroupDetails(prodGrpId);
     }
 
-    public void insertCustGroupDetails (int prodGroupId) {
+    public void insertCustGroupDetails (String prodGroupId) {
         /* first, check if cust group detail table has this pg_id, if yes then dont insert, else insert (gd_id, gd_joinDate, cus_ID, pg_id)*/
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
+        gdJoinDate = Calendar.getInstance().getTime();
+        prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+        gdCusID = prefs.getString("userID", null);
+        groupDetailClass groupDetail =  new groupDetailClass(gdJoinDate, qtyChosenVal, gdCusID, prodGroupId);
+        databaseProduct.setValue(groupDetail);
     }
 }
 
