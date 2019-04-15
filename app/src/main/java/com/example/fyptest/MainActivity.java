@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-//import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.MainScreen;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(R.string.account_header_user).withEmail(R.string.account_header_email)
+                        new ProfileDrawerItem().withName("Insert username here").withEmail("example@email.com.sg")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override

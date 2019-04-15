@@ -9,8 +9,6 @@
     <string name="drawer_main_1">Item 1</string>
     <string name="drawer_main_2">Item 2</string>
     <string name="drawer_secondary">Secondary Item</string>
-    <string name="account_header_user">User Name</string>
-    <string name="account_header_email">example@4gb.com.sg</string>
     <string name="drawer_section_categories">Categories</string>
     <string name="FAQs"><u>FAQs</u></string>
 
