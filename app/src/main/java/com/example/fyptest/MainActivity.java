@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 //import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.AddProductFragment;
+import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.MainScreen;
+import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.WatchListFragment;
@@ -48,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         navigation.getMenu().getItem(1).setChecked(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(new ProductListingFragment());
-
-
 
         //Set to view main screen on application start-up
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -90,13 +90,14 @@ public class MainActivity extends AppCompatActivity {
         new DrawerBuilder().withActivity(this);
 
         //Primary = bold items, Secondary = normal items
-   //     PrimaryDrawerItem item_categories = new PrimaryDrawerItem().withName("Categories").withSelectable(false).withIcon(R.drawable.ic_apps_black_24dp);
+        PrimaryDrawerItem item_categories = new PrimaryDrawerItem().withName("Categories").withSelectable(false).withIcon(R.drawable.ic_apps_black_24dp);
         PrimaryDrawerItem item_notifications = new PrimaryDrawerItem().withName("Notifications").withSelectable(false).withIcon(R.drawable.ic_notifications_black_24dp);
-    //    PrimaryDrawerItem item_help_centre = new PrimaryDrawerItem().withName("Help Centre").withSelectable(false).withIcon(R.drawable.ic_help_outline_black_24dp);
+        PrimaryDrawerItem item_help_centre = new PrimaryDrawerItem().withName("Help Centre").withSelectable(false).withIcon(R.drawable.ic_help_outline_black_24dp);
         PrimaryDrawerItem item_logout = new PrimaryDrawerItem().withName("Logout").withSelectable(false);
 
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        final Drawer result = new DrawerBuilder()
+                .withCloseOnClick(true)
                 .withSelectedItem(-1)
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -104,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         //item position corresponds to listing of items here (includes dividers, etc.)
-                   //     item_categories,
+                        item_categories,
                         item_notifications,
                         new DividerDrawerItem(),
-                    //    item_help_centre,
+                        item_help_centre,
                         new DividerDrawerItem(),
                         item_logout
                 )
@@ -117,11 +118,13 @@ public class MainActivity extends AppCompatActivity {
                         //do funky stuff with clicked items :D
                         switch (position) {
                             case 1:
-                                //startActivity(new Intent(MainActivity.this, registerActivity.class));
-//                                fragment = new CategoriesFragment();
+                                fragment = new CategoriesFragment();
                                 loadFragment(fragment);
+                                break;
                             case 2:
-                                startActivity(new Intent(MainActivity.this, resetPWActivity.class));
+                                fragment = new NotificationsFragment();
+                                loadFragment(fragment);
+                                break;
                             case 4:
                                 break;
                             case 6:
