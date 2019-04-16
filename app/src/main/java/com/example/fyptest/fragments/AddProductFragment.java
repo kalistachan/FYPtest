@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -68,7 +70,7 @@ public class AddProductFragment extends Fragment {
 
     SharedPreferences prefs;
     String userIdentity;
-
+    BottomNavigationView navigation;
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
@@ -110,43 +112,101 @@ public class AddProductFragment extends Fragment {
 
         prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
         userIdentity = prefs.getString("userID", null);
+        navigation = (BottomNavigationView) getView().findViewById(R.id.navigation);
 
-        if (!editProductPrice.getText().toString().equals("Retail Price")) {
+        if (!editProductPrice.getText().toString().equals("$0.00")) {
             maxDis.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                    String text1 = s.toString();
+                    String text2 = editProductPrice.getText().toString();
+                    if (!TextUtils.isEmpty(text1)) {
+                        if (!TextUtils.isEmpty(text2)) {
+                            float retailPrice = Float.parseFloat(text2);
+                            float value = 100;
+                            float maxDisc = Float.parseFloat(text1) / value;
+                            float maxSellPrice = retailPrice * maxDisc;
+                            String floatToString = "S$" + Float.toString(maxSellPrice);
+                            textViewMaxPrice.setText(floatToString);
+                        } else {
+                            editProductPrice.setHint("S$0.00");
+                            textViewMaxPrice.setText("S$0.00");
+                        }
+                    } else {
+                        textViewMaxPrice.setText("S$0.00");
+                        maxDis.setHint("100%");
+                    }
                 }
                 @SuppressLint("SetTextI18n")
                 @Override
-                public void afterTextChanged(Editable s) {
-//                    String ori = maxDis.getText().toString() + "%";
-//                    maxDis.setText(ori);
-//                    float originalPrice = Float.parseFloat(editProductPrice.getText().toString());
-                    float discount = (Float.parseFloat(s.toString()) / 100);
-//                    float finalValue = originalPrice * discount;
-                    textViewMaxPrice.setText(Float.toString(discount));
-                }
+                public void afterTextChanged(Editable s) {}
             });
             minDis.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String text1 = s.toString();
+                    String text2 = editProductPrice.getText().toString();
+                    if (!TextUtils.isEmpty(text1)) {
+                        if (!TextUtils.isEmpty(text2)) {
+                            float retailPrice = Float.parseFloat(text2);
+                            float value = 100;
+                            float minDisc = Float.parseFloat(text1) / value;
+                            float maxSellPrice = retailPrice * minDisc;
+                            String floatToString = "S$" + Float.toString(maxSellPrice);
+                            textViewMinPrice.setText(floatToString);
+                        } else {
+                            editProductPrice.setHint("S$0.00");
+                            textViewMinPrice.setText("S$0.00");
+                        }
+                    } else {
+                        textViewMinPrice.setText("S$0.00");
+                        minDis.setHint("100%");
+                    }
+                }
                 @SuppressLint("SetTextI18n")
                 @Override
-                public void afterTextChanged(Editable s) {
-//                    String ori = minDis.getText().toString() + "%";
-//                    minDis.setText(ori);
-//                    float originalPrice = Float.parseFloat(editProductPrice.getText().toString());
-                    float discount = (Float.parseFloat(s.toString()) / 100);
-//                    float finalValue = originalPrice * discount;
-                    textViewMinPrice.setText(Float.toString(discount));
+                public void afterTextChanged(Editable s) {}
+            });
+            editProductPrice.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String retailPriceText = s.toString();
+                    String maxDisText = maxDis.getText().toString();
+                    String minDisText = minDis.getText().toString();
+                    if (!TextUtils.isEmpty(retailPriceText)) {
+                        if (!TextUtils.isEmpty(maxDisText)) {
+                            float retailPrice = Float.parseFloat(retailPriceText);
+                            float value = 100;
+                            float maxDisc = Float.parseFloat(maxDisText) / value;
+                            float maxSellPrice = retailPrice * maxDisc;
+                            String floatToString = "S$" + Float.toString(maxSellPrice);
+                            textViewMaxPrice.setText(floatToString);
+                        } else {
+                            textViewMaxPrice.setText("S$0.00");
+                        }
+                        if (!TextUtils.isEmpty(minDisText)) {
+                            float retailPrice = Float.parseFloat(retailPriceText);
+                            float value = 100;
+                            float minDisc = Float.parseFloat(minDisText) / value;
+                            float minSellPrice = retailPrice * minDisc;
+                            String floatToString = "S$" + Float.toString(minSellPrice);
+                            textViewMinPrice.setText(floatToString);
+                        } else {
+                            textViewMinPrice.setText("S$0.00");
+                        }
+                    } else {
+                        textViewMaxPrice.setText("S$0.00");
+                        textViewMinPrice.setText("S$0.00");
+                    }
                 }
+                @Override
+                public void afterTextChanged(Editable s) {}
             });
         }
 
@@ -199,7 +259,6 @@ public class AddProductFragment extends Fragment {
                     addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
                             pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
                             pro_productType, pro_s_ID);
-
                 } else {
 
                 }
@@ -256,6 +315,15 @@ public class AddProductFragment extends Fragment {
                                         pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID);
 
                                 databaseProduct.child(prodId).setValue(productClass);
+
+                                //Redirecting user back to productListing Screen
+                                Fragment newFragment = new ProductListingFragment();
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_container, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                navigation.getMenu().getItem(1).setChecked(true);
+
                                 Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
                             }
                         }
