@@ -106,7 +106,8 @@ public class ProductListingFragment extends Fragment {
         });
     }
 
-    public void ShowDialog(Context context, final String prodID, String prodName) {
+    public int ShowDialog(Context context, final String prodID, String prodName) {
+        final int[] qtyChosen = new int[1];
         mContext = context;
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
         LinearLayout linear = new LinearLayout(mContext);
@@ -144,6 +145,7 @@ public class ProductListingFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 insertProductGroup(prodID);
+                qtyChosen[0] = qtyChosenVal;
             }
         });
 
@@ -151,11 +153,14 @@ public class ProductListingFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                qtyChosen[0] = 0;
             }
         });
 
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
+        Log.d("dialogstatus ", "value: " + qtyChosen);
+        return qtyChosen[0];
     }
 
     private void insertProductGroup (String prodID) {
