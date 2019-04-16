@@ -74,15 +74,10 @@ public class MainActivity extends AppCompatActivity {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
+                .withSelectionListEnabledForSingleProfile(true)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Insert username here").withEmail("example@email.com.sg")
+                        new ProfileDrawerItem().withName("Insert username here").withEmail("$%& Points Earned")
                 )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        return false;
-                    }
-                })
                 .build();
         //account_header
 
