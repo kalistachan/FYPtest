@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Set to view main screen on application start-up
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_container, new MainScreen());
+        ft.replace(R.id.frame_container, new ProductListingFragment());
         ft.commit();
 
         //Catching Value thrown from login
