@@ -50,7 +50,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         final String prodName = uploadCurrent.getPro_name();
         final ProductListingFragment pl = new ProductListingFragment();
         holder.prodTextName.setText(prodName);
-        holder.prodTextPrice.setText(uploadCurrent.getPro_retailPrice());
+        holder.prodTextPrice.setText("$" + uploadCurrent.getPro_retailPrice());
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()

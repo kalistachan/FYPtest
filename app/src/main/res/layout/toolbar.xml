@@ -11,5 +11,5 @@
         android:layout_height="59dip"
         android:layout_width="132dip"
         android:layout_gravity="start"
-        android:background="@drawable/logo" />
+        android:background="@drawable/logo"/>
 </android.support.v7.widget.Toolbar>

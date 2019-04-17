@@ -9,6 +9,7 @@
 
 
     <LinearLayout
+        android:id="@+id/profileForm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -79,6 +80,16 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Address"
+            android:textSize="16dp"
+            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+        <EditText
+            android:id="@+id/postalCode"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Postal Code"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 

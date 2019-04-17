@@ -84,6 +84,7 @@ public class resetPWActivity extends AppCompatActivity {
             char getChar = chars[random.nextInt(chars.length)];
             password.append(getChar);
         }
+
         return password.toString();
     }
 
