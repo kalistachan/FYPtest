@@ -1,8 +1,11 @@
 package com.example.fyptest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +26,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewHolder> {
     Context mContext;
     List<productClass> productList;
     ArrayList<String> itemList;
+    SharedPreferences pref;
+    String userIdentity;
     boolean[] value;
 
     public CustomAdapter(Context applicationContext,  List<productClass> productList) {
@@ -34,6 +41,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         this.productList = productList;
         this.itemList = new ArrayList<>();
         this.value = new boolean[1];
+        this.pref = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
+        this.userIdentity = pref.getString("userID", "UNKNOWN");
     }
 
     @Override
@@ -59,8 +68,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
         readData(new FirebaseCallback() {
             @Override
-            public void onCallback(List<String> list) {
-                if (list.isEmpty()) {
+            public void onCallback1(final List<String> list1) {
+                if (list1.isEmpty()) {
                     holder.grpBtn.setText("Create Group");
                     holder.grpBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -72,8 +81,26 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                         holder.grpBtn.setText("View Group");
                     }
                 } else {
-                    for (String item : list) {
+                    for (final String item : list1) {
                         if (item.equalsIgnoreCase(prodID)) {
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+                                db.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            if (snapshot.child("gd_pg_pro_ID").getValue().toString().equalsIgnoreCase(item)) {
+                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                                    holder.grpBtn.setText("View Group");
+                                                } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                                    holder.grpBtn.setText("Join Group");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
                             holder.grpBtn.setText("Join Group");
                             break;
                         } else {
@@ -87,7 +114,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                         }
                     }
                 }
-
             }
         });
     }
@@ -101,7 +127,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                     String productID = snapshot.child("pg_pro_ID").getValue().toString();
                     itemList.add(productID);
                 }
-                firebaseCallback.onCallback(itemList);
+                firebaseCallback.onCallback1(itemList);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -110,7 +136,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     }
 
     private interface FirebaseCallback {
-        void onCallback(List<String> list);
+        void onCallback1(List<String> itemList);
     }
 
     @Override

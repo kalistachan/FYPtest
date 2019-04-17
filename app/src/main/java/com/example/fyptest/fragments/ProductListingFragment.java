@@ -77,7 +77,6 @@ public class ProductListingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         displayProduct();
         abc = new boolean[1];
-
     }
 
     @Override
@@ -168,20 +167,20 @@ public class ProductListingFragment extends Fragment {
             then call insertCustGroupDetails (pg_id)*/
         pgDateCreated = Calendar.getInstance().getTime();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
-        prodGrpId = databaseProduct.push().getKey();
-        productGroupClass productGroup = new productGroupClass(prodGrpId, pgDateCreated, null, prodID);
-        databaseProduct.child(prodGrpId).setValue(productGroup);
-        insertCustGroupDetails(prodGrpId);
+        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null);
+        databaseProduct.child(prodID).setValue(productGroup);
+        insertCustGroupDetails(prodID);
     }
 
     public void insertCustGroupDetails (String prodGroupId) {
         /* first, check if cust group detail table has this pg_id, if yes then dont insert, else insert (gd_id, gd_joinDate, cus_ID, pg_id)*/
         databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
+        String pg_ID = databaseProduct.push().getKey();
         gdJoinDate = Calendar.getInstance().getTime();
         prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         gdCusID = prefs.getString("userID", null);
-        groupDetailClass groupDetail =  new groupDetailClass(gdJoinDate, qtyChosenVal, gdCusID, prodGroupId);
-        databaseProduct.setValue(groupDetail);
+        groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
+        databaseProduct.child(pg_ID).setValue(groupDetail);
     }
 }
 
