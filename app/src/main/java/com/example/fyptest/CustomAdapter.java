@@ -53,7 +53,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
-        final int[] qtyChosen = new int[1];
         final productClass uploadCurrent = productList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -74,12 +73,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                     holder.grpBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            qtyChosen[0] = pl.ShowDialog(mContext, prodID, prodName);
+                            pl.ShowDialog(mContext, prodID, prodName);
                         }
                     });
-                    if (qtyChosen[0] != 0) {
-                        holder.grpBtn.setText("View Group");
-                    }
                 } else {
                     for (final String item : list1) {
                         if (item.equalsIgnoreCase(prodID)) {
@@ -93,6 +89,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                                     holder.grpBtn.setText("View Group");
                                                 } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                                     holder.grpBtn.setText("Join Group");
+                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                           pl.ShowDialog(mContext, prodID, prodName);
+                                                        }
+                                                    });
                                                 }
                                             }
                                         }
