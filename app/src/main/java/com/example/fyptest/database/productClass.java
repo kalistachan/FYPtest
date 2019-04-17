@@ -123,7 +123,7 @@ public class productClass {
         return pro_s_ID;
     }
 
-    public String pro_targetQuantity() { return  pro_targetQuantity; }
+    public String getPro_targetQuantity() { return  pro_targetQuantity; }
 
     public void setPro_mImageUrl(String pro_mImageUrl) {
         this.pro_mImageUrl = pro_mImageUrl;

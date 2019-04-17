@@ -46,7 +46,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
+        final String targetQty = uploadCurrent.getPro_targetQuantity();
+        final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
         holder.prodTextName.setText(prodName);
+        holder.targetQty.setText(targetQty);
+        holder.timeRemain.setText(timeRemain + " days left");
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()

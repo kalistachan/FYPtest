@@ -86,6 +86,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             if (snapshot.child("gd_pg_pro_ID").getValue().toString().equalsIgnoreCase(item)) {
                                                 if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                                     holder.grpBtn.setText("View Group");
+                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            pl.swapToGroupFragment(mContext);
+                                                        }
+                                                    });
                                                 } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                                     holder.grpBtn.setText("Join Group");
                                                     holder.grpBtn.setOnClickListener(new View.OnClickListener() {

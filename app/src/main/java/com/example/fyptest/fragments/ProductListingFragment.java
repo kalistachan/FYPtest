@@ -1,12 +1,16 @@
 package com.example.fyptest.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,10 +60,6 @@ public class ProductListingFragment extends Fragment {
 
     SharedPreferences prefs;
 
-    public ProductListingFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,11 +77,6 @@ public class ProductListingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         displayProduct();
         abc = new boolean[1];
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     public void displayProduct () {
@@ -158,8 +153,6 @@ public class ProductListingFragment extends Fragment {
     }
 
     private void insertProductGroup (String prodID) {
-        /* if product is in product group table, get pg_id, else insert new product group (pg_id, pg_createdDate, prodID) and return pg_id,
-            then call insertCustGroupDetails (pg_id)*/
         pgDateCreated = Calendar.getInstance().getTime();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null);
@@ -168,7 +161,6 @@ public class ProductListingFragment extends Fragment {
     }
 
     public void insertCustGroupDetails (String prodGroupId) {
-        /* first, check if cust group detail table has this pg_id, if yes then dont insert, else insert (gd_id, gd_joinDate, cus_ID, pg_id)*/
         databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
         String pg_ID = databaseProduct.push().getKey();
         gdJoinDate = Calendar.getInstance().getTime();
@@ -176,6 +168,16 @@ public class ProductListingFragment extends Fragment {
         gdCusID = prefs.getString("userID", null);
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         databaseProduct.child(pg_ID).setValue(groupDetail);
+    }
+
+    public void swapToGroupFragment (Context mContext) {
+        Activity activity = (FragmentActivity) mContext;
+        GroupFragment newGroupFragment = new GroupFragment();
+        Log.d("activity ", "value: " + activity);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newGroupFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
 

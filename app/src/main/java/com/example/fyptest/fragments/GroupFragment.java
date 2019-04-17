@@ -69,10 +69,7 @@ public class GroupFragment extends Fragment {
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(final List<String> grpProdID) {
-                if (grpProdID.isEmpty()) {
-                    // Display empty page
-                    Log.d("list is empty", "value: " + grpProdID);
-                } else {
+                if (!grpProdID.isEmpty()) {
                     for (final String item : grpProdID) {
                         DatabaseReference dbProd = FirebaseDatabase.getInstance().getReference("Product");
                         dbProd.addValueEventListener(new ValueEventListener() {
@@ -109,7 +106,6 @@ public class GroupFragment extends Fragment {
                     {
                         String productID = snapshot.child("gd_pg_pro_ID").getValue().toString();
                         grpProdID.add(productID);
-                        Log.d("prod id", "value: " + productID);
                     }
                 }
                 firebaseCallback.onCallback1(grpProdID);
