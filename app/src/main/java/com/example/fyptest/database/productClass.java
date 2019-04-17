@@ -47,6 +47,14 @@ public class productClass {
         this.pro_targetQuantity = pro_targetQuantity;
     }
 
+    public productClass(String pro_ID, String pro_mImageUrl, String pro_name, String pro_targetQuantity, String pro_durationForGroupPurchase) {
+        this.pro_mImageUrl = pro_mImageUrl;
+        this.pro_name = pro_name;
+        this.pro_targetQuantity = pro_targetQuantity;
+        this.pro_durationForGroupPurchase = pro_durationForGroupPurchase;
+        this.pro_ID = pro_ID;
+    }
+
     public String getPro_ID() {
         return pro_ID;
     }

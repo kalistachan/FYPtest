@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.fragments.CategoriesFragment;
+import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_group:
-                    fragment = new AddProductFragment();
+                    fragment = new GroupFragment();
                     loadFragment(fragment);
                     return true;
 

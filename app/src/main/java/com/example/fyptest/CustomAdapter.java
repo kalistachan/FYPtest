@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.fyptest.database.Product;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.google.firebase.database.DataSnapshot;

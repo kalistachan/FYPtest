@@ -1,94 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/watchlist_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="1dp"
-    android:background="@drawable/layoutborder"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    tools:context=".fragments.GroupFragment">
 
-    <ImageView
-        android:id="@+id/image_view_upload"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="start"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/prodNameViewName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="start"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/targetQty"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:gravity="start"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
-
-    <TextView
-        android:id="@+id/prodPriceViewName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:gravity="start"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/targetQty" />
-
-    <TextView
-        android:id="@+id/timeRemain"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:gravity="start"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/prodPriceViewName" />
-
-    <Button
-        android:id="@+id/groupbtn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/orangebuttons"
-        android:minHeight="40dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:text="Leave Group"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

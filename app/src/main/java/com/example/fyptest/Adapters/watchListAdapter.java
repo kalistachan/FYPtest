@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
-import com.example.fyptest.database.Product;
 import com.example.fyptest.database.productClass;
 import com.squareup.picasso.Picasso;
 
