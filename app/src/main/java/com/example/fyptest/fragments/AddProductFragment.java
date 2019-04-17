@@ -56,7 +56,7 @@ public class AddProductFragment extends Fragment {
 
     ImageView imgView;
     EditText editProductName, editProductPrice, duration, editTextProdDesc, maxDis,
-            minTar, minDis, editTextShipCost, editTextFreeShipCondition;
+            minTar, minDis, editTextShipCost, editTextFreeShipCondition, editTextTQ;
     Spinner productType;
     TextView textViewMaxPrice, textViewMinPrice, maxTar, dayOrWeek;
     CheckBox checkBoxFreeShipment;
@@ -99,6 +99,7 @@ public class AddProductFragment extends Fragment {
         minDis = (EditText) getView().findViewById(R.id.minDis);
         editTextShipCost = (EditText) getView().findViewById(R.id.editTextShipCost);
         editTextFreeShipCondition = (EditText) getView().findViewById(R.id.editTextFreeShipCondition);
+        editTextTQ = (EditText) getView().findViewById(R.id.editTextTQ);
 
         textViewMaxPrice = (TextView) getView().findViewById(R.id.textViewMaxPrice);
         textViewMinPrice = (TextView) getView().findViewById(R.id.textViewMinPrice);
@@ -223,7 +224,7 @@ public class AddProductFragment extends Fragment {
                 String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
                         pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
                         pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "approved", pro_aproveBy = "admin1",
-                        pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity;
+                        pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
 
                 if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
 
@@ -251,14 +252,16 @@ public class AddProductFragment extends Fragment {
                     if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
                 } else { pro_freeShippingAt = null;}
 
+                if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
+
                 boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
                         pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
-                        pro_Status, pro_productType, pro_s_ID});
+                        pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
 
                 if (result) {
                     addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
                             pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
-                            pro_productType, pro_s_ID);
+                            pro_productType, pro_s_ID, pro_targetQuantity);
                 } else {
 
                 }
@@ -277,7 +280,7 @@ public class AddProductFragment extends Fragment {
     private void addProd (final String pro_name, final String pro_description, final String pro_retailPrice, final String pro_maxOrderQtySellPrice, final String pro_minOrderQtySellPrice,
                           final String pro_maxOrderDiscount, final String pro_minOrderAccepted, final String pro_minOrderDiscount, final String pro_shippingCost,
                           final String pro_freeShippingAt, final String pro_durationForGroupPurchase, final String pro_Status, final String pro_aproveBy, final String pro_productType,
-                          final String pro_s_ID) {
+                          final String pro_s_ID, final String pro_targetQuantity) {
         storage= FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
@@ -312,7 +315,7 @@ public class AddProductFragment extends Fragment {
 
                                 productClass productClass = new productClass(prodId, imageUrl, pro_name, pro_description, pro_retailPrice,
                                         pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
-                                        pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID);
+                                        pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID, pro_targetQuantity);
 
                                 databaseProduct.child(prodId).setValue(productClass);
 

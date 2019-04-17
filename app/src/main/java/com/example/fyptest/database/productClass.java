@@ -18,6 +18,7 @@ public class productClass {
     private String pro_approveBy;
     private String pro_productType;
     private String pro_s_ID;
+    private String pro_targetQuantity;
 
     public productClass() {
 
@@ -25,7 +26,7 @@ public class productClass {
 
     public productClass(String pro_ID, String pro_mImageUrl, String pro_name, String pro_description, String pro_retailPrice, String pro_maxOrderQtySellPrice, String pro_minOrderQtySellPrice, String pro_maxOrderDiscount,
                         String pro_minOrderAccepted, String pro_minOrderDiscount, String pro_shippingCost, String pro_freeShippingAt, String pro_durationForGroupPurchase, String pro_Status, String pro_approveBy,
-                        String pro_productType, String pro_s_ID) {
+                        String pro_productType, String pro_s_ID, String pro_targetQuantity) {
         this.pro_ID = pro_ID;
         this.pro_mImageUrl = pro_mImageUrl;
         this.pro_name = pro_name;
@@ -43,6 +44,7 @@ public class productClass {
         this.pro_approveBy = pro_approveBy;
         this.pro_productType = pro_productType;
         this.pro_s_ID = pro_s_ID;
+        this.pro_targetQuantity = pro_targetQuantity;
     }
 
     public String getPro_ID() {
@@ -112,6 +114,8 @@ public class productClass {
     public String getPro_s_ID() {
         return pro_s_ID;
     }
+
+    public String pro_targetQuantity() { return  pro_targetQuantity; }
 
     public void setPro_mImageUrl(String pro_mImageUrl) {
         this.pro_mImageUrl = pro_mImageUrl;

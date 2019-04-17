@@ -85,6 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter Product Name"
+                    android:inputType="textPersonName"
                     android:layout_weight="1"
                     tools:ignore="HardcodedText,MissingConstraints" />
 
@@ -151,12 +152,52 @@
                 android:minLines="4"
                 tools:ignore="HardcodedText,ObsoleteLayoutParam,UnusedAttribute" />
 
+            <!--Product Quantity-->
+            <LinearLayout
+                android:id="@+id/linearLastAdded"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editText"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewTQ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:text="Target Quantity :"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/editTextTQ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:hint="Enters Quantity"
+                    android:inputType="number"
+                    android:textSize="20dp"
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
             <!--Retail Price-->
             <LinearLayout
                 android:id="@+id/linear2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/editText"
+                android:layout_below="@+id/linearLastAdded"
                 android:layout_marginStart="17dp"
                 android:layout_marginLeft="17dp"
                 android:layout_marginTop="0dp"
@@ -316,7 +357,7 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
@@ -356,7 +397,7 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
@@ -369,7 +410,7 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:textSize="20dp"
                     tools:ignore="MissingConstraints" />
 
@@ -415,6 +456,7 @@
 
             </LinearLayout>
 
+            <!--Shipping-->
             <LinearLayout
                 android:id="@+id/linear8"
                 android:layout_width="match_parent"
@@ -447,6 +489,7 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:inputType="numberDecimal"
                     android:hint="Enter price to meet"/>
 
             </LinearLayout>
