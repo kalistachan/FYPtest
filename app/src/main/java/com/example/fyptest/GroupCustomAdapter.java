@@ -1,5 +1,6 @@
 package com.example.fyptest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,9 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TooManyListenersException;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -55,9 +60,10 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final GroupFragment gf = new GroupFragment();
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
+        long remainingDays = calculateRemainingTime(prodID, uploadCurrent.getPro_durationForGroupPurchase());
         final String prodName = uploadCurrent.getPro_name();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
-        final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
+        final String timeRemain = String.valueOf(remainingDays);
         holder.prodTextName.setText(prodName);
         holder.targetQty.setText(targetQty);
         holder.timeRemain.setText(timeRemain + " days left");
@@ -100,9 +106,43 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         }
     }
 
-
     private void removeItemFromRecycleView(int position) {
         groupList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    private long calculateRemainingTime(final String prodID, final String duration) {
+        final long[] diffDays = new long[1];
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                        try {
+                            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                            Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(dateCreated);
+                            cal.add(Calendar.DATE, Integer.parseInt(duration));
+                            Date currentTime = Calendar.getInstance().getTime();
+                            Date afterDurationDate = cal.getTime();
+                            long diff =  afterDurationDate.getTime() - currentTime.getTime();
+                            diffDays[0] = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
+                        } catch (java.text.ParseException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        return diffDays[0];
     }
 }

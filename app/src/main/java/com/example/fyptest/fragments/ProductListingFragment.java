@@ -183,5 +183,25 @@ public class ProductListingFragment extends Fragment {
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         databaseProduct.child(pg_ID).setValue(groupDetail);
     }
+/*
+    private boolean checkProductGroupExist (String prodID) {
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
+        databaseProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                prodList.clear();
+                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
+                    productClass product = productSnapshot.getValue(productClass.class);
+                    prodList.add(product);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    */
 }
 

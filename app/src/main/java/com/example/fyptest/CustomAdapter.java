@@ -104,6 +104,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             @Override
             public void onCallback1(final List<String> list1) {
                 if (list1.isEmpty()) {
+                    Log.d("List empty ","value: empty" );
                     setButtonToCreateGroup(holder.grpBtn, prodID, prodName);
                     dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -142,6 +143,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                 } else {
                     for (final String item : list1) {
                         if (item.equalsIgnoreCase(prodID)) {
+                            Log.d("Item ","value: " + item);
+                            Log.d("prodID ","value: " + prodID);
                             DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
                                 db.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
