@@ -145,4 +145,5 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         });
         return diffDays[0];
     }
+
 }

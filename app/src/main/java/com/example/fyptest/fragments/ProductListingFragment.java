@@ -149,7 +149,11 @@ public class ProductListingFragment extends Fragment {
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                insertProductGroup(prodID);
+                if (checkProductGroupExist(prodID) == true) {
+                    insertCustGroupDetails(prodID);
+                } else {
+                    insertProductGroup(prodID);
+                }
             }
         });
 
@@ -183,16 +187,19 @@ public class ProductListingFragment extends Fragment {
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         databaseProduct.child(pg_ID).setValue(groupDetail);
     }
-/*
-    private boolean checkProductGroupExist (String prodID) {
+
+    private boolean checkProductGroupExist (final String prodID) {
+        final boolean[] pgStatus = new boolean[1];
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                prodList.clear();
-                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
-                    productClass product = productSnapshot.getValue(productClass.class);
-                    prodList.add(product);
+                for (DataSnapshot productGrpSnapshot: dataSnapshot.getChildren()){
+                    if (productGrpSnapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                        pgStatus[0] = true;
+                    } else {
+                        pgStatus[0] = false;
+                    }
                 }
             }
 
@@ -201,7 +208,10 @@ public class ProductListingFragment extends Fragment {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        Log.d("boolean ", "value: " + pgStatus[0]);
+        return pgStatus[0];
     }
-    */
+
+
 }
 
