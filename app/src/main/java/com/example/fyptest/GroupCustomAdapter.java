@@ -86,7 +86,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(final String timeRemain) {
-
                 if (!timeRemain.isEmpty()) {
                     holder.timeRemain.setText(timeRemain + " days left");
                 }
@@ -150,13 +149,9 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                                 cal.add(Calendar.DATE, Integer.parseInt(duration));
                                 Date currentTime = Calendar.getInstance().getTime();
                                 Date afterDurationDate = cal.getTime();
-                                Log.d("currentTime", "value: " + currentTime);
-                                Log.d("afterDurationDate", "value: " + afterDurationDate);
                                 long diff = afterDurationDate.getTime() - currentTime.getTime();
                                 long remainingDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                                Log.d("remainingDays", "value: " + remainingDays);
                                 diffDays[0] = String.valueOf(remainingDays);
-                                Log.d("diffDays", "value: " + diffDays[0]);
 
                             } catch (java.text.ParseException e) {
                                 // TODO Auto-generated catch block
@@ -174,43 +169,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
 
     private interface FirebaseCallback {
         void onCallback1(String days);
-    }
-
-
-    private long calculateRemainingTime(final String prodID, final String duration) {
-        final long[] diffDays = new long[1];
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                        try {
-                            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                            Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(dateCreated);
-                            cal.add(Calendar.DATE, Integer.parseInt(duration));
-                            Date currentTime = Calendar.getInstance().getTime();
-                            Date afterDurationDate = cal.getTime();
-                            long diff =  afterDurationDate.getTime() - currentTime.getTime();
-                            diffDays[0] = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-
-                        } catch (java.text.ParseException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        Log.d("diffDays", "value: " + diffDays[0]);
-        return diffDays[0];
     }
 
 }
