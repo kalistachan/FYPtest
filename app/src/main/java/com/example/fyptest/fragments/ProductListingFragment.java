@@ -165,23 +165,23 @@ public class ProductListingFragment extends Fragment {
     }
 
     private void insertProductGroup (String prodID) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
         Calendar c = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
         String string_pgDateCreated = df.format(c.getTime());
-        String pgID = db.push().getKey();
-        productGroupClass productGroup = new productGroupClass(pgID, prodID, pgDateCreated, null, string_pgDateCreated);
-        db.child(pgID).setValue(productGroup);
-        insertCustGroupDetails(pgID);
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
+        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
+        databaseProduct.child(prodID).setValue(productGroup);
+        insertCustGroupDetails(prodID);
     }
 
     private void insertCustGroupDetails (String prodGroupId) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
+        String pg_ID = databaseProduct.push().getKey();
         gdJoinDate = Calendar.getInstance().getTime();
         prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         gdCusID = prefs.getString("userID", null);
-        groupDetailClass groupDetail =  new groupDetailClass(prodGroupId, gdJoinDate, qtyChosenVal, gdCusID);
-        databaseProduct.setValue(groupDetail);
+        groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
+        databaseProduct.child(pg_ID).setValue(groupDetail);
     }
 }
 

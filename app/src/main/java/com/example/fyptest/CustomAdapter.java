@@ -105,171 +105,171 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             public void onCallback1(final List<String> list1) {
                 if (list1.isEmpty()) {
                     setButtonToCreateGroup(holder.grpBtn, prodID, prodName);
-//                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            if (dataSnapshot.hasChild(userIdentity)) {
-//                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-//                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-//                                        setButtonToViewWatchList(holder.watchBtn);
-//                                        break;
-//                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-//                                        holder.watchBtn.setText(" Add to Watch List ");
-//                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                addToWatchList(prodID, userIdentity);
-//                                                setButtonToViewWatchList(holder.watchBtn);
-//                                            }
-//                                        });
-//                                    }
-//                                }
-//                            } else {
-//                                holder.watchBtn.setText(" Add to Watch List ");
-//                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        addToWatchList(prodID, userIdentity);
-//                                        setButtonToViewWatchList(holder.watchBtn);
-//                                    }
-//                                });
-//                            }
-//                        }
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        }
-//                    });
+                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild(userIdentity)) {
+                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                                        setButtonToViewWatchList(holder.watchBtn);
+                                        break;
+                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+                                        holder.watchBtn.setText(" Add to Watch List ");
+                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                addToWatchList(prodID, userIdentity);
+                                                setButtonToViewWatchList(holder.watchBtn);
+                                            }
+                                        });
+                                    }
+                                }
+                            } else {
+                                holder.watchBtn.setText(" Add to Watch List ");
+                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        addToWatchList(prodID, userIdentity);
+                                        setButtonToViewWatchList(holder.watchBtn);
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
                 } else {
-//                    for (final String item : list1) {
-//                        if (item.equalsIgnoreCase(prodID)) {
-//                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
-//                                db.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                        if (dataSnapshot.hasChildren()) {
-//                                            for (DataSnapshot snapshot : dataSnapshot.child(prodID).getChildren()) {
-//                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-//                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                                        @Override
-//                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                                            if (dataSnapshot.hasChild(userIdentity)) {
-//                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-//                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-//                                                                        removeFromWatchList();
-//                                                                        break;
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                        @Override
-//                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                                        }
-//                                                    });
-//                                                    holder.grpBtn.setText("View Group");
-//                                                    holder.watchBtn.setVisibility(View.GONE);
-//                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-//                                                        @Override
-//                                                        public void onClick(View v) {
-//                                                            swapToGroupFragment(mContext);
-//                                                        }
-//                                                    });
-//                                                } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-//                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                                        @Override
-//                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                                            if (dataSnapshot.hasChild(userIdentity)) {
-//                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-//                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-//                                                                        setButtonToViewWatchList(holder.watchBtn);
-//                                                                        break;
-//                                                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-//                                                                        holder.watchBtn.setText(" Add to Watch List ");
-//                                                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                                                            @Override
-//                                                                            public void onClick(View v) {
-//                                                                                addToWatchList(prodID, userIdentity);
-//                                                                                setButtonToViewWatchList(holder.watchBtn);
-//                                                                            }
-//                                                                        });
-//                                                                    }
-//                                                                }
-//                                                            } else {
-//                                                                holder.watchBtn.setText(" Add to Watch List ");
-//                                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                                                    @Override
-//                                                                    public void onClick(View v) {
-//                                                                        addToWatchList(prodID, userIdentity);
-//                                                                        setButtonToViewWatchList(holder.watchBtn);
-//                                                                    }
-//                                                                });
-//                                                            }
-//                                                        }
-//                                                        @Override
-//                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                                        }
-//                                                    });
-//                                                    holder.grpBtn.setText("Join Group");
-//                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-//                                                        @Override
-//                                                        public void onClick(View v) {
-//                                                            pl.ShowDialog(mContext, prodID, prodName);
-//                                                            holder.watchBtn.setVisibility(View.GONE);
-//                                                        }
-//                                                    });
-//                                                }
-//                                            }
-//
-//                                        }
-//                                    }
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                    }
-//                                });
-//                        } else if (!item.equalsIgnoreCase(prodID)) {
-//                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                    if (dataSnapshot.hasChild(userIdentity)) {
-//                                        for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-//                                            if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-//                                                setButtonToViewWatchList(holder.watchBtn);
-//                                                break;
-//                                            } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-//                                                holder.watchBtn.setText(" Add to Watch List ");
-//                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//                                                        addToWatchList(prodID, userIdentity);
-//                                                        setButtonToViewWatchList(holder.watchBtn);
-//                                                    }
-//                                                });
-//                                            }
-//                                        }
-//                                    } else {
-//                                        holder.watchBtn.setText(" Add to Watch List ");
-//                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                addToWatchList(prodID, userIdentity);
-//                                                setButtonToViewWatchList(holder.watchBtn);
-//                                            }
-//                                        });
-//                                    }
-//                                }
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                }
-//                            });
-//                            holder.grpBtn.setText("Create Group");
-//                            holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    pl.ShowDialog(mContext, prodID, prodName);
-//                                    holder.watchBtn.setVisibility(View.GONE);
-//                                }
-//                            });
-//                        }
-//                    }
+                    for (final String item : list1) {
+                        if (item.equalsIgnoreCase(prodID)) {
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+                                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.hasChildren()) {
+                                            for (DataSnapshot snapshot : dataSnapshot.child(prodID).getChildren()) {
+                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.hasChild(userIdentity)) {
+                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                                                                        removeFromWatchList();
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        }
+                                                    });
+                                                    holder.grpBtn.setText("View Group");
+                                                    holder.watchBtn.setVisibility(View.GONE);
+                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            swapToGroupFragment(mContext);
+                                                        }
+                                                    });
+                                                } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.hasChild(userIdentity)) {
+                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                                                                        setButtonToViewWatchList(holder.watchBtn);
+                                                                        break;
+                                                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+                                                                        holder.watchBtn.setText(" Add to Watch List ");
+                                                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View v) {
+                                                                                addToWatchList(prodID, userIdentity);
+                                                                                setButtonToViewWatchList(holder.watchBtn);
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                holder.watchBtn.setText(" Add to Watch List ");
+                                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View v) {
+                                                                        addToWatchList(prodID, userIdentity);
+                                                                        setButtonToViewWatchList(holder.watchBtn);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        }
+                                                    });
+                                                    holder.grpBtn.setText("Join Group");
+                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            pl.ShowDialog(mContext, prodID, prodName);
+                                                            holder.watchBtn.setVisibility(View.GONE);
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+                        } else if (!item.equalsIgnoreCase(prodID)) {
+                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(userIdentity)) {
+                                        for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+                                            if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                                                setButtonToViewWatchList(holder.watchBtn);
+                                                break;
+                                            } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+                                                holder.watchBtn.setText(" Add to Watch List ");
+                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        addToWatchList(prodID, userIdentity);
+                                                        setButtonToViewWatchList(holder.watchBtn);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    } else {
+                                        holder.watchBtn.setText(" Add to Watch List ");
+                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                addToWatchList(prodID, userIdentity);
+                                                setButtonToViewWatchList(holder.watchBtn);
+                                            }
+                                        });
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+                            holder.grpBtn.setText("Create Group");
+                            holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    pl.ShowDialog(mContext, prodID, prodName);
+                                    holder.watchBtn.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
                 }
             }
         });
