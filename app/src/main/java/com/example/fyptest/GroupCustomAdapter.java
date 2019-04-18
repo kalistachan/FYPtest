@@ -60,15 +60,15 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final GroupFragment gf = new GroupFragment();
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
-        long remainingDays = calculateRemainingTime(prodID, uploadCurrent.getPro_durationForGroupPurchase());
+       // long remainingDays = calculateRemainingTime(prodID, uploadCurrent.getPro_durationForGroupPurchase());
         final String prodName = uploadCurrent.getPro_name();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
-        final String timeRemain = String.valueOf(remainingDays);
+       // final String timeRemain = String.valueOf(remainingDays);
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
-
+        holder.prodPriceView.setText(minPrice);
         holder.prodTextName.setText(prodName);
         holder.targetQty.setText(targetQty);
-        holder.timeRemain.setText(timeRemain + " days left");
+     //   holder.timeRemain.setText(timeRemain + " days left");
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
@@ -82,6 +82,16 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 gf.checkingConditionForRemoval(prodID, userIdentity, groupList, mContext);
             }
         });
+
+        readData(new FirebaseCallback() {
+            @Override
+            public void onCallback1(final String timeRemain) {
+
+                if (!timeRemain.isEmpty()) {
+                    holder.timeRemain.setText(timeRemain + " days left");
+                }
+            }
+        },prodID, uploadCurrent.getPro_durationForGroupPurchase());
     }
 
     private String getMinPrice(String retailPrice, String minDisc) {
@@ -103,6 +113,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         TextView targetQty;
         TextView timeRemain;
         ImageView imageView;
+        TextView prodPriceView;
         Button leaveBtn;
 
         public ImageViewHolder(final View itemView) {
@@ -112,6 +123,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             targetQty = itemView.findViewById(R.id.targetQty);
             timeRemain = itemView.findViewById(R.id.timeRemain);
             imageView = itemView.findViewById(R.id.image_view_upload);
+            prodPriceView = itemView.findViewById(R.id.prodPriceViewName);
             leaveBtn = itemView.findViewById(R.id.groupbtn1);
 
         }
@@ -121,6 +133,49 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         groupList.remove(position);
         notifyItemRemoved(position);
     }
+
+    private void readData (final GroupCustomAdapter.FirebaseCallback firebaseCallback, final String prodID, final String duration) {
+        final String[] diffDays = new String[1];
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                            try {
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                                Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(dateCreated);
+                                cal.add(Calendar.DATE, Integer.parseInt(duration));
+                                Date currentTime = Calendar.getInstance().getTime();
+                                Date afterDurationDate = cal.getTime();
+                                Log.d("currentTime", "value: " + currentTime);
+                                Log.d("afterDurationDate", "value: " + afterDurationDate);
+                                long diff = afterDurationDate.getTime() - currentTime.getTime();
+                                long remainingDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                                Log.d("remainingDays", "value: " + remainingDays);
+                                diffDays[0] = String.valueOf(remainingDays);
+                                Log.d("diffDays", "value: " + diffDays[0]);
+
+                            } catch (java.text.ParseException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    firebaseCallback.onCallback1(diffDays[0]);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+    }
+
+    private interface FirebaseCallback {
+        void onCallback1(String days);
+    }
+
 
     private long calculateRemainingTime(final String prodID, final String duration) {
         final long[] diffDays = new long[1];
@@ -154,6 +209,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        Log.d("diffDays", "value: " + diffDays[0]);
         return diffDays[0];
     }
 
