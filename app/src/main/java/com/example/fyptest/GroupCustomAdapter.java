@@ -64,6 +64,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final String prodName = uploadCurrent.getPro_name();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
         final String timeRemain = String.valueOf(remainingDays);
+        String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
+
         holder.prodTextName.setText(prodName);
         holder.targetQty.setText(targetQty);
         holder.timeRemain.setText(timeRemain + " days left");
@@ -80,6 +82,15 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 gf.checkingConditionForRemoval(prodID, userIdentity, groupList, mContext);
             }
         });
+    }
+
+    private String getMinPrice(String retailPrice, String minDisc) {
+        float fRetailPrice = Float.parseFloat(retailPrice);
+        float value = 100;
+        float fMinDisc = Float.parseFloat(minDisc) / value;
+        float minSellPrice = fRetailPrice * fMinDisc;
+        String floatToStringMinPrice = "S$" + Float.toString(minSellPrice);
+        return floatToStringMinPrice;
     }
 
     @Override
