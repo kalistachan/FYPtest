@@ -13,5 +13,5 @@
         android:id="@+id/back"
         android:icon="@drawable/ic_search_black_24dp"
         tools:ignore="MenuTitle" />
-
+    
 </menu>
