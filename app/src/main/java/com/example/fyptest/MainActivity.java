@@ -1,14 +1,20 @@
 package com.example.fyptest;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         homepagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                swapToProductListFragment();
             }
         });
 //--------------------------------------------------------------------------------------------------
@@ -178,6 +184,13 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
+    private void swapToProductListFragment () {
+        Activity activity = MainActivity.this;
+        ProductListingFragment newPLFragment = new ProductListingFragment();
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newPLFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
 }
