@@ -46,6 +46,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
     DatabaseReference dbWatchList;
 
+    ProductListingFragment pl;
+
     boolean[] value;
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -75,6 +77,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         this.pref = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", "UNKNOWN");
         this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+        this.pl = new ProductListingFragment();
     }
 
     @Override
@@ -88,7 +91,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         final productClass uploadCurrent = productList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
-        final ProductListingFragment pl = new ProductListingFragment();
         holder.prodTextName.setText(prodName);
         holder.prodTextPrice.setText("$" + uploadCurrent.getPro_retailPrice());
         Picasso.get()
@@ -102,186 +104,180 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             @Override
             public void onCallback1(final List<String> list1) {
                 if (list1.isEmpty()) {
-                    holder.grpBtn.setText("Create Group");
-                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            pl.ShowDialog(mContext, prodID, prodName);
-                        }
-                    });
-                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.hasChild(userIdentity)) {
-                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                        setButtonToViewWatchList(holder.watchBtn);
-                                        break;
-                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-                                        holder.watchBtn.setText(" Add to Watch List ");
-                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                addToWatchList(prodID, userIdentity);
-                                                setButtonToViewWatchList(holder.watchBtn);
-                                            }
-                                        });
-                                    }
-                                }
-                            } else {
-                                holder.watchBtn.setText(" Add to Watch List ");
-                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        addToWatchList(prodID, userIdentity);
-                                        setButtonToViewWatchList(holder.watchBtn);
-                                    }
-                                });
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
+                    setButtonToCreateGroup(holder.grpBtn, prodID, prodName);
+//                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            if (dataSnapshot.hasChild(userIdentity)) {
+//                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+//                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+//                                        setButtonToViewWatchList(holder.watchBtn);
+//                                        break;
+//                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+//                                        holder.watchBtn.setText(" Add to Watch List ");
+//                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                addToWatchList(prodID, userIdentity);
+//                                                setButtonToViewWatchList(holder.watchBtn);
+//                                            }
+//                                        });
+//                                    }
+//                                }
+//                            } else {
+//                                holder.watchBtn.setText(" Add to Watch List ");
+//                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        addToWatchList(prodID, userIdentity);
+//                                        setButtonToViewWatchList(holder.watchBtn);
+//                                    }
+//                                });
+//                            }
+//                        }
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//                        }
+//                    });
                 } else {
-                    for (final String item : list1) {
-                        if (item.equalsIgnoreCase(prodID)) {
-                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
-                                db.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.hasChild(prodID)) {
-                                            for (DataSnapshot snapshot : dataSnapshot.child(prodID).getChildren()) {
-                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            if (dataSnapshot.hasChild(userIdentity)) {
-                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                                                        removeFromWatchList();
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                        }
-                                                    });
-                                                    holder.grpBtn.setText("View Group");
-                                                    holder.watchBtn.setVisibility(View.GONE);
-                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            swapToGroupFragment(mContext);
-                                                        }
-                                                    });
-                                                } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            if (dataSnapshot.hasChild(userIdentity)) {
-                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                                                        setButtonToViewWatchList(holder.watchBtn);
-                                                                        break;
-                                                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-                                                                        holder.watchBtn.setText(" Add to Watch List ");
-                                                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                                                            @Override
-                                                                            public void onClick(View v) {
-                                                                                addToWatchList(prodID, userIdentity);
-                                                                                setButtonToViewWatchList(holder.watchBtn);
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                holder.watchBtn.setText(" Add to Watch List ");
-                                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(View v) {
-                                                                        addToWatchList(prodID, userIdentity);
-                                                                        setButtonToViewWatchList(holder.watchBtn);
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                        }
-                                                    });
-                                                    holder.grpBtn.setText("Join Group");
-                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            pl.ShowDialog(mContext, prodID, prodName);
-                                                            holder.watchBtn.setVisibility(View.GONE);
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                        }
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    }
-                                });
-                        } else if (!item.equalsIgnoreCase(prodID)) {
-                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.hasChild(userIdentity)) {
-                                        for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-                                            if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                                setButtonToViewWatchList(holder.watchBtn);
-                                                break;
-                                            } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
-                                                holder.watchBtn.setText(" Add to Watch List ");
-                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        addToWatchList(prodID, userIdentity);
-                                                        setButtonToViewWatchList(holder.watchBtn);
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    } else {
-                                        holder.watchBtn.setText(" Add to Watch List ");
-                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                addToWatchList(prodID, userIdentity);
-                                                setButtonToViewWatchList(holder.watchBtn);
-                                            }
-                                        });
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                }
-                            });
-                            holder.grpBtn.setText("Create Group");
-                            holder.grpBtn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    pl.ShowDialog(mContext, prodID, prodName);
-                                    holder.watchBtn.setVisibility(View.GONE);
-                                }
-                            });
-                        }
-                    }
+//                    for (final String item : list1) {
+//                        if (item.equalsIgnoreCase(prodID)) {
+//                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+//                                db.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                        if (dataSnapshot.hasChildren()) {
+//                                            for (DataSnapshot snapshot : dataSnapshot.child(prodID).getChildren()) {
+//                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+//                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                        @Override
+//                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                                            if (dataSnapshot.hasChild(userIdentity)) {
+//                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+//                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+//                                                                        removeFromWatchList();
+//                                                                        break;
+//                                                                    }
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                        @Override
+//                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                                        }
+//                                                    });
+//                                                    holder.grpBtn.setText("View Group");
+//                                                    holder.watchBtn.setVisibility(View.GONE);
+//                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(View v) {
+//                                                            swapToGroupFragment(mContext);
+//                                                        }
+//                                                    });
+//                                                } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+//                                                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                        @Override
+//                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                                            if (dataSnapshot.hasChild(userIdentity)) {
+//                                                                for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+//                                                                    if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+//                                                                        setButtonToViewWatchList(holder.watchBtn);
+//                                                                        break;
+//                                                                    } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+//                                                                        holder.watchBtn.setText(" Add to Watch List ");
+//                                                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                                                            @Override
+//                                                                            public void onClick(View v) {
+//                                                                                addToWatchList(prodID, userIdentity);
+//                                                                                setButtonToViewWatchList(holder.watchBtn);
+//                                                                            }
+//                                                                        });
+//                                                                    }
+//                                                                }
+//                                                            } else {
+//                                                                holder.watchBtn.setText(" Add to Watch List ");
+//                                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                                                    @Override
+//                                                                    public void onClick(View v) {
+//                                                                        addToWatchList(prodID, userIdentity);
+//                                                                        setButtonToViewWatchList(holder.watchBtn);
+//                                                                    }
+//                                                                });
+//                                                            }
+//                                                        }
+//                                                        @Override
+//                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                                        }
+//                                                    });
+//                                                    holder.grpBtn.setText("Join Group");
+//                                                    holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(View v) {
+//                                                            pl.ShowDialog(mContext, prodID, prodName);
+//                                                            holder.watchBtn.setVisibility(View.GONE);
+//                                                        }
+//                                                    });
+//                                                }
+//                                            }
+//
+//                                        }
+//                                    }
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                    }
+//                                });
+//                        } else if (!item.equalsIgnoreCase(prodID)) {
+//                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                    if (dataSnapshot.hasChild(userIdentity)) {
+//                                        for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+//                                            if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+//                                                setButtonToViewWatchList(holder.watchBtn);
+//                                                break;
+//                                            } else if (!snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)){
+//                                                holder.watchBtn.setText(" Add to Watch List ");
+//                                                holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        addToWatchList(prodID, userIdentity);
+//                                                        setButtonToViewWatchList(holder.watchBtn);
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//                                    } else {
+//                                        holder.watchBtn.setText(" Add to Watch List ");
+//                                        holder.watchBtn.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                addToWatchList(prodID, userIdentity);
+//                                                setButtonToViewWatchList(holder.watchBtn);
+//                                            }
+//                                        });
+//                                    }
+//                                }
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                }
+//                            });
+//                            holder.grpBtn.setText("Create Group");
+//                            holder.grpBtn.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    pl.ShowDialog(mContext, prodID, prodName);
+//                                    holder.watchBtn.setVisibility(View.GONE);
+//                                }
+//                            });
+//                        }
+//                    }
                 }
             }
         });
     }
 
     private void readData (final FirebaseCallback firebaseCallback) {
-        DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("Product Group");
-        db1.addValueEventListener(new ValueEventListener() {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+        db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 itemList.clear();
@@ -299,16 +295,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
     private interface FirebaseCallback {
         void onCallback1(List<String> itemList);
-    }
-
-    private void setButtonToViewWatchList(Button button) {
-        button.setText(" View Watch List ");
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                swapToWatchListGragment(mContext);
-            }
-        });
     }
 
     public int getItemCount() {
@@ -345,4 +331,38 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     private void removeFromWatchList() {
 
     }
+
+
+    private void setButtonToViewWatchList(Button button) {
+        button.setText(" View Watch List ");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToWatchListGragment(mContext);
+            }
+        });
+    }
+
+    private void setButtonToCreateGroup(final Button button, final String prodID, final String prodName) {
+        button.setText("Create Group");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pl.ShowDialog(mContext, prodID, prodName);
+                setButtonToViewGroup(button);
+            }
+        });
+    }
+
+    private void setButtonToViewGroup(Button button) {
+        button.setText("View Group");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToGroupFragment(mContext);
+            }
+        });
+    }
+
+
 }

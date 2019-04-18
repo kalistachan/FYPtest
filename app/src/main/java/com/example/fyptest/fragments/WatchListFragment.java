@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.example.fyptest.Adapters.watchListAdapter;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
-import com.example.fyptest.database.Product;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.watchlistClass;
 import com.google.firebase.database.DataSnapshot;

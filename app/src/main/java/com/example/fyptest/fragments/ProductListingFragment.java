@@ -1,5 +1,6 @@
 package com.example.fyptest.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -27,7 +28,6 @@ import android.widget.Toast;
 
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
-import com.example.fyptest.database.Product;
 import com.example.fyptest.database.groupDetailClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
@@ -165,25 +165,23 @@ public class ProductListingFragment extends Fragment {
     }
 
     private void insertProductGroup (String prodID) {
-        //pgDateCreated = Calendar.getInstance().getTime();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
         Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
         String string_pgDateCreated = df.format(c.getTime());
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
-        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
-        databaseProduct.child(prodID).setValue(productGroup);
-        insertCustGroupDetails(prodID);
+        String pgID = db.push().getKey();
+        productGroupClass productGroup = new productGroupClass(pgID, prodID, pgDateCreated, null, string_pgDateCreated);
+        db.child(pgID).setValue(productGroup);
+        insertCustGroupDetails(pgID);
     }
 
     private void insertCustGroupDetails (String prodGroupId) {
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
-        String pg_ID = databaseProduct.push().getKey();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
         gdJoinDate = Calendar.getInstance().getTime();
         prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         gdCusID = prefs.getString("userID", null);
-        groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
-        databaseProduct.child(pg_ID).setValue(groupDetail);
+        groupDetailClass groupDetail =  new groupDetailClass(prodGroupId, gdJoinDate, qtyChosenVal, gdCusID);
+        databaseProduct.setValue(groupDetail);
     }
 }
 
