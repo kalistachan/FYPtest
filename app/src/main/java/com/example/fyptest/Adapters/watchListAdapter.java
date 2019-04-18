@@ -20,52 +20,68 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.ViewHolder> {
-
+public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.ImageViewHolder> {
     Context context;
     List<productClass> productList;
 
-    private static final String TAG = "watchListAdapter";
+    private static final String TAG = "Debug: Watch List Adapter";
 
     public watchListAdapter(Context context, List<productClass> productList) {
         this.productList = productList;
         this.context = context;
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(context).inflate(R.layout.watchlist_listing, viewGroup, false);
-        return new ViewHolder(v);
+    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+        View v = LayoutInflater.from(context).inflate(R.layout.watchlist_listing, parent, false);
+        return new ImageViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {}
+    public void onBindViewHolder(@NonNull ImageViewHolder viewHolder, int position) {
+        final productClass uploadCurrent = productList.get(position);
+        final String prodID = uploadCurrent.getPro_ID();
+        final String prodName = uploadCurrent.getPro_name();
+        final String retailPrice = uploadCurrent.getPro_retailPrice();
+        final String minOrderQtySellPrice = uploadCurrent.getPro_minOrderQtySellPrice();
+        final String maxOrderQtySellPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
+        final String shippingFee = uploadCurrent.getPro_shippingCost();
+        final String freeShipping = uploadCurrent.getPro_freeShippingAt();
+        final String targetQty = uploadCurrent.getPro_targetQuantity();
+        final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
+        viewHolder.prodNameViewName.setText(prodName);
+        viewHolder.prodPriceViewName.setText("$" + retailPrice);
+        viewHolder.shipPriceView.setText("$" + shippingFee);
+        Picasso.get()
+                .load(uploadCurrent.getPro_mImageUrl())
+                .fit()
+                .centerCrop()
+                .into(viewHolder.image_view_upload);
+    }
 
     @Override
     public int getItemCount() {
         return productList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image_view_upload;
-        TextView prodNameViewName, prodPriceViewName, shipPriceView;
+        TextView prodNameViewName, prodPriceViewName, shipPriceView, shippingFee;
         LinearLayout parent_layout;
         Button btnRemove, btnAdd;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image_view_upload = itemView.findViewById(R.id.image_view_upload);
             prodNameViewName = itemView.findViewById(R.id.prodNameViewName);
             prodPriceViewName = itemView.findViewById(R.id.prodPriceViewName);
             shipPriceView = itemView.findViewById(R.id.shipPriceView);
+            shippingFee = itemView.findViewById(R.id.shippingFee);
             btnRemove = itemView.findViewById(R.id.btnRemove);
             btnAdd = itemView.findViewById(R.id.btnAdd);
-            parent_layout = itemView.findViewById(R.id.parent_layout);
-
         }
     }
 }

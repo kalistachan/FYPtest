@@ -3,6 +3,8 @@ package com.example.fyptest.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -51,13 +54,9 @@ public class ProductListingFragment extends Fragment {
     Context mContext;
     int qtyChosenVal;
     TextView qtyText;
-    String prodGrpId;
-    Date pgDateCreated;
-    Date pgDateEnd;
+    String gdCusID, prodGrpId;
+    Date pgDateCreated, gdJoinDate;
     boolean[] abc;
-    Date gdJoinDate;
-    String gdCusID;
-
     SharedPreferences prefs;
 
     @Override
@@ -65,18 +64,28 @@ public class ProductListingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View groupView = inflater.inflate(R.layout.fragment_productlisting, container, false);
-
-        mRecyclerView = groupView.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return groupView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        displayProduct();
+//        abc = new boolean[1];
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         abc = new boolean[1];
+        displayProduct();
     }
 
     public void displayProduct () {
@@ -85,6 +94,7 @@ public class ProductListingFragment extends Fragment {
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                prodList.clear();
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     productClass product = productSnapshot.getValue(productClass.class);
                     prodList.add(product);
@@ -98,6 +108,8 @@ public class ProductListingFragment extends Fragment {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     public void ShowDialog(Context context, final String prodID, String prodName) {
@@ -153,31 +165,25 @@ public class ProductListingFragment extends Fragment {
     }
 
     private void insertProductGroup (String prodID) {
-        pgDateCreated = Calendar.getInstance().getTime();
+        //pgDateCreated = Calendar.getInstance().getTime();
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
+        String string_pgDateCreated = df.format(c.getTime());
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
-        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null);
+        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
         databaseProduct.child(prodID).setValue(productGroup);
         insertCustGroupDetails(prodID);
     }
 
-    public void insertCustGroupDetails (String prodGroupId) {
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
+    private void insertCustGroupDetails (String prodGroupId) {
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
         String pg_ID = databaseProduct.push().getKey();
         gdJoinDate = Calendar.getInstance().getTime();
         prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         gdCusID = prefs.getString("userID", null);
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         databaseProduct.child(pg_ID).setValue(groupDetail);
-    }
-
-    public void swapToGroupFragment (Context mContext) {
-        Activity activity = (FragmentActivity) mContext;
-        GroupFragment newGroupFragment = new GroupFragment();
-        Log.d("activity ", "value: " + activity);
-        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, newGroupFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,15 +31,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WatchListFragment extends Fragment {
-
+    //Get user Identity
     SharedPreferences pref;
-    String getUserID;
+    String userIdentity;
 
+    //RecyclerView Items
     RecyclerView recycler_view_WatchList;
-
-    DatabaseReference dbProduct,dbUser, dbCustomer, dbWatchList;
     watchListAdapter adapter;
 
+    //Database
+    DatabaseReference dbProduct, dbWatchList;
+
+    //Storing list used for later callbacks
     List<productClass> productList;
     List<String> watchListProd;
 
@@ -50,70 +54,86 @@ public class WatchListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_watch_list, container, false);
 
         //Identifying recycleView
-        recycler_view_WatchList = view.findViewById(R.id.recycler_view_WatchList);
-        recycler_view_WatchList.setHasFixedSize(true);
-        recycler_view_WatchList.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.recycler_view_WatchList = view.findViewById(R.id.recycler_view_WatchList);
+        this.recycler_view_WatchList.setHasFixedSize(true);
+        this.recycler_view_WatchList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Identifying User
-        pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+        this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+        this.userIdentity = pref.getString("userID", null);
 
         //Connecting DB Reference
-        dbUser = FirebaseDatabase.getInstance().getReference("User");
-        dbCustomer = FirebaseDatabase.getInstance().getReference("Customer Information");
+        this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+        this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
 
         //Other required variables
-        productList = new ArrayList<>();
-        watchListProd = new ArrayList<>();
+        this.productList = new ArrayList<>();
+        this.watchListProd = new ArrayList<>();
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        displayProdusts();
+        displayWatchProducts();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    public void displayProdusts() {
-        dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
-        dbProduct = FirebaseDatabase.getInstance().getReference("Product");
-        getUserID = pref.getString("userID", null);
-
+    public void displayWatchProducts() {
         //Extracting productID from watchList to save under a string list
-        dbWatchList.addValueEventListener(new ValueEventListener() {
+        readData(new FirebaseCallback() {
+            @Override
+            public void onCallback1(List<String> itemList) {
+                if (!watchListProd.isEmpty()) {
+                    for (final String item : watchListProd) {
+                        dbProduct.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
+                                        productClass product = snapshot.getValue(productClass.class);
+                                        productList.add(product);
+                                    }
+                                }
+                                adapter = new watchListAdapter(getActivity(), productList);
+                                recycler_view_WatchList.setAdapter(adapter);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    private void readData (final FirebaseCallback firebaseCallback){
+        dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot watchlistSnapshot : dataSnapshot.getChildren()) {
-                    final String productInWatchList = watchlistSnapshot.child("wl_pro_ID").getValue().toString();
-                    Log.d("ValueCheck: ID of product in watch list snapShot", productInWatchList);
-                    dbProduct.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
-                                Log.d("ValueCheck: ID of product in watch list snapShot", productInWatchList);
-                                if (productSnapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(productInWatchList)) {
-                                    productClass products = productSnapshot.getValue(productClass.class);
-                                    productList.add(products);
-                                    break;
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {}
-                    });
+                if (dataSnapshot.hasChild(userIdentity)) {
+                    for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
+                        watchListProd.add(snapshot.child("wl_pro_ID").getValue().toString());
+                    }
+                    firebaseCallback.onCallback1(watchListProd);
+                } else if (!dataSnapshot.hasChild(userIdentity)){
+                    firebaseCallback.onCallback1(watchListProd);
+                    Log.d("Debug: Null WatchList", watchListProd.toString());
                 }
-                adapter = new watchListAdapter(getActivity(), productList);
-                recycler_view_WatchList.setAdapter(adapter);
-                Log.d("ValueCheck: After For Loop in dataChange Class", productList.toString());
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Debug: onCancelled (dbWatchList)", databaseError.getMessage());
+            }
         });
-        Log.d("ValueCheck: After dataChange Class", productList.toString());
 
+    }
+
+    private interface FirebaseCallback {
+        void onCallback1(List<String> itemList);
     }
 }

@@ -1,17 +1,21 @@
 package com.example.fyptest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TooManyListenersException;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -29,10 +34,14 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     Context mContext;
     List<productClass> groupList;
 
+    SharedPreferences preferences;
+    String userIdentity;
 
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
         this.groupList = groupList;
+        this.preferences = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
+        this.userIdentity = preferences.getString("userID", "UNKNOWN");
     }
 
     @Override
@@ -43,6 +52,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+        final GroupFragment gf = new GroupFragment();
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -56,6 +66,14 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);
+
+        holder.leaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItemFromRecycleView(position);
+                gf.checkingConditionForRemoval(prodID, userIdentity, groupList, mContext);
+            }
+        });
     }
 
     @Override
@@ -80,5 +98,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             leaveBtn = itemView.findViewById(R.id.groupbtn1);
 
         }
+    }
+
+
+    private void removeItemFromRecycleView(int position) {
+        groupList.remove(position);
+        notifyItemRemoved(position);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,6 +71,7 @@ public class GroupFragment extends Fragment {
             @Override
             public void onCallback1(final List<String> grpProdID) {
                 if (!grpProdID.isEmpty()) {
+
                     for (final String item : grpProdID) {
                         DatabaseReference dbProd = FirebaseDatabase.getInstance().getReference("Product");
                         dbProd.addValueEventListener(new ValueEventListener() {
@@ -79,7 +81,7 @@ public class GroupFragment extends Fragment {
                                     if (productSnapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
                                         productClass product = productSnapshot.getValue(productClass.class);
                                         grpList.add(product);
-                                    };
+                                    }
                                 }
                                 mAdapter = new GroupCustomAdapter(getActivity(), grpList);
                                 mRecyclerView.setAdapter(mAdapter);
@@ -91,7 +93,7 @@ public class GroupFragment extends Fragment {
                             }
                         });
                     }
-                }
+                } grpProdID.clear();
             }
         });
     }
@@ -102,10 +104,12 @@ public class GroupFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity))
-                    {
-                        String productID = snapshot.child("gd_pg_pro_ID").getValue().toString();
-                        grpProdID.add(productID);
+                    for (DataSnapshot nestedsnapshot : snapshot.getChildren()) {
+                        if (nestedsnapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                            String productID = nestedsnapshot.child("gd_pg_pro_ID").getValue().toString();
+                            grpProdID.add(productID);
+                            break;
+                        }
                     }
                 }
                 firebaseCallback.onCallback1(grpProdID);
@@ -120,4 +124,41 @@ public class GroupFragment extends Fragment {
         void onCallback1(List<String> itemList);
     }
 
+    public void checkingConditionForRemoval(final String productID, final String userID, final List<productClass> list, final Context context) {
+        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        dbGroupDetail.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                int counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                        String gd_ID = snapshot.child("gd_ID").getValue().toString();
+                        removeGroupDetail(productID, gd_ID);
+                        counter++;
+                    } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)){
+                        counter++;
+                    }
+                }
+                if (counter == 1) {
+                    removeProductGroup(productID);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removeProductGroup(final String productID) {
+        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
+        dbProductGroup.removeValue();
+    }
+
+    private void removeGroupDetail(final String productID, final String groupDetailID) {
+        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupDetailID);
+        Log.d("Count", dbGroupDetail.toString());
+        dbGroupDetail.removeValue();
+    }
 }
