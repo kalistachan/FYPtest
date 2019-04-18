@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="1dp"
     android:background="@drawable/layoutborder"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
 
     <ImageView
         android:id="@+id/image_view_upload"
@@ -15,12 +16,12 @@
         android:layout_height="120dp"
         android:layout_gravity="start"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"/>
 
     <TextView
         android:id="@+id/prodNameViewName"
@@ -44,13 +45,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:gravity="start"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
 
+
+    <TextView
+        android:id="@+id/prodPriceViewName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="start"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/targetQty" />
 
     <TextView
         android:id="@+id/timeRemain"
@@ -61,7 +72,7 @@
         android:gravity="start"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/targetQty" />
+        app:layout_constraintTop_toBottomOf="@+id/prodPriceViewName" />
 
     <Button
         android:id="@+id/groupbtn1"

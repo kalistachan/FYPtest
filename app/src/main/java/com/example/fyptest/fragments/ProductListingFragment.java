@@ -21,7 +21,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -113,7 +112,7 @@ public class ProductListingFragment extends Fragment {
 
     }
 
-    public void ShowDialog(final Context context, final String prodID, String prodName, final Button button) {
+    public void ShowDialog(Context context, final String prodID, String prodName) {
         mContext = context;
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
         LinearLayout linear = new LinearLayout(mContext);
@@ -151,7 +150,6 @@ public class ProductListingFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 insertProductGroup(prodID);
-                setButtonToViewGroup(button, context);
             }
         });
 
@@ -164,26 +162,6 @@ public class ProductListingFragment extends Fragment {
 
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
-    }
-
-    private void setButtonToViewGroup(Button button, final Context context) {
-        button.setText("View Group");
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                swapToGroupFragment(context);
-            }
-        });
-    }
-
-    public void swapToGroupFragment (Context mContext) {
-        Activity activity = (FragmentActivity) mContext;
-        GroupFragment newGroupFragment = new GroupFragment();
-        Log.d("activity ", "value: " + activity);
-        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, newGroupFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     private void insertProductGroup (String prodID) {
