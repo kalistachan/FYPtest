@@ -92,11 +92,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         },prodID, uploadCurrent.getPro_durationForGroupPurchase());
     }
 
-    private boolean checkGroupDetail(String productID) {
-
-        return false;
-    }
-
     private String getMinPrice(String retailPrice, String minDisc) {
         float fRetailPrice = Float.parseFloat(retailPrice);
         float value = 100;

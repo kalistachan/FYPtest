@@ -195,25 +195,10 @@ public class ProductListingFragment extends Fragment {
 
     private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {
         gdJoinDate = Calendar.getInstance().getTime();
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
-        databaseProduct.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                        if (snapshotAgain.child("gd_pg_pro_ID").getValue().toString().equalsIgnoreCase(prodGroupId)) {
-                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(snapshotAgain.child("gd_pg_pro_ID").getValue().toString());
-                            String pg_ID = db.push().getKey();
-                            groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
-                            db.child(pg_ID).setValue(groupDetail);
-                            break;
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
+        String pg_ID = db.push().getKey();
+        groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
+        db.child(pg_ID).setValue(groupDetail);
     }
 }
 
