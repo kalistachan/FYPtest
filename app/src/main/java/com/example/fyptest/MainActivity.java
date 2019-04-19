@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         homepagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment = new ProductListingFragment();
-                loadFragment(fragment);
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
             }
         });
 //--------------------------------------------------------------------------------------------------
@@ -166,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     //pushing userInfo out of current view
                     loadFragment(fragment);
                     return true;
-
             }
             return false;
         }
