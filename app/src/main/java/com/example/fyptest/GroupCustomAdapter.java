@@ -156,10 +156,13 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     }
 
     private void removeItemFromRecycleView(int position, List<productClass> list) {
-        list.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, list.size());
-        notifyDataSetChanged();
+        if (position > -1) {
+            list.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, list.size());
+            notifyDataSetChanged();
+        }
+
     }
 
     private void readData (final GroupCustomAdapter.FirebaseCallback firebaseCallback, final String prodID, final String duration) {
