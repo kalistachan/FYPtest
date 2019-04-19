@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,30 +124,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             break;
                                         } else {
                                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Join Group", 1, userIdentity, mContext);
-                                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    if (dataSnapshot.hasChildren()) {
-                                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                            for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                                                if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                                                    setButtonToViewWatchList(holder.watchBtn, mContext);
-                                                                    break;
-                                                                } else {
-                                                                    setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                                                                }
-                                                            }
-                                                        }
-                                                    } else {
-                                                        setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                                                    }
-                                                }
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    Toast.makeText(mContext, "Database Error: Error Code 401", Toast.LENGTH_LONG).show();
-                                                    Log.d("401", databaseError.getMessage());
-                                                }
-                                            });
+                                            changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                                         }
                                     }
                                 }
@@ -159,61 +137,44 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             break;
                         } else {
                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
-                            dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.hasChildren()) {
-                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                            for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                                if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                                    setButtonToViewWatchList(holder.watchBtn, mContext);
-                                                    break;
-                                                } else {
-                                                    setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    Toast.makeText(mContext, "Database Error: Error Code 401", Toast.LENGTH_LONG).show();
-                                    Log.d("401", databaseError.getMessage());
-                                }
-                            });
+                            changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                         }
                     }
-                } else {
+                } else if (itemList.isEmpty()) {
                     setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
-                    dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.hasChildren()) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                        if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                            setButtonToViewWatchList(holder.watchBtn, mContext);
-                                            break;
-                                        } else {
-                                            setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                                        }
-                                    }
-                                }
-                            } else {
-                                setButtonToAddWatchList(prodID, holder.watchBtn, userIdentity, mContext);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(mContext, "Database Error: Error Code 401", Toast.LENGTH_LONG).show();
-                            Log.d("401", databaseError.getMessage());
-                        }
-                    });
+                    changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                 }
                 itemList.clear();
             }
+        });
+    }
+
+    private void changeWatchButton(final Button button, final String userID, final String prodID, final Context context) {
+        dbWatchList.addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(userID)) {
+                    Log.d("123123", "has userID");
+                    if (dataSnapshot.child(userID).hasChild(prodID)) {
+                        Log.d("123123", "has userID & ProdID");
+                        if (dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                            Log.d("123123", "has userID & ProdID & CusID");
+                            setButtonToViewWatchList(button, context);
+                        } else if (!dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                            Log.d("123123", "has userID & ProdID but no CusID");
+                            setButtonToAddWatchList(prodID, button, userID, context);
+                        }
+                    } else if (!dataSnapshot.child(userID).hasChild(prodID)) {
+                        Log.d("123123", "has userID no ProdID & no CusID");
+                        setButtonToAddWatchList(prodID, button, userID, context);
+                    }
+                } else if (!dataSnapshot.hasChild(userID)) {
+                    Log.d("123123", "no userID");
+                    setButtonToAddWatchList(prodID, button, userID, context);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){}
         });
     }
 

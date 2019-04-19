@@ -71,7 +71,7 @@ public class WatchListFragment extends Fragment {
         this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", null);
 
-        //Query
+        //DB Reference
         this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
         this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
 

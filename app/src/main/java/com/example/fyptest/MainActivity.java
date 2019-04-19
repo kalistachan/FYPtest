@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.getMenu().getItem(1).setChecked(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         loadFragment(new ProductListingFragment());
 

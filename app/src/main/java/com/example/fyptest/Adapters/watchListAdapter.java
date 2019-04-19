@@ -32,8 +32,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.ImageViewHolder> {
     Context context;
-    List<productClass> productList, watchProduct;
+    List<productClass> productList;
     List<String> itemList;
+
     SharedPreferences preferences;
     String userIdentity;
 
@@ -126,8 +127,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
                 firebaseCallback.onCallback1(itemList);
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 

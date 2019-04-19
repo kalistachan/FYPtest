@@ -12,6 +12,10 @@ import com.example.fyptest.R;
 
 
 public class MainScreen extends Fragment {
+    public static MainScreen newInstance() {
+        MainScreen fragment = new MainScreen();
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

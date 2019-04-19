@@ -143,12 +143,13 @@ public class ProductListingFragment extends Fragment {
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                removeFromWatchList(prodID, gdCusID);
+                setButtonToViewGroup(button, context);
                 if (option == 1) {
                     insertCustGroupDetails (prodID, gdCusID);
                 } else if (option == 2) {
                     insertProductGroup(prodID, gdCusID);
                 }
-                setButtonToViewGroup(button, context);
             }
         });
 
@@ -161,6 +162,12 @@ public class ProductListingFragment extends Fragment {
 
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
+    }
+
+    private void removeFromWatchList(String prodID, String gdCusID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
+        db.removeValue();
+
     }
 
     private void setButtonToViewGroup(Button button, final Context context) {
