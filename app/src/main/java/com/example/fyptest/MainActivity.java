@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -44,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("4GB");
+
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -59,15 +64,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
         String id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
-//--------------------------------------------------------------------------------------------------
-        ImageButton homepagebutton = (ImageButton) findViewById(R.id.homepage);
-        homepagebutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
-            }
-        });
-//--------------------------------------------------------------------------------------------------
+
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
@@ -159,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
 
-                case R.id.homepage:
+                /*case R.id.homepage:
                     fragment = new MainScreen();
                     //pushing userInfo out of current view
                     loadFragment(fragment);
-                    return true;
+                    return true;*/
             }
             return false;
         }
@@ -177,6 +174,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
 
 }

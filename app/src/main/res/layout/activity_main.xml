@@ -9,9 +9,12 @@
     android:orientation="vertical"
     tools:ignore="ExtraText">
 
-    <include
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color4GBTheme"
+        android:elevation="10dp"/>
 
     <FrameLayout
         android:id="@+id/frame_container"
