@@ -38,7 +38,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.ImageViewHolder> {
     Context mContext;
     List<productClass> groupList;
-
     SharedPreferences preferences;
     String userIdentity;
 

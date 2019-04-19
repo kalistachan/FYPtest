@@ -1,6 +1,7 @@
 package com.example.fyptest.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,20 +16,28 @@ import android.widget.TextView;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.ImageViewHolder> {
     Context context;
     List<productClass> productList;
+    SharedPreferences preferences;
+    String userIdentity;
 
     private static final String TAG = "Debug: Watch List Adapter";
 
     public watchListAdapter(Context context, List<productClass> productList) {
         this.productList = productList;
         this.context = context;
+        this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
+        this.userIdentity = preferences.getString("userID", "UNKNOWN");
     }
 
     @Override
@@ -38,7 +47,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ImageViewHolder viewHolder, final int position) {
         final productClass uploadCurrent = productList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -57,11 +66,30 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
                 .fit()
                 .centerCrop()
                 .into(viewHolder.image_view_upload);
+
+        viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItemFromRecycleView(position);
+                removeFromWatchList(prodID);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return productList.size();
+    }
+
+    private void removeFromWatchList(String prodID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(userIdentity).child(prodID);
+        db.removeValue();
+
+    }
+
+    private void removeItemFromRecycleView(int position) {
+        productList.remove(position);
+        notifyItemRemoved(position);
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
