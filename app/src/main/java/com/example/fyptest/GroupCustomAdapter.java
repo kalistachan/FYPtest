@@ -88,7 +88,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                                     db.child(groupDetailID).removeValue();
                                     DatabaseReference dbAgain = FirebaseDatabase.getInstance().getReference("Product Group").child(prodID);
                                     dbAgain.removeValue();
-                                    removeItemFromRecycleView(position, groupList);
                                     return;
                                 }
                             }
@@ -97,7 +96,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                                 if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                     String groupDetailID = snapshot.child("gd_ID").getValue().toString();
                                     db.child(groupDetailID).removeValue();
-                                    removeItemFromRecycleView(position, groupList);
                                     return;
                                 }
                             }

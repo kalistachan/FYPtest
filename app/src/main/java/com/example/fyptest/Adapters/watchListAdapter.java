@@ -137,8 +137,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             @Override
             public void onClick(View v) {
                 pl.ShowDialog(context, prodID, prodName, button, option, gdCusID);
-                removeItemFromRecycleView(position);
-                removeFromWatchList(prodID);
             }
         });
     }
