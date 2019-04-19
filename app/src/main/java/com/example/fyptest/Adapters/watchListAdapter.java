@@ -16,8 +16,13 @@ import android.widget.TextView;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.fragments.ProductListingFragment;
+import com.example.fyptest.fragments.WatchListFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,9 +32,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.ImageViewHolder> {
     Context context;
-    List<productClass> productList;
+    List<productClass> productList, watchProduct;
+    List<String> itemList;
     SharedPreferences preferences;
     String userIdentity;
+
+    ProductListingFragment pl;
 
     private static final String TAG = "Debug: Watch List Adapter";
 
@@ -38,6 +46,8 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         this.context = context;
         this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        this.pl = new ProductListingFragment();
+        this.itemList = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +57,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ImageViewHolder viewHolder, final int position) {
         final productClass uploadCurrent = productList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -67,6 +77,24 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
                 .centerCrop()
                 .into(viewHolder.image_view_upload);
 
+        readData(new FirebaseCallback() {
+            @Override
+            public void onCallback1(List<String> itemList) {
+                if (!itemList.isEmpty()) {
+                    for (String producdID : itemList) {
+                        if (producdID.equalsIgnoreCase(prodID)) {
+                            setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Join Group", 1, userIdentity, context, position);
+                            break;
+                        } else if (!producdID.equalsIgnoreCase(prodID)) {
+                            setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Create Group", 2, userIdentity, context, position);
+                        }
+                    }
+                } else {
+                    setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Create Group", 2, userIdentity, context, position);
+                }
+            }
+        });
+
         viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +107,40 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     @Override
     public int getItemCount() {
         return productList.size();
+    }
+
+    private interface FirebaseCallback {
+        void onCallback1(List<String> itemList);
+    }
+
+    private void readData (final watchListAdapter.FirebaseCallback firebaseCallback) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                itemList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String productID = snapshot.child("pg_pro_ID").getValue().toString();
+                    itemList.add(productID);
+                }
+                firebaseCallback.onCallback1(itemList);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void setToCreateOrJoinGroup(final Button button, final String prodID, final String prodName , String btnName, final int option, final String gdCusID, final Context context, final int position) {
+        button.setText(btnName);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pl.ShowDialog(context, prodID, prodName, button, option, gdCusID);
+                removeItemFromRecycleView(position);
+                removeFromWatchList(prodID);
+            }
+        });
     }
 
     private void removeFromWatchList(String prodID) {

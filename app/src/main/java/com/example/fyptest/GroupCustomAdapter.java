@@ -77,12 +77,45 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         holder.leaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItemFromRecycleView(position);
-                gf.checkingConditionForRemoval(prodID, userIdentity, groupList, mContext);
+                final DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+                db.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 1) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                    String groupDetailID = snapshot.child("gd_ID").getValue().toString();
+                                    db.child(groupDetailID).removeValue();
+                                    DatabaseReference dbAgain = FirebaseDatabase.getInstance().getReference("Product Group").child(prodID);
+                                    dbAgain.removeValue();
+                                    removeItemFromRecycleView(position, groupList);
+                                    return;
+                                }
+                            }
+                        } else if (dataSnapshot.getChildrenCount() > 1) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                    String groupDetailID = snapshot.child("gd_ID").getValue().toString();
+                                    db.child(groupDetailID).removeValue();
+                                    removeItemFromRecycleView(position, groupList);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
+                    }
+                });
             }
         });
 
         readData(new FirebaseCallback() {
+
+
+
             @Override
             public void onCallback1(final String timeRemain) {
                 if (!timeRemain.isEmpty()) {
@@ -127,8 +160,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         }
     }
 
-    private void removeItemFromRecycleView(int position) {
-        groupList.remove(position);
+    private void removeItemFromRecycleView(int position, List<productClass> list) {
+        list.remove(position);
         notifyItemRemoved(position);
     }
 

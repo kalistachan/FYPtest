@@ -116,7 +116,6 @@ public class GroupFragment extends Fragment {
                             }
                         }
                     }
-                    Log.d("12345", "from here" + grpProdID.toString());
                     firebaseCallback.onCallback1(grpProdID);
                 } else if (!dataSnapshot.hasChildren()){
                     firebaseCallback.onCallback1(grpProdID);
@@ -130,42 +129,5 @@ public class GroupFragment extends Fragment {
 
     private interface FirebaseCallback {
         void onCallback1(List<String> itemList);
-    }
-
-    public void checkingConditionForRemoval(final String productID, final String userID, final List<productClass> list, final Context context) {
-        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
-        dbGroupDetail.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list.clear();
-                int counter = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
-                        String gd_ID = snapshot.child("gd_ID").getValue().toString();
-                        removeGroupDetail(productID, gd_ID);
-                        counter++;
-                    } else if (!snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)){
-                        counter++;
-                    }
-                }
-                if (counter == 1) {
-                    removeProductGroup(productID);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void removeProductGroup(final String productID) {
-        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
-        dbProductGroup.removeValue();
-    }
-
-    private void removeGroupDetail(final String productID, final String groupDetailID) {
-        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupDetailID);
-        dbGroupDetail.removeValue();
     }
 }
