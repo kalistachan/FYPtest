@@ -45,16 +45,19 @@ public class GroupFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View groupView = inflater.inflate(R.layout.group, container, false);
-        this.grpProdID = new ArrayList<>();
-        mRecyclerView = groupView.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         this.pref = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", "UNKNOWN");
+
+        this.grpList = new ArrayList<>();
+        this.grpProdID = new ArrayList<>();
+
         return groupView;
     }
 
@@ -65,12 +68,11 @@ public class GroupFragment extends Fragment {
     }
 
     public void displayGroup () {
-        grpList = new ArrayList<>();
         readData(new FirebaseCallback() {
             @Override
-            public void onCallback1(final List<String> grpProdID) {
+            public void onCallback1(final List<String> itemList) {
                 if (!grpProdID.isEmpty()) {
-
+                    grpList.clear();
                     for (final String item : grpProdID) {
                         DatabaseReference dbProd = FirebaseDatabase.getInstance().getReference("Product");
                         dbProd.addValueEventListener(new ValueEventListener() {
@@ -89,10 +91,11 @@ public class GroupFragment extends Fragment {
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
                             }
                         });
                     }
-                } grpProdID.clear();
+                }
             }
         });
     }
@@ -102,16 +105,22 @@ public class GroupFragment extends Fragment {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    for (DataSnapshot nestedsnapshot : snapshot.getChildren()) {
-                        if (nestedsnapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-                            String productID = nestedsnapshot.child("gd_pg_pro_ID").getValue().toString();
-                            grpProdID.add(productID);
-                            break;
+                if (dataSnapshot.hasChildren()) {
+                    grpProdID.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for (DataSnapshot nestedsnapshot : snapshot.getChildren()) {
+                            if (nestedsnapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                String productID = nestedsnapshot.child("gd_pg_pro_ID").getValue().toString();
+                                grpProdID.add(productID);
+                                break;
+                            }
                         }
                     }
+                    Log.d("12345", "from here" + grpProdID.toString());
+                    firebaseCallback.onCallback1(grpProdID);
+                } else if (!dataSnapshot.hasChildren()){
+                    firebaseCallback.onCallback1(grpProdID);
                 }
-                firebaseCallback.onCallback1(grpProdID);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -157,7 +166,6 @@ public class GroupFragment extends Fragment {
 
     private void removeGroupDetail(final String productID, final String groupDetailID) {
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupDetailID);
-        Log.d("Count", dbGroupDetail.toString());
         dbGroupDetail.removeValue();
     }
 }

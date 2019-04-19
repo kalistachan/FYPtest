@@ -20,10 +20,12 @@ import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.watchlistClass;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -41,11 +43,19 @@ public class WatchListFragment extends Fragment {
     //Database
     DatabaseReference dbProduct, dbWatchList;
 
+    //Query
+    Query getWatchProduct;
+
     //Storing list used for later callbacks
     List<productClass> productList;
     List<String> watchListProd;
 
     public WatchListFragment() {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -61,7 +71,7 @@ public class WatchListFragment extends Fragment {
         this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", null);
 
-        //Connecting DB Reference
+        //Query
         this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
         this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
 
@@ -84,6 +94,7 @@ public class WatchListFragment extends Fragment {
             @Override
             public void onCallback1(List<String> itemList) {
                 if (!watchListProd.isEmpty()) {
+                    productList.clear();
                     for (final String item : watchListProd) {
                         dbProduct.addValueEventListener(new ValueEventListener() {
                             @Override

@@ -38,7 +38,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.ImageViewHolder> {
     Context mContext;
     List<productClass> groupList;
-
     SharedPreferences preferences;
     String userIdentity;
 
@@ -91,6 +90,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 }
             }
         },prodID, uploadCurrent.getPro_durationForGroupPurchase());
+    }
+
+    private boolean checkGroupDetail(String productID) {
+
+        return false;
     }
 
     private String getMinPrice(String retailPrice, String minDisc) {

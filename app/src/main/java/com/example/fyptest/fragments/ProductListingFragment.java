@@ -55,10 +55,10 @@ public class ProductListingFragment extends Fragment {
     Context mContext;
     int qtyChosenVal;
     TextView qtyText;
-    String gdCusID, prodGrpId;
     Date pgDateCreated, gdJoinDate;
     boolean[] abc;
     SharedPreferences prefs;
+    String userIdentity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,23 +68,17 @@ public class ProductListingFragment extends Fragment {
         this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        this.mContext = getContext();
+
+        this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+        this.userIdentity = prefs.getString("userID", "UNKNOWN");
         return groupView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        abc = new boolean[1];
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         abc = new boolean[1];
         displayProduct();
     }
@@ -113,17 +107,16 @@ public class ProductListingFragment extends Fragment {
 
     }
 
-    public void ShowDialog(final Context context, final String prodID, String prodName, final Button button) {
-        mContext = context;
-        final AlertDialog.Builder popDialog = new AlertDialog.Builder(mContext);
-        LinearLayout linear = new LinearLayout(mContext);
+    public void ShowDialog(final Context context, final String prodID, String prodName, final Button button, final int option, final String gdCusID) {
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
+        LinearLayout linear = new LinearLayout(context);
 
         linear.setOrientation(LinearLayout.VERTICAL);
-        qtyText = new TextView(mContext);
+        qtyText = new TextView(context);
         qtyText.setPadding(10, 10, 10, 10);
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        final SeekBar seek = new SeekBar(mContext);
+        final SeekBar seek = new SeekBar(context);
         seek.setMax(10);
         linear.addView(seek);
         linear.addView(qtyText);
@@ -150,7 +143,11 @@ public class ProductListingFragment extends Fragment {
         popDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                insertProductGroup(prodID);
+                if (option == 1) {
+                    insertCustGroupDetails (prodID, gdCusID);
+                } else if (option == 2) {
+                    insertProductGroup(prodID, gdCusID);
+                }
                 setButtonToViewGroup(button, context);
             }
         });
@@ -186,24 +183,37 @@ public class ProductListingFragment extends Fragment {
         transaction.commit();
     }
 
-    private void insertProductGroup (String prodID) {
+    private void insertProductGroup (String prodID, String gdCusID) {
         Calendar c = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
         String string_pgDateCreated = df.format(c.getTime());
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
         databaseProduct.child(prodID).setValue(productGroup);
-        insertCustGroupDetails(prodID);
+        insertCustGroupDetails(prodID, gdCusID);
     }
 
-    private void insertCustGroupDetails (String prodGroupId) {
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
-        String pg_ID = databaseProduct.push().getKey();
+    private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {
         gdJoinDate = Calendar.getInstance().getTime();
-        prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        gdCusID = prefs.getString("userID", null);
-        groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
-        databaseProduct.child(pg_ID).setValue(groupDetail);
+        databaseProduct = FirebaseDatabase.getInstance().getReference("Group Detail");
+        databaseProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                        if (snapshotAgain.child("gd_pg_pro_ID").getValue().toString().equalsIgnoreCase(prodGroupId)) {
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(snapshotAgain.child("gd_pg_pro_ID").getValue().toString());
+                            String pg_ID = db.push().getKey();
+                            groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
+                            db.child(pg_ID).setValue(groupDetail);
+                            break;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
     }
 }
 
