@@ -51,7 +51,6 @@ public class GroupFragment extends Fragment {
         this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         this.pref = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", "UNKNOWN");
 

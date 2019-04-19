@@ -59,15 +59,12 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final GroupFragment gf = new GroupFragment();
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
-       // long remainingDays = calculateRemainingTime(prodID, uploadCurrent.getPro_durationForGroupPurchase());
         final String prodName = uploadCurrent.getPro_name();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
-       // final String timeRemain = String.valueOf(remainingDays);
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
         holder.prodPriceView.setText(minPrice);
         holder.prodTextName.setText(prodName);
         holder.targetQty.setText(targetQty);
-     //   holder.timeRemain.setText(timeRemain + " days left");
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
@@ -78,7 +75,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             @Override
             public void onClick(View v) {
                 final DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
-                db.addValueEventListener(new ValueEventListener() {
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() == 1) {
@@ -114,11 +111,9 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
 
         readData(new FirebaseCallback() {
 
-
-
             @Override
             public void onCallback1(final String timeRemain) {
-                if (!timeRemain.isEmpty()) {
+                if (timeRemain != null) {
                     holder.timeRemain.setText(timeRemain + " days left");
                 }
             }
@@ -163,6 +158,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     private void removeItemFromRecycleView(int position, List<productClass> list) {
         list.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, list.size());
+        notifyDataSetChanged();
     }
 
     private void readData (final GroupCustomAdapter.FirebaseCallback firebaseCallback, final String prodID, final String duration) {
