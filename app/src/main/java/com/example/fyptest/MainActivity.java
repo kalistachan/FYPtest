@@ -23,6 +23,7 @@ import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
+import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
