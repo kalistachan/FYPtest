@@ -2,10 +2,11 @@ package com.example.fyptest.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.text.LocaleDisplayNames;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,39 +16,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.fyptest.Adapters.purchasesAdapter;
 import com.example.fyptest.Adapters.watchListAdapter;
 import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
-import com.example.fyptest.database.watchlistClass;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WatchListFragment extends Fragment {
-    //Get user Identity
+public class PurchaseFragment extends Fragment {
+    //Retrieving User Identity
     SharedPreferences pref;
     String userIdentity;
+    Context context;
 
-    //RecyclerView Items
-    RecyclerView recycler_view_WatchList;
-    watchListAdapter adapter;
+    //Retriving RecycleView
+    RecyclerView recycler_view_Purchase;
+    purchasesAdapter adapter;
 
-    //Database
-    DatabaseReference dbProduct, dbWatchList;
+    //Pulling From Database
+    DatabaseReference dbOrderHistory, dbProduct;
 
-    //Storing list used for later callbacks
-    List<productClass> productList;
-    List<String> watchListProd;
+    //Temporary Storing
+    List<productClass> products;
+    List<String> productsID;
 
-    public WatchListFragment() {
+    public PurchaseFragment() {
     }
 
     @Override
@@ -57,78 +57,81 @@ public class WatchListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_watch_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_purchase, container, false);
 
         //Identifying recycleView
-        this.recycler_view_WatchList = view.findViewById(R.id.recycler_view_WatchList);
-        this.recycler_view_WatchList.setHasFixedSize(true);
-        this.recycler_view_WatchList.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.recycler_view_Purchase = view.findViewById(R.id.recycler_view_Purchase);
+        this.recycler_view_Purchase.setHasFixedSize(true);
+        this.recycler_view_Purchase.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.context = getActivity();
 
         //Identifying User
         this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", null);
 
         //DB Reference
-        this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+        this.dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History");
         this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
 
         //Other required variables
-        this.productList = new ArrayList<>();
-        this.watchListProd = new ArrayList<>();
+        this.products = new ArrayList<>();
+        this.productsID = new ArrayList<>();
 
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        displayWatchProducts();
+        displayProduct();
     }
 
-    public void displayWatchProducts() {
-        //Extracting productID from watchList to save under a string list
+    private void displayProduct() {
         readData(new FirebaseCallback() {
             @Override
-            public void onCallback1(List<String> itemList) {
-                if (!watchListProd.isEmpty()) {
-                    productList.clear();
-                    for (final String item : watchListProd) {
+            public void onCallback(List<String> itemList) {
+                if (!productsID.isEmpty()) {
+                    for (final String item : itemList) {
                         dbProduct.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
-                                        productClass product = snapshot.getValue(productClass.class);
-                                        productList.add(product);
+                                        productClass productClass = dataSnapshot.child(item).getValue(productClass.class);
+                                        products.add(productClass);
                                     }
                                 }
-                                adapter = new watchListAdapter(getActivity(), productList);
-                                recycler_view_WatchList.setAdapter(adapter);
+                                adapter = new purchasesAdapter(getActivity(), products);
+                                recycler_view_Purchase.setAdapter(adapter);
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
+                                Log.d("Debug: onCancelled (dbWatchList)", databaseError.getMessage());
                             }
                         });
                     }
+                } else {
+                    adapter = new purchasesAdapter(getActivity(), products);
+                    recycler_view_Purchase.setAdapter(adapter);
                 }
             }
         });
     }
 
-    private void readData (final FirebaseCallback firebaseCallback){
-        dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void readData (final PurchaseFragment.FirebaseCallback firebaseCallback){
+        dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userIdentity)) {
                     for (DataSnapshot snapshot : dataSnapshot.child(userIdentity).getChildren()) {
-                        watchListProd.add(snapshot.child("wl_pro_ID").getValue().toString());
+                        String gd_ID = snapshot.child("oh_pro_ID").getValue().toString();
+                        productsID.add(gd_ID);
                     }
-                    firebaseCallback.onCallback1(watchListProd);
-                } else if (!dataSnapshot.hasChild(userIdentity)){
-                    firebaseCallback.onCallback1(watchListProd);
-                    Log.d("Debug: Null WatchList", watchListProd.toString());
+                    firebaseCallback.onCallback(productsID);
+                } else {
+                    firebaseCallback.onCallback(productsID);
+                    Log.d("Debug: No Previous Purchase", productsID.toString());
                 }
             }
             @Override
@@ -137,10 +140,9 @@ public class WatchListFragment extends Fragment {
                 Log.d("Debug: onCancelled (dbWatchList)", databaseError.getMessage());
             }
         });
-
     }
 
     private interface FirebaseCallback {
-        void onCallback1(List<String> itemList);
+        void onCallback(List<String> itemList);
     }
 }

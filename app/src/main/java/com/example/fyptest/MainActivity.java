@@ -23,6 +23,7 @@ import com.example.fyptest.fragments.MainScreen;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
+import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_purchase:
-                    fragment = new ProductListingFragment();
+                    fragment = new PurchaseFragment();
                     loadFragment(fragment);
                     return true;
 
@@ -155,12 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;
-
-                /*case R.id.homepage:
-                    fragment = new MainScreen();
-                    //pushing userInfo out of current view
-                    loadFragment(fragment);
-                    return true;*/
             }
             return false;
         }

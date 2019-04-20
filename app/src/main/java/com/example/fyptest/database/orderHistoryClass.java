@@ -4,35 +4,32 @@ import java.util.Date;
 
 public class orderHistoryClass {
     private String oh_ID;
-    private String oh_co_ID;
+    private String oh_pro_ID;
     private String oh_cus_ID;
     private String oh_os_ID;
     private int oh_totalQuantity;
-    private float oh_totalPrice;
     private Date oh_checkoutDate;
+    private String oh_orderedPrice;
 
-    public void orderHistoryClass() {
+    public void orderHistoryClass() {}
 
-    }
-
-    public orderHistoryClass(String oh_ID, String oh_co_ID, String oh_cus_ID,
-                             String oh_os_ID, int oh_totalQuantity,
-                             float oh_totalPrice, Date oh_checkoutDate) {
+    public orderHistoryClass(String oh_ID, String oh_pro_ID, String oh_cus_ID,
+                             String oh_os_ID, int oh_totalQuantity, Date oh_checkoutDate, String oh_orderedPrice) {
         this.oh_ID = oh_ID;
-        this.oh_co_ID = oh_co_ID;
+        this.oh_pro_ID = oh_pro_ID;
         this.oh_cus_ID = oh_cus_ID;
         this.oh_os_ID = oh_os_ID;
         this.oh_totalQuantity = oh_totalQuantity;
-        this.oh_totalPrice = oh_totalPrice;
         this.oh_checkoutDate = oh_checkoutDate;
+        this.oh_orderedPrice = oh_orderedPrice;
     }
 
     public String getOh_ID() {
         return oh_ID;
     }
 
-    public String getOh_co_ID() {
-        return oh_co_ID;
+    public String getOh_pro_ID() {
+        return oh_pro_ID;
     }
 
     public String getOh_cus_ID() {
@@ -47,11 +44,11 @@ public class orderHistoryClass {
         return oh_totalQuantity;
     }
 
-    public float getOh_totalPrice() {
-        return oh_totalPrice;
-    }
-
     public Date getOh_checkoutDate() {
         return oh_checkoutDate;
+    }
+
+    public String getOh_orderedPrice() {
+        return oh_orderedPrice;
     }
 }
