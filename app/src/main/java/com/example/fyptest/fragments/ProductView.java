@@ -32,6 +32,14 @@ public class ProductView extends Fragment {
     DatabaseReference databaseProduct;
     TextView pvName;
     TextView categoryTV;
+    TextView descTV;
+    TextView durationTV;
+    TextView originalTV;
+    TextView discTV_1;
+    TextView discTV_2;
+    TextView targetqtyTV;
+    TextView purchaseqtyTV;
+    TextView shippingTV;
     ImageView image;
 
 
@@ -45,6 +53,14 @@ public class ProductView extends Fragment {
         pvName = groupView.findViewById(R.id.pv_name);
         categoryTV = groupView.findViewById(R.id.categoryTV);
         image = groupView.findViewById(R.id.image_view_upload2);
+        descTV = groupView.findViewById(R.id.productdescTV);
+        durationTV = groupView.findViewById(R.id.durationTV);
+        originalTV = groupView.findViewById(R.id.originalTV);
+        discTV_1 = groupView.findViewById(R.id.dc1TV);
+        discTV_2 = groupView.findViewById(R.id.dc2TV);
+        targetqtyTV = groupView.findViewById(R.id.tqTV);
+        purchaseqtyTV = groupView.findViewById(R.id.pqQty);
+        shippingTV = groupView.findViewById(R.id.sfTV);
         return groupView;
     }
 
@@ -71,6 +87,15 @@ public class ProductView extends Fragment {
                                 .into(image);
                         pvName.setText(productSnapshot.child("pro_name").getValue().toString());
                         categoryTV.setText(productSnapshot.child("pro_productType").getValue().toString());
+                        descTV.setText(productSnapshot.child("pro_description").getValue().toString());
+                        durationTV.setText(productSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
+                        originalTV.setText(productSnapshot.child("pro_retailPrice").getValue().toString());
+                        discTV_1.setText(productSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
+                        discTV_2.setText(productSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
+                        targetqtyTV.setText(productSnapshot.child("pro_targetQuantity").getValue().toString());
+                        // purchaseqty need to get from group detail table
+                       // purchaseqtyTV.setText(productSnapshot.child("pro_productType").getValue().toString());
+                        shippingTV.setText(productSnapshot.child("pro_shippingCost").getValue().toString());
                     }
                 }
 

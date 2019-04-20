@@ -228,7 +228,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         transaction.replace(R.id.frame_container, newProductView, "ProdID");
         transaction.addToBackStack(null);
         transaction.commit();
-       // pv.recyclerViewListClicked(prodID);
     }
 
 
