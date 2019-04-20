@@ -2,6 +2,7 @@ package com.example.fyptest;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("4GB");
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.logosmall);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -156,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
 
-                /*case R.id.homepage:
+                case R.drawable.logosmall:
                     fragment = new MainScreen();
                     //pushing userInfo out of current view
                     loadFragment(fragment);
-                    return true;*/
+                    return true;
             }
             return false;
         }
