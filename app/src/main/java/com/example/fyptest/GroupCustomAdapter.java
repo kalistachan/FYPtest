@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
+import com.example.fyptest.fragments.ProductView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +44,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     List<productClass> groupList;
     SharedPreferences preferences;
     String userIdentity;
+    private static GroupCustomAdapter itemListener;
+    ProductView pv = new ProductView();
 
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
@@ -85,6 +91,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                                     db.child(groupDetailID).removeValue();
                                     DatabaseReference dbAgain = FirebaseDatabase.getInstance().getReference("Product Group").child(prodID);
                                     dbAgain.removeValue();
+                                    removeItemFromRecycleView(position, groupList);
                                     return;
                                 }
                             }
@@ -93,6 +100,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                                 if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                     String groupDetailID = snapshot.child("gd_ID").getValue().toString();
                                     db.child(groupDetailID).removeValue();
+                                    removeItemFromRecycleView(position, groupList);
                                     return;
                                 }
                             }
@@ -116,6 +124,15 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 }
             }
         },prodID, uploadCurrent.getPro_durationForGroupPurchase());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToProductView(mContext,prodID);
+             //   pv.recyclerViewListClicked(v, prodID);
+                Toast.makeText(mContext, "Test itemview on click " + prodID, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private String getMinPrice(String retailPrice, String minDisc) {
@@ -131,6 +148,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     public int getItemCount() {
         return groupList.size();
     }
+
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView prodTextName;
@@ -160,7 +178,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             notifyItemRangeChanged(position, list.size());
             notifyDataSetChanged();
         }
-
     }
 
     private void readData (final GroupCustomAdapter.FirebaseCallback firebaseCallback, final String prodID, final String duration) {
@@ -200,5 +217,19 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     private interface FirebaseCallback {
         void onCallback1(String days);
     }
+
+    public void swapToProductView(Context mContext, String prodID) {
+        Activity activity = (FragmentActivity) mContext;
+        ProductView newProductView = new ProductView();
+        Bundle arguments = new Bundle();
+        arguments.putString("ProdID" , prodID);
+        newProductView.setArguments(arguments);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newProductView, "ProdID");
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+
 
 }
