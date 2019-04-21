@@ -1,5 +1,6 @@
 package com.example.fyptest;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment;
     BottomNavigationView navigation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
         String id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+
 
 
 //nav_drawer components-----------------------------------------------------------------------------
@@ -128,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 //nav_drawer components-----------------------------------------------------------------------------
-
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

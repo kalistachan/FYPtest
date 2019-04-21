@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -33,8 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.productClass;
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -222,7 +221,7 @@ public class AddProductFragment extends Fragment {
             public void onClick(View v) {
                 String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
                         pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
-                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "approved", pro_aproveBy = "admin1",
+                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
                         pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
 
                 if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
@@ -261,8 +260,6 @@ public class AddProductFragment extends Fragment {
                     addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
                             pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
                             pro_productType, pro_s_ID, pro_targetQuantity);
-                } else {
-
                 }
 
             }
@@ -271,7 +268,11 @@ public class AddProductFragment extends Fragment {
         buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                Fragment fragment = new fragment_main();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
     }
@@ -319,7 +320,7 @@ public class AddProductFragment extends Fragment {
                                 databaseProduct.child(prodId).setValue(productClass);
 
                                 //Redirecting user back to productListing Screen
-                                Fragment newFragment = new ProductListingFragment();
+                                Fragment newFragment = new fragment_main();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 transaction.replace(R.id.frame_container, newFragment);
                                 transaction.addToBackStack(null);
@@ -408,4 +409,5 @@ public class AddProductFragment extends Fragment {
         }
         return true;
     }
+
 }

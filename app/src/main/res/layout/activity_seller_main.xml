@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sellerContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Seller.SellerMainActivity">
+    tools:context=".Seller.SellerMainActivity"
+    android:orientation="vertical"
+    tools:ignore="ExtraText">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/seller_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color4GBTheme"
+        android:elevation="10dp" />
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/btnLogout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOG OUT"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/red"
+        android:textSize="15dp"
+        android:layout_alignParentBottom="true"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>
