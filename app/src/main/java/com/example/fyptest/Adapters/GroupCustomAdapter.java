@@ -1,4 +1,4 @@
-package com.example.fyptest;
+package com.example.fyptest.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.GroupFragment;
-import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProductView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,11 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TooManyListenersException;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;

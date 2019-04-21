@@ -3,9 +3,6 @@ package com.example.fyptest.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fyptest.CustomAdapter;
+import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.groupDetailClass;
 import com.example.fyptest.database.productClass;

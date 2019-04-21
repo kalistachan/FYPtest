@@ -1,7 +1,6 @@
 package com.example.fyptest.fragments;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.fyptest.CustomAdapter;
-import com.example.fyptest.GroupCustomAdapter;
+import com.example.fyptest.Adapters.GroupCustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.google.firebase.database.DataSnapshot;

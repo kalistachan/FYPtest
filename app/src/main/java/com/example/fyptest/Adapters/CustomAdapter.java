@@ -1,14 +1,10 @@
-package com.example.fyptest;
+package com.example.fyptest.Adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -21,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.watchlistClass;
-import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProductView;
 import com.example.fyptest.fragments.WatchListFragment;
@@ -34,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
