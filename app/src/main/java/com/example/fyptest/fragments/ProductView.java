@@ -80,10 +80,10 @@ public class ProductView extends Fragment {
 
     public void recyclerViewListClicked(final String prodID, final String userID){
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
-        dbGroupDetails = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+        dbGroupDetails = FirebaseDatabase.getInstance().getReference("Group Detail");
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
                     if (productSnapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                         Picasso.get()
@@ -104,17 +104,35 @@ public class ProductView extends Fragment {
                         dbGroupDetails.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                                for (DataSnapshot gdSnapshot: dataSnapshot2.getChildren()){
-                                    if (gdSnapshot.exists()) {
-                                        if (gdSnapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
-                                            purchaseqtyTV.setText(gdSnapshot.child("gd_qty").getValue().toString());
+                                if (dataSnapshot2.hasChild(prodID)) {
+                                    for (DataSnapshot gdSnapshot: dataSnapshot2.getChildren()){
+                                        if (gdSnapshot.exists()) {
+                                            DatabaseReference db2 = dbGroupDetails.child(prodID);
+                                            db2.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot3) {
+                                                    for (DataSnapshot gdSnapshot3: dataSnapshot3.getChildren()) {
+                                                        if (gdSnapshot3.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                                                            purchaseqtyTV.setText(gdSnapshot3.child("gd_qty").getValue().toString());
+                                                        } else {
+                                                            purchaseqtyTV.setText("0");
+                                                        }
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         } else {
                                             purchaseqtyTV.setText("0");
+                                            Log.d("snapshot status ", "value: dont exist");
                                         }
-                                    } else {
-                                        purchaseqtyTV.setText("0");
                                     }
+                                } else {
+                                    purchaseqtyTV.setText("0");
                                 }
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
