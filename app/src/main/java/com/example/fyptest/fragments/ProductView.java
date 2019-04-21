@@ -149,16 +149,4 @@ public class ProductView extends Fragment {
             }
         });
     }
-
-    /*
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState, int position) {
-        super.onViewCreated(view, savedInstanceState);
-        displayProductView(position);
-    }
-
-    private void displayProductView(int position) {
-
-    }
-    */
 }
