@@ -115,7 +115,7 @@ public class ProductView extends Fragment {
                                                         if (gdSnapshot3.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
                                                             purchaseqtyTV.setText(gdSnapshot3.child("gd_qty").getValue().toString());
                                                         } else {
-                                                            purchaseqtyTV.setText("0");
+                                                            purchaseqtyTV.setText("-");
                                                         }
                                                     }
                                                 }
@@ -125,12 +125,11 @@ public class ProductView extends Fragment {
                                                 }
                                             });
                                         } else {
-                                            purchaseqtyTV.setText("0");
-                                            Log.d("snapshot status ", "value: dont exist");
+                                            purchaseqtyTV.setText("-");
                                         }
                                     }
                                 } else {
-                                    purchaseqtyTV.setText("0");
+                                    purchaseqtyTV.setText("-");
                                 }
 
                             }
