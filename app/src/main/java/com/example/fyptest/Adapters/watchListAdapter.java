@@ -1,8 +1,12 @@
 package com.example.fyptest.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +21,7 @@ import com.example.fyptest.CustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProductListingFragment;
+import com.example.fyptest.fragments.ProductView;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -69,6 +74,12 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         final String freeShipping = uploadCurrent.getPro_freeShippingAt();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
         final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToProductView(context,prodID);
+            }
+        });
         viewHolder.prodNameViewName.setText(prodName);
         viewHolder.prodPriceViewName.setText("$" + retailPrice);
         viewHolder.shipPriceView.setText("$" + shippingFee);
@@ -171,5 +182,18 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             btnRemove = itemView.findViewById(R.id.btnRemove);
             btnAdd = itemView.findViewById(R.id.btnAdd);
         }
+    }
+
+    public void swapToProductView(Context mContext, String prodID) {
+        Activity activity = (FragmentActivity) mContext;
+        ProductView newProductView = new ProductView();
+        Bundle arguments = new Bundle();
+        arguments.putString("ProdID" , prodID);
+        arguments.putString("CusID", userIdentity);
+        newProductView.setArguments(arguments);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newProductView);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

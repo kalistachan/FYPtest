@@ -149,14 +149,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Discount Price:"
+            android:text="Discounted Price:"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/minDiscPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -262,26 +262,6 @@
             app:layout_constraintStart_toEndOf="@+id/pv_discount_2"
             app:layout_constraintTop_toBottomOf="@+id/dc1TV" />
 
-        <TextView
-            android:id="@+id/textView19"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:text="insert value here"
-            android:textColor="@color/black"
-            android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/textView17"
-            app:layout_constraintTop_toBottomOf="@+id/pv_discount_2" />
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="% target quantity met"
-            android:textColor="@color/black"
-            android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/textView19"
-            app:layout_constraintTop_toBottomOf="@+id/pv_discount_2" />
 
         <View
             android:id="@+id/view2"
@@ -293,7 +273,7 @@
             android:background="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintTop_toBottomOf="@+id/minDiscPercent" />
 
         <TextView
             android:id="@+id/tqTV"
@@ -319,7 +299,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:gravity="end"
-            android:text="TextView"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/pv_purchase_qty"

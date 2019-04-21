@@ -129,8 +129,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             @Override
             public void onClick(View v) {
                 swapToProductView(mContext,prodID);
-             //   pv.recyclerViewListClicked(v, prodID);
-                Toast.makeText(mContext, "Test itemview on click " + prodID, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -223,13 +221,12 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         ProductView newProductView = new ProductView();
         Bundle arguments = new Bundle();
         arguments.putString("ProdID" , prodID);
+        arguments.putString("CusID", userIdentity);
         newProductView.setArguments(arguments);
         FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, newProductView, "ProdID");
+        transaction.replace(R.id.frame_container, newProductView);
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
-
 
 }

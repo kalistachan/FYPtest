@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -24,6 +25,7 @@ import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.watchlistClass;
 import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
+import com.example.fyptest.fragments.ProductView;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,6 +96,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         final String prodName = uploadCurrent.getPro_name();
         holder.prodTextName.setText(prodName);
         holder.prodTextPrice.setText("$" + uploadCurrent.getPro_retailPrice());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToProductView(mContext,prodID);
+            }
+        });
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
@@ -258,5 +266,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         });
     }
 
+    public void swapToProductView(Context mContext, String prodID) {
+        Activity activity = (FragmentActivity) mContext;
+        ProductView newProductView = new ProductView();
+        Bundle arguments = new Bundle();
+        arguments.putString("ProdID" , prodID);
+        arguments.putString("CusID", userIdentity);
+        newProductView.setArguments(arguments);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newProductView);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
 }

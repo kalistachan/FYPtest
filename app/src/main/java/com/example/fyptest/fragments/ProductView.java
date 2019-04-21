@@ -30,6 +30,7 @@ import java.util.List;
 
 public class ProductView extends Fragment {
     DatabaseReference databaseProduct;
+    DatabaseReference dbGroupDetails;
     TextView pvName;
     TextView categoryTV;
     TextView descTV;
@@ -40,6 +41,7 @@ public class ProductView extends Fragment {
     TextView targetqtyTV;
     TextView purchaseqtyTV;
     TextView shippingTV;
+    TextView minDiscPercent;
     ImageView image;
 
 
@@ -61,6 +63,8 @@ public class ProductView extends Fragment {
         targetqtyTV = groupView.findViewById(R.id.tqTV);
         purchaseqtyTV = groupView.findViewById(R.id.pqQty);
         shippingTV = groupView.findViewById(R.id.sfTV);
+        minDiscPercent = groupView.findViewById(R.id.minDiscPercent);
+
         return groupView;
     }
 
@@ -68,18 +72,20 @@ public class ProductView extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
-        String desired_string = arguments.getString("ProdID");
-        recyclerViewListClicked(desired_string);
+        String prodID = arguments.getString("ProdID");
+        String userID = arguments.getString("CusID");
+        recyclerViewListClicked(prodID, userID);
     }
 
 
-    public void recyclerViewListClicked(final String prodID){
+    public void recyclerViewListClicked(final String prodID, final String userID){
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
+        dbGroupDetails = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
-                    if (productSnapshot.child("pro_ID").getValue().toString().equals(prodID)) {
+                    if (productSnapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                         Picasso.get()
                                 .load(productSnapshot.child("pro_mImageUrl").getValue().toString())
                                 .fit()
@@ -93,9 +99,28 @@ public class ProductView extends Fragment {
                         discTV_1.setText(productSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
                         discTV_2.setText(productSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
                         targetqtyTV.setText(productSnapshot.child("pro_targetQuantity").getValue().toString());
-                        // purchaseqty need to get from group detail table
-                       // purchaseqtyTV.setText(productSnapshot.child("pro_productType").getValue().toString());
                         shippingTV.setText(productSnapshot.child("pro_shippingCost").getValue().toString());
+                        minDiscPercent.setText("*if " + productSnapshot.child("pro_minOrderDiscount").getValue().toString() + "% target quantity met");
+                        dbGroupDetails.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                                for (DataSnapshot gdSnapshot: dataSnapshot2.getChildren()){
+                                    if (gdSnapshot.exists()) {
+                                        if (gdSnapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                                            purchaseqtyTV.setText(gdSnapshot.child("gd_qty").getValue().toString());
+                                        } else {
+                                            purchaseqtyTV.setText("0");
+                                        }
+                                    } else {
+                                        purchaseqtyTV.setText("0");
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
 
