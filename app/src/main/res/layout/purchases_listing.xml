@@ -18,8 +18,6 @@
         tools:ignore="MissingConstraints"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:divider="?android:dividerHorizontal"
-        android:showDividers="middle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -42,8 +40,7 @@
             android:textStyle="bold"
             tools:ignore="HardcodedText,MissingConstraints" />
 
-        <View
-            style="@style/Divider"/>
+        <View style="@style/Divider"/>
 
     </LinearLayout>
 
@@ -83,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="11dp"
         android:text="x1"
         android:textAlignment="textEnd"
         android:textColor="@color/black"
@@ -99,9 +96,8 @@
         android:id="@+id/prodPriceViewName"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="9dp"
+        android:layout_marginEnd="16dp"
         android:gravity="end"
         android:text="$0.00"
         android:textAlignment="textEnd"
@@ -134,7 +130,7 @@
         android:id="@+id/viewShippingFeePrice"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="16dp"
         android:text="$0.00"
         android:textAlignment="textEnd"
         android:textColor="@color/black"
@@ -150,6 +146,7 @@
         android:id="@+id/linearFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop=""
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:orientation="vertical"
@@ -166,7 +163,9 @@
             android:id="@+id/totalPaidPrice"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:gravity="end"
             android:text="Total Payment: $00.00"
             android:textColor="@color/black"
@@ -181,9 +180,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="0.5dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="2dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/yellowbuttons"

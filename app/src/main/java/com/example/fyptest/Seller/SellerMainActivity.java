@@ -3,15 +3,19 @@ package com.example.fyptest.Seller;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.loginActivity;
 
 public class SellerMainActivity extends AppCompatActivity {
@@ -21,7 +25,7 @@ public class SellerMainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
 
-    Menu addProduct;
+    Fragment fragment;
 
     Button btnLogout;
 
@@ -36,6 +40,8 @@ public class SellerMainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.seller_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        //Setting Logo in ToolBar
         toolbar.setLogo(R.drawable.logosmall);
 
         btnLogout = (Button) findViewById(R.id.btnLogout);
@@ -61,7 +67,32 @@ public class SellerMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.seller_toolbar, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.seller_toolbar, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addProduct:
+                fragment = new AddProductFragment();
+                loadFragment(fragment);
+                return true;
+
+            case R.id.toolbar_logo:
+                fragment = new fragment_main();
+                loadFragment(fragment);
+                return true;
+        }
+        return false;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
