@@ -10,109 +10,196 @@
     android:background="@drawable/layoutborder"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/linearHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:divider="?android:dividerHorizontal"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/orderStatusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="30dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="Shipping Status"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,MissingConstraints" />
+
+        <View
+            style="@style/Divider"/>
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/image_view_upload"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         android:layout_gravity="start"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="8dp"
         android:maxHeight="120dp"
         android:minHeight="120dp"
         android:src="@drawable/ic_image_placeholder"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/quantity"
-        android:layout_width="45dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:text="1"
+        android:id="@+id/prodNameViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="276dp"
+        android:minHeight="38dp"
+        android:text="Product Name"
+        android:textAlignment="textStart"
         android:textColor="@color/black"
+        android:textStyle=""
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/textView39"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
         tools:ignore="HardcodedText,MissingConstraints" />
 
     <TextView
-        android:id="@+id/prodNameViewName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Product Name"
+        android:layout_marginEnd="5dp"
+        android:text="x1"
+        android:textAlignment="textEnd"
         android:textColor="@color/black"
-        android:textStyle=""
+        app:layout_constraintBottom_toBottomOf="@+id/prodNameViewName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.989"
+        app:layout_constraintStart_toStartOf="@+id/image_view_upload"
+        app:layout_constraintTop_toTopOf="@+id/prodNameViewName"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="HardcodedText,MissingConstraints" />
 
     <TextView
         android:id="@+id/prodPriceViewName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="start|left"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="9dp"
+        android:gravity="end"
         android:text="$0.00"
+        android:textAlignment="textEnd"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView39"
-        app:layout_constraintEnd_toStartOf="@+id/orderStatusTextView"
-        app:layout_constraintStart_toEndOf="@+id/textView39"
-        app:layout_constraintTop_toTopOf="@+id/textView39"
-        app:layout_constraintVertical_bias="0.6"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/orderStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:minHeight="30dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:text="Shipping Status"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btnTrackOrder"
+        app:layout_constraintBottom_toTopOf="@+id/viewShippingFeePrice"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="HardcodedText" />
-
-    <Button
-        android:id="@+id/btnTrackOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/yellowbuttons"
-        android:minHeight="30sp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-
-        android:text="Track Order"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="HardcodedText,RtlCompat" />
 
     <TextView
         android:id="@+id/textView39"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Total Price:"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
+        android:text="Shipping Fee :"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
+        app:layout_constraintEnd_toStartOf="@+id/viewShippingFeePrice"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/viewShippingFeePrice"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginEnd="10dp"
+        android:text="$0.00"
+        android:textAlignment="textEnd"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView39"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toTopOf="@+id/textView39"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="HardcodedText,MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/linearFooter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_upload"
+        tools:ignore="MissingConstraints">
+
+        <View
+            style="@style/Divider"/>
+
+        <TextView
+            android:id="@+id/totalPaidPrice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:gravity="end"
+            android:text="Total Payment: $00.00"
+            android:textColor="@color/black"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:id="@+id/lineBeforeBtn"
+            style="@style/Divider"/>
+
+        <Button
+            android:id="@+id/btnTrackOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="0.5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/yellowbuttons"
+            android:minHeight="30sp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="Track Order"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.653"
+            tools:ignore="HardcodedText,RtlHardcoded" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

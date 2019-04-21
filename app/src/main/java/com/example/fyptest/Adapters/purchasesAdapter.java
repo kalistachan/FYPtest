@@ -67,6 +67,8 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
         final productClass uploadCurrent = productList.get(i);
         final String prodName = uploadCurrent.getPro_name();
         final String prodID = uploadCurrent.getPro_ID();
+        final String freeShippingCondition = uploadCurrent.getPro_freeShippingAt();
+        final String shippingFee = uploadCurrent.getPro_shippingCost();
         imageViewHolder.prodNameViewName.setText(prodName);
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
@@ -80,11 +82,37 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("oh_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                        imageViewHolder.prodPriceViewName.setText("$" +snapshot.child("oh_orderedPrice").getValue().toString());
-                        imageViewHolder.quantity.setText("x" + snapshot.child("oh_totalQuantity").getValue().toString());
+                        String productCheckoutPrice = snapshot.child("oh_orderedPrice").getValue().toString();
+                        String quantityPurchase = snapshot.child("oh_totalQuantity").getValue().toString();
+                        float amountPaid = Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase);
+                        String intToStringForPrice = Float.toString(amountPaid);
+
+                        if (amountPaid >= Float.parseFloat(freeShippingCondition)) {
+                            String shippingFee = "$0.00";
+                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
+                            imageViewHolder.totalPaidPrice.setText(intToStringForPrice);
+                        } else {
+                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
+                            float finalCost = amountPaid + Float.parseFloat(shippingFee);
+                            String intToStringForfinalCost = Float.toString(finalCost);
+                            imageViewHolder.totalPaidPrice.setText(intToStringForfinalCost);
+                        }
+
+                        imageViewHolder.prodPriceViewName.setText("$" + productCheckoutPrice);
+                        imageViewHolder.quantity.setText("x" + quantityPurchase);
                         imageViewHolder.orderStatusTextView.setText(snapshot.child("oh_os").getValue().toString());
-                        if (snapshot.child("oh_os").getValue().toString().equalsIgnoreCase("delivered")) {
+
+                        if (!snapshot.child("oh_os").getValue().toString().equalsIgnoreCase("delivered")) {
+                            imageViewHolder.lineBeforeBtn.setVisibility(View.GONE);
                             imageViewHolder.btnTrackOrder.setVisibility(View.GONE);
+                        } else {
+                            imageViewHolder.btnTrackOrder.setText("Acknowledge");
+                            imageViewHolder.btnTrackOrder.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
                         }
                     }
                 }
@@ -99,8 +127,9 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView image_view_upload;
-        TextView prodNameViewName, quantity, prodPriceViewName, orderStatusTextView;
+        TextView prodNameViewName, quantity, prodPriceViewName, orderStatusTextView, viewShippingFeePrice, totalPaidPrice;
         Button btnTrackOrder;
+        View lineBeforeBtn;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,36 +137,11 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
             prodNameViewName = itemView.findViewById(R.id.prodNameViewName);
             quantity = itemView.findViewById(R.id.quantity);
             prodPriceViewName = itemView.findViewById(R.id.prodPriceViewName);
+            viewShippingFeePrice = itemView.findViewById(R.id.viewShippingFeePrice);
             orderStatusTextView = itemView.findViewById(R.id.orderStatusTextView);
+            totalPaidPrice = itemView.findViewById(R.id.totalPaidPrice);
             btnTrackOrder = itemView.findViewById(R.id.btnTrackOrder);
+            lineBeforeBtn = itemView.findViewById(R.id.lineBeforeBtn);
         }
-    }
-
-    private interface FirebaseCallback {
-        void onCallback(List<orderHistoryClass> itemList);
-    }
-
-    private void readData (final purchasesAdapter.FirebaseCallback firebaseCallback) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Order History").child(userIdentity);
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(userIdentity)) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        orderHistoryClass orderHistoryClass = snapshot.getValue(orderHistoryClass.class);
-                        orderHistoryList.add(orderHistoryClass);
-                    }
-                    firebaseCallback.onCallback(orderHistoryList);
-                } else {
-                    firebaseCallback.onCallback(orderHistoryList);
-                    Log.d("Debug: ", "No Previous Purchase");
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("Debug: onCancelled (dbWatchList)", databaseError.getMessage());
-            }
-        });
     }
 }
