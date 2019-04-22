@@ -52,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logosmall);
 
+        View homepage = toolbar.getChildAt(0);
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gotohome = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(gotohome);
+            }
+        });
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
