@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.fyptest.R;
+import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.loginActivity;
 
 public class AdminMainActivity extends AppCompatActivity {
@@ -60,7 +61,15 @@ public class AdminMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.addSeller:
+                fragment = new AddSellerFragment();
+                loadFragment(fragment);
+                return true;
 
+            case R.id.toolbar_logo:
+                fragment = new fragment_main();
+                loadFragment(fragment);
+                return true;
         }
         return false;
     }
