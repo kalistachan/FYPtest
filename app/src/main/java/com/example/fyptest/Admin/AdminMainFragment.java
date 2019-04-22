@@ -1,9 +1,10 @@
-package com.example.fyptest.Seller;
+package com.example.fyptest.Admin;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class fragment_main extends Fragment {
+public class AdminMainFragment extends Fragment {
     SharedPreferences preferences;
     String userIdentity;
     Context context;
@@ -32,14 +33,16 @@ public class fragment_main extends Fragment {
     DatabaseReference dbProduct;
 
     List<productClass> productList;
-    MainFragmentAdapter adapter;
+    AdminAdapter adapter;
 
-    public fragment_main() {}
+    public AdminMainFragment() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_main, container, false);
         this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setHasFixedSize(true);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -55,7 +58,7 @@ public class fragment_main extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayProduct();
     }
@@ -66,12 +69,12 @@ public class fragment_main extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("pro_s_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+//                    if (snapshot.child("pro_Status").getValue().toString().equalsIgnoreCase("pending")) {
                         productClass product = snapshot.getValue(productClass.class);
                         productList.add(product);
-                    }
+//                    }
                 }
-                adapter = new MainFragmentAdapter(getActivity(), productList);
+                adapter = new AdminAdapter(getActivity(), productList);
                 recyclerView.setAdapter(adapter);
             }
             @Override

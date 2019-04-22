@@ -14,7 +14,7 @@
     </array>
 
     <array name="productType">
-        <item> </item>
+        <item></item>
         <item>cosmetic</item>
         <item>toiletries</item>
         <item>fashion</item>

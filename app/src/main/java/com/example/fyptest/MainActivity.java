@@ -1,7 +1,6 @@
 package com.example.fyptest;
 
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -52,15 +51,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logosmall);
-
-        View homepage = toolbar.getChildAt(0);
-        homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gotohome = new Intent(MainActivity.this, MainActivity.class);
-                startActivity(gotohome);
-            }
-        });
 
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);

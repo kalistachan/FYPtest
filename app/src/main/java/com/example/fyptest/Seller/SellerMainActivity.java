@@ -19,12 +19,10 @@ import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.loginActivity;
 
 public class SellerMainActivity extends AppCompatActivity {
-
     SharedPreferences preferences;
     String userIdentity;
 
     Toolbar toolbar;
-
     Fragment fragment;
 
     Button btnLogout;
@@ -77,6 +75,10 @@ public class SellerMainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.addProduct:
                 fragment = new AddProductFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString("ProdID" , null);
+                arguments.putString("CusID", userIdentity);
+                fragment.setArguments(arguments);
                 loadFragment(fragment);
                 return true;
 

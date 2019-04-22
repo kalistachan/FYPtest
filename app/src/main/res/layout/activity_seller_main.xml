@@ -21,7 +21,7 @@
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/seller_toolbar"
         android:layout_above="@+id/btnLogout"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
