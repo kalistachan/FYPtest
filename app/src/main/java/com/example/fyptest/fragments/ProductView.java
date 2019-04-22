@@ -1,17 +1,24 @@
 package com.example.fyptest.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.database.watchlistClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,11 +27,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ProductView extends Fragment {
-    DatabaseReference databaseProduct;
-    DatabaseReference dbGroupDetails;
+    DatabaseReference databaseProduct, dbGroupDetails, dbGroup;
     TextView pvName, categoryTV, descTV, durationTV, originalTV, discTV_1, discTV_2, targetqtyTV,
             purchaseqtyTV, shippingTV, minDiscPercent;
     ImageView image;
+    Button groupBtn, watchBtn;
+    Context context;
+    ProductListingFragment pl;
 
     public ProductView() {
         // Required empty public constructor
@@ -33,6 +42,7 @@ public class ProductView extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View groupView = inflater.inflate(R.layout.fragment_product_view, container, false);
+        context = getContext();
         pvName = groupView.findViewById(R.id.pv_name);
         categoryTV = groupView.findViewById(R.id.categoryTV);
         image = groupView.findViewById(R.id.image_view_upload2);
@@ -45,7 +55,9 @@ public class ProductView extends Fragment {
         purchaseqtyTV = groupView.findViewById(R.id.pqQty);
         shippingTV = groupView.findViewById(R.id.sfTV);
         minDiscPercent = groupView.findViewById(R.id.minDiscPercent);
-
+        groupBtn = groupView.findViewById(R.id.button2);
+        watchBtn = groupView.findViewById(R.id.button3);
+        pl = new ProductListingFragment();
         return groupView;
     }
 
@@ -61,6 +73,7 @@ public class ProductView extends Fragment {
     public void recyclerViewListClicked(final String prodID, final String userID){
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
         dbGroupDetails = FirebaseDatabase.getInstance().getReference("Group Detail");
+        dbGroup = FirebaseDatabase.getInstance().getReference("Product Group");
         databaseProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -71,6 +84,7 @@ public class ProductView extends Fragment {
                                 .fit()
                                 .centerCrop()
                                 .into(image);
+                        final String productName = productSnapshot.child("pro_name").getValue().toString();
                         pvName.setText(productSnapshot.child("pro_name").getValue().toString());
                         categoryTV.setText(productSnapshot.child("pro_productType").getValue().toString());
                         descTV.setText(productSnapshot.child("pro_description").getValue().toString());
@@ -120,12 +134,156 @@ public class ProductView extends Fragment {
                         });
                     }
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dbGroup.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(prodID)) {
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+                    db.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                                    Log.d("12345", "Condition 1");
+                                    groupBtn.setText("View Goup");
+                                    removeFromWatchList(prodID, userID);
+                                    watchBtn.setVisibility(View.INVISIBLE);
+                                    groupBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            pl.swapToGroupFragment(getContext());
+                                        }
+                                    });
+                                    break;
+                                } else {
+                                    Log.d("12345", "Condition 2");
+                                    DatabaseReference dbPro = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                                    dbPro.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            String productName = dataSnapshot.child("pro_name").getValue().toString();
+                                            setToCreateOrJoinGroup(groupBtn, prodID, productName , "Join Group", 1, userID, getContext());
+                                            changeWatchButton(watchBtn, userID, prodID, getContext());
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else if (!dataSnapshot.hasChild(prodID)) {
+                    Log.d("12345", "Condition 3");
+                    DatabaseReference dbPro = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                    dbPro.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String productName = dataSnapshot.child("pro_name").getValue().toString();
+                            setToCreateOrJoinGroup(groupBtn, prodID, productName , "Create Group", 2, userID, getContext());
+                            changeWatchButton(watchBtn, userID, prodID, getContext());
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void removeFromWatchList(String prodID, String gdCusID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
+        db.removeValue();
+
+    }
+
+    private void changeWatchButton(final Button button, final String userID, final String prodID, final Context context) {
+        DatabaseReference dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+        dbWatchList.addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(userID)) {
+                    if (dataSnapshot.child(userID).hasChild(prodID)) {
+                        if (dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                            setButtonToViewWatchList(button, context);
+                        } else if (!dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
+                            setButtonToAddWatchList(prodID, button, userID, context);
+                        }
+                    } else if (!dataSnapshot.child(userID).hasChild(prodID)) {
+                        setButtonToAddWatchList(prodID, button, userID, context);
+                    }
+                } else if (!dataSnapshot.hasChild(userID)) {
+                    setButtonToAddWatchList(prodID, button, userID, context);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){}
+        });
+    }
+
+    private void setButtonToAddWatchList(final String prodID, final Button button, final String gdCusID, final Context context) {
+        button.setText(" Add To Watch List ");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToWatchList(prodID, button, gdCusID, context);
+            }
+        });
+    }
+
+    private void setButtonToViewWatchList(Button button, final Context context) {
+        button.setText(" View Watch List ");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToWatchListGragment(context);
+            }
+        });
+    }
+
+    private void swapToWatchListGragment (Context mContext) {
+        Activity activity = (FragmentActivity) mContext;
+        WatchListFragment newGroupFragment = new WatchListFragment();
+        Log.d("activity ", "value: " + activity);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newGroupFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void addToWatchList(String prodID, Button button, String gdCusID, Context context) {
+        DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID);
+        String wl_ID = newDB.push().getKey();
+        watchlistClass watchlistClass = new watchlistClass(wl_ID, gdCusID, prodID);
+        newDB.child(prodID).setValue(watchlistClass);
+        setButtonToViewWatchList(button, context);
+    }
+
+    private void setToCreateOrJoinGroup(final Button button, final String prodID, final String prodName ,
+                                        String btnName, final int option, final String gdCusID, final Context context) {
+        button.setText(btnName);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pl.ShowDialog(context, prodID, prodName, button, option, gdCusID);
             }
         });
     }

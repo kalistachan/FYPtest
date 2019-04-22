@@ -42,7 +42,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     SharedPreferences pref;
     String userIdentity;
 
-    DatabaseReference dbWatchList, dbGroupDetail;
+    DatabaseReference dbGroupDetail;
 
     ProductListingFragment pl;
 
@@ -77,7 +77,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         this.pref = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", "UNKNOWN");
 
-        this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
         this.pl = new ProductListingFragment();
     }
 
@@ -156,6 +155,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     }
 
     private void changeWatchButton(final Button button, final String userID, final String prodID, final Context context) {
+        DatabaseReference dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
         dbWatchList.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
