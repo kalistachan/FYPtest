@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -39,12 +38,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -63,12 +66,10 @@ public class AddProductFragment extends Fragment {
     DatabaseReference databaseProduct;
     FirebaseStorage storage;
     StorageReference storageReference;
-    String prodId;
-    String imageUrl;
-
     SharedPreferences prefs;
-    String userIdentity;
-    BottomNavigationView navigation;
+
+    String prodId, imageUrl, userIdentity, prodID, userID;
+    Bundle arguments;
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
@@ -77,6 +78,38 @@ public class AddProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_product, container, false);
+        arguments = getArguments();
+
+        this.imgView = (ImageView) view.findViewById(R.id.imgView);
+        this.productType = (Spinner) view.findViewById(R.id.productType);
+        this.checkBoxFreeShipment = (CheckBox) view.findViewById(R.id.checkBoxFreeShipment);
+
+        this.editProductName = (EditText) view.findViewById(R.id.editProductName);
+        this.editProductPrice = (EditText) view.findViewById(R.id.editProductPrice);
+        this.duration = (EditText) view.findViewById(R.id.duration);
+        this.editTextProdDesc = (EditText) view.findViewById(R.id.editTextProdDesc);
+        this.maxDis = (EditText) view.findViewById(R.id.maxDis);
+        this.minTar = (EditText) view.findViewById(R.id.minTar);
+        this.minDis = (EditText) view.findViewById(R.id.minDis);
+        this.editTextShipCost = (EditText) view.findViewById(R.id.editTextShipCost);
+        this.editTextFreeShipCondition = (EditText) view.findViewById(R.id.editTextFreeShipCondition);
+        this.editTextTQ = (EditText) view.findViewById(R.id.editTextTQ);
+
+        this.textViewMaxPrice = (TextView) view.findViewById(R.id.textViewMaxPrice);
+        this.textViewMinPrice = (TextView) view.findViewById(R.id.textViewMinPrice);
+        this.maxTar = (TextView) view.findViewById(R.id.maxTar);
+        this.dayOrWeek = (TextView) view.findViewById(R.id.dayOrWeek);
+
+        this.buttonAddProduct = (Button) view.findViewById(R.id.buttonAddProduct);
+        this.buttonCancelProduct = (Button) view.findViewById(R.id.buttonCancelProduct);
+
+        //Get User Identity
+        prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
+        userIdentity = prefs.getString("userID", null);
+
+        //Retrieving Thrown Object
+        //prodID = arguments.getString("ProdID");
+        //userID = arguments.getString("CusID");
         return view;
     }
 
@@ -84,34 +117,75 @@ public class AddProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        imgView = (ImageView) getView().findViewById(R.id.imgView);
+        if (arguments.getString("ProdID") != null) {
+            fillAddProdContent();
+            buttonAddProduct.setText("Edit");
+            buttonCancelProduct.setText("Remove");
+        }
+        else if (arguments.getString("ProdID") == null) {
+            buttonAddProduct.setText("Add");
+            buttonCancelProduct.setText("Cancel");
 
-        productType = (Spinner) getView().findViewById(R.id.productType);
+            buttonAddProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
+                            pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
+                            pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
+                            pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
 
-        editProductName = (EditText) getView().findViewById(R.id.editProductName);
-        editProductPrice = (EditText) getView().findViewById(R.id.editProductPrice);
-        duration = (EditText) getView().findViewById(R.id.duration);
-        editTextProdDesc = (EditText) getView().findViewById(R.id.editTextProdDesc);
-        maxDis = (EditText) getView().findViewById(R.id.maxDis);
-        minTar = (EditText) getView().findViewById(R.id.minTar);
-        minDis = (EditText) getView().findViewById(R.id.minDis);
-        editTextShipCost = (EditText) getView().findViewById(R.id.editTextShipCost);
-        editTextFreeShipCondition = (EditText) getView().findViewById(R.id.editTextFreeShipCondition);
-        editTextTQ = (EditText) getView().findViewById(R.id.editTextTQ);
+                    if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
 
-        textViewMaxPrice = (TextView) getView().findViewById(R.id.textViewMaxPrice);
-        textViewMinPrice = (TextView) getView().findViewById(R.id.textViewMinPrice);
-        maxTar = (TextView) getView().findViewById(R.id.maxTar);
-        dayOrWeek = (TextView) getView().findViewById(R.id.dayOrWeek);
+                    if (checkNull(editTextProdDesc)) {pro_description = editTextProdDesc.getText().toString().trim();}
 
-        checkBoxFreeShipment = (CheckBox) getView().findViewById(R.id.checkBoxFreeShipment);
+                    if (checkNull(editProductPrice)) {pro_retailPrice = editProductPrice.getText().toString().trim();}
 
-        buttonAddProduct = (Button) getView().findViewById(R.id.buttonAddProduct);
-        buttonCancelProduct = (Button) getView().findViewById(R.id.buttonCancelProduct);
+                    if (checkNull(duration)) {
+                        if (Integer.parseInt(duration.getText().toString()) < 4 || Integer.parseInt(duration.getText().toString()) > 30) {
+                            duration.setError("Invalid Duration");
+                        } else {
+                            pro_durationForGroupPurchase = duration.getText().toString().trim();
+                        }
+                    }
 
-        prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
-        userIdentity = prefs.getString("userID", null);
-        navigation = (BottomNavigationView) getView().findViewById(R.id.navigation);
+                    if (checkNull(maxDis)) {pro_maxOrderDiscount = maxDis.getText().toString().trim();}
+
+                    if (checkNull(minTar)) {pro_minOrderAccepted = minTar.getText().toString().trim();}
+
+                    if (checkNull(minDis)) {pro_minOrderDiscount = minDis.getText().toString().trim();}
+
+                    if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
+
+                    if (checkBoxFreeShipment.isChecked()) {
+                        if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
+                    } else { pro_freeShippingAt = null;}
+
+                    if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
+
+                    boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
+                            pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
+                            pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
+
+                    if (result) {
+                        addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
+                                pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
+                                pro_productType, pro_s_ID, pro_targetQuantity);
+                    }
+
+                }
+            });
+
+            buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    Fragment fragment = new fragment_main();
+                    transaction.replace(R.id.frame_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+        }
 
         if (!editProductPrice.getText().toString().equals("$0.00")) {
             maxDis.addTextChangedListener(new TextWatcher() {
@@ -215,66 +289,6 @@ public class AddProductFragment extends Fragment {
                 filePath =  chooseImage();
             }
         });
-
-        buttonAddProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
-                        pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
-                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
-                        pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
-
-                if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
-
-                if (checkNull(editTextProdDesc)) {pro_description = editTextProdDesc.getText().toString().trim();}
-
-                if (checkNull(editProductPrice)) {pro_retailPrice = editProductPrice.getText().toString().trim();}
-
-                if (checkNull(duration)) {
-                    if (Integer.parseInt(duration.getText().toString()) < 4 || Integer.parseInt(duration.getText().toString()) > 30) {
-                        duration.setError("Invalid Duration");
-                    } else {
-                        pro_durationForGroupPurchase = duration.getText().toString().trim();
-                    }
-                }
-
-                if (checkNull(maxDis)) {pro_maxOrderDiscount = maxDis.getText().toString().trim();}
-
-                if (checkNull(minTar)) {pro_minOrderAccepted = minTar.getText().toString().trim();}
-
-                if (checkNull(minDis)) {pro_minOrderDiscount = minDis.getText().toString().trim();}
-
-                if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
-
-                if (checkBoxFreeShipment.isChecked()) {
-                    if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
-                } else { pro_freeShippingAt = null;}
-
-                if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
-
-                boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
-                        pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
-                        pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
-
-                if (result) {
-                    addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
-                            pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
-                            pro_productType, pro_s_ID, pro_targetQuantity);
-                }
-
-            }
-        });
-
-        buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                Fragment fragment = new fragment_main();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
     }
 
     private void addProd (final String pro_name, final String pro_description, final String pro_retailPrice, final String pro_maxOrderQtySellPrice, final String pro_minOrderQtySellPrice,
@@ -325,7 +339,6 @@ public class AddProductFragment extends Fragment {
                                 transaction.replace(R.id.frame_container, newFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();
-                                navigation.getMenu().getItem(1).setChecked(true);
 
                                 Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
                             }
@@ -348,6 +361,14 @@ public class AddProductFragment extends Fragment {
             });
         } else {
             Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setSpinText(Spinner spin, String text) {
+        for (int i = 0 ; i < spin.getAdapter().getCount(); i++) {
+            if (spin.getAdapter().getItem(i).toString().contains(text)) {
+                spin.setSelection(i);
+            }
         }
     }
 
@@ -408,6 +429,41 @@ public class AddProductFragment extends Fragment {
             }
         }
         return true;
+    }
+
+    private void fillAddProdContent() {
+        prodID = arguments.getString("ProdID");
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+        dbProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("12345", dataSnapshot.getValue().toString());
+                Picasso.get()
+                        .load(dataSnapshot.child("pro_mImageUrl").getValue().toString())
+                        .into(imgView);
+                editProductName.setText(dataSnapshot.child("pro_name").getValue().toString());
+                setSpinText(productType, dataSnapshot.child("pro_productType").getValue().toString());
+                duration.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
+                editTextProdDesc.setText(dataSnapshot.child("pro_description").getValue().toString());
+                editTextTQ.setText(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                editProductPrice.setText(dataSnapshot.child("pro_retailPrice").getValue().toString());
+                maxDis.setText(dataSnapshot.child("pro_maxOrderDiscount").getValue().toString());
+                minTar.setText(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
+                minDis.setText(dataSnapshot.child("pro_minOrderDiscount").getValue().toString());
+                String shipCost = "$" + dataSnapshot.child("pro_shippingCost").getValue().toString();
+                editTextShipCost.setText(shipCost);
+
+                if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                    String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
+                    checkBoxFreeShipment.setChecked(true);
+                    editTextFreeShipCondition.setText(freeShipping);
+                } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
+                    checkBoxFreeShipment.setChecked(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
     }
 
 }

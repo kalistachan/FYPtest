@@ -39,21 +39,20 @@ public class fragment_main extends Fragment {
     public fragment_main() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        preferences = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        userIdentity = preferences.getString("userID", null);
-        context = getContext();
-        productList = new ArrayList<>();
-        dbProduct = FirebaseDatabase.getInstance().getReference("Product");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_fragment_main, container, false);
-        this.recyclerView = container.findViewById(R.id.recycler_view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_fragment_main, container, false);
+        this.recyclerView = view.findViewById(R.id.recycler_view);
         this.recyclerView.setHasFixedSize(true);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        this.context = getContext();
+
+        this.preferences = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+        this.userIdentity = preferences.getString("userID", null);
+
+        this.productList = new ArrayList<>();
+        this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
         return view;
     }
 
@@ -69,8 +68,10 @@ public class fragment_main extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    productClass product = snapshot.getValue(productClass.class);
-                    productList.add(product);
+                    if (snapshot.child("pro_s_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                        productClass product = snapshot.getValue(productClass.class);
+                        productList.add(product);
+                    }
                 }
                 adapter = new MainFragmentAdapter(getActivity(), productList);
                 recyclerView.setAdapter(adapter);

@@ -324,10 +324,13 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/orangebuttons"
             android:text="Button 1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.286"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sfTV" />
 
@@ -335,10 +338,13 @@
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/yellowbuttons"
             android:text="Button 2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/button2"
             app:layout_constraintTop_toBottomOf="@+id/sfTV" />
 

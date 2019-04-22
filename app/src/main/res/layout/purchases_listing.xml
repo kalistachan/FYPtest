@@ -155,8 +155,7 @@
         app:layout_constraintTop_toBottomOf="@+id/image_view_upload"
         tools:ignore="MissingConstraints">
 
-        <View
-            style="@style/Divider"/>
+        <View style="@style/Divider"/>
 
         <TextView
             android:id="@+id/totalPaidPrice"

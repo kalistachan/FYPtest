@@ -70,10 +70,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     public CustomAdapter(Context applicationContext,  List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
+
         this.itemList = new ArrayList<>();
         this.value = new boolean[1];
+
         this.pref = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = pref.getString("userID", "UNKNOWN");
+
         this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
         this.pl = new ProductListingFragment();
     }
@@ -157,22 +160,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userID)) {
-                    Log.d("123123", "has userID");
                     if (dataSnapshot.child(userID).hasChild(prodID)) {
-                        Log.d("123123", "has userID & ProdID");
                         if (dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
-                            Log.d("123123", "has userID & ProdID & CusID");
                             setButtonToViewWatchList(button, context);
                         } else if (!dataSnapshot.child(userID).child(prodID).child("wl_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
-                            Log.d("123123", "has userID & ProdID but no CusID");
                             setButtonToAddWatchList(prodID, button, userID, context);
                         }
                     } else if (!dataSnapshot.child(userID).hasChild(prodID)) {
-                        Log.d("123123", "has userID no ProdID & no CusID");
                         setButtonToAddWatchList(prodID, button, userID, context);
                     }
                 } else if (!dataSnapshot.hasChild(userID)) {
-                    Log.d("123123", "no userID");
                     setButtonToAddWatchList(prodID, button, userID, context);
                 }
             }

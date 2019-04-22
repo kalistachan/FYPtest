@@ -22,17 +22,8 @@ import com.squareup.picasso.Picasso;
 public class ProductView extends Fragment {
     DatabaseReference databaseProduct;
     DatabaseReference dbGroupDetails;
-    TextView pvName;
-    TextView categoryTV;
-    TextView descTV;
-    TextView durationTV;
-    TextView originalTV;
-    TextView discTV_1;
-    TextView discTV_2;
-    TextView targetqtyTV;
-    TextView purchaseqtyTV;
-    TextView shippingTV;
-    TextView minDiscPercent;
+    TextView pvName, categoryTV, descTV, durationTV, originalTV, discTV_1, discTV_2, targetqtyTV,
+            purchaseqtyTV, shippingTV, minDiscPercent;
     ImageView image;
 
 

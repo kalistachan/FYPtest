@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:scrollbars="none">
 
-
     <LinearLayout
         android:id="@+id/profileForm"
         android:layout_width="match_parent"
@@ -27,6 +26,8 @@
             app:srcCompat="@drawable/ic_account_circle_black_100dp"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
+        <View style="@style/Divider"/>
+
         <TextView
             android:id="@+id/profileTitle1"
             android:layout_width="match_parent"
@@ -44,6 +45,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Email"
+            android:inputType="textEmailAddress"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -53,6 +55,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Number"
+            android:inputType="number"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -62,6 +65,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:inputType="textPassword"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -71,6 +75,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Confirm Password"
+            android:inputType="textPassword"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -80,6 +85,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Address"
+            android:inputType="text"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -88,10 +94,13 @@
             android:layout_gravity="center"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:inputType="number"
             android:hint="Postal Code"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+        <View style="@style/Divider"/>
 
         <TextView
             android:id="@+id/profileTitle2"
@@ -110,6 +119,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Credit Card Number"
+            android:inputType="date"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -119,6 +129,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:hint="Card Number"
+            android:inputType="number"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
@@ -127,9 +138,13 @@
             android:layout_gravity="center"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:hint="CVS Code"
+            android:inputType="number"
             android:textSize="16dp"
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+        <View style="@style/Divider"/>
 
         <Switch
             android:id="@+id/switch1"
@@ -146,6 +161,8 @@
             android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin" />
+
+        <View style="@style/Divider"/>
 
         <LinearLayout
             android:layout_width="match_parent"
