@@ -19,12 +19,10 @@ import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.loginActivity;
 
 public class SellerMainActivity extends AppCompatActivity {
-
     SharedPreferences preferences;
     String userIdentity;
 
     Toolbar toolbar;
-
     Fragment fragment;
 
     Button btnLogout;

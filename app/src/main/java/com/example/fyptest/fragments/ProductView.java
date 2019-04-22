@@ -26,7 +26,6 @@ public class ProductView extends Fragment {
             purchaseqtyTV, shippingTV, minDiscPercent;
     ImageView image;
 
-
     public ProductView() {
         // Required empty public constructor
     }
@@ -58,7 +57,6 @@ public class ProductView extends Fragment {
         String userID = arguments.getString("CusID");
         recyclerViewListClicked(prodID, userID);
     }
-
 
     public void recyclerViewListClicked(final String prodID, final String userID){
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");

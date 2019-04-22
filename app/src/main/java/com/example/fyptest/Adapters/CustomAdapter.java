@@ -270,5 +270,4 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
 }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/layoutborder"
+    android:elevation="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints,Orientation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="30dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="Product Name"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,MissingConstraints"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="-9dp" />
+
+        <View style="@style/Divider"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_view_upload"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_image_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/textViewProductPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Product Price"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
+        app:layout_constraintVertical_bias="0.110000014"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textViewTargetQty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Target Qty"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textViewProductPrice"
+        app:layout_constraintStart_toStartOf="@+id/textViewProductPrice"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProductPrice"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textViewDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Duration"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/textViewTargetQty"
+        app:layout_constraintStart_toStartOf="@+id/textViewTargetQty"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTargetQty"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textViewProductDescription"
+        android:layout_width="173dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:maxWidth="173dp"
+        android:maxHeight="78dp"
+        android:text="Product Description"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDuration"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
+        app:layout_constraintVertical_bias="0.272"
+        tools:ignore="HardcodedText" />
+
+</android.support.constraint.ConstraintLayout>
