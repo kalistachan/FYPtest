@@ -31,8 +31,17 @@ public class AdminMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
 
+        //Set to view main screen on application start-up
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_container, new AdminMainFragment());
+        ft.commit();
+
         preferences = getSharedPreferences("IDs", MODE_PRIVATE);
-        userIdentity = preferences.getString("userID", "UNKNOWN");
+        if (preferences.getString("userID", "UNKNOWN") == null) {
+            startActivity(new Intent(AdminMainActivity.this, loginActivity.class));
+        } else if (preferences.getString("userID", "UNKNOWN") != null) {
+            userIdentity = preferences.getString("userID", "UNKNOWN");
+        }
 
         toolbar = findViewById(R.id.admin_toolbar);
         setSupportActionBar(toolbar);
@@ -67,7 +76,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.toolbar_logo:
-                fragment = new fragment_main();
+                fragment = new AdminMainFragment();
                 loadFragment(fragment);
                 return true;
         }

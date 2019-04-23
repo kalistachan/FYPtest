@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,10 +70,10 @@ public class AdminMainFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    if (snapshot.child("pro_Status").getValue().toString().equalsIgnoreCase("pending")) {
+                    if (snapshot.child("pro_Status").getValue().toString().equalsIgnoreCase("pending")) {
                         productClass product = snapshot.getValue(productClass.class);
                         productList.add(product);
-//                    }
+                    }
                 }
                 adapter = new AdminAdapter(getActivity(), productList);
                 recyclerView.setAdapter(adapter);

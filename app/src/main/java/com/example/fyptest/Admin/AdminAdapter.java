@@ -30,7 +30,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         this.productList = productList;
 
         this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        this.userIdentity = preferences.getString("userID", null);
     }
 
     @Override

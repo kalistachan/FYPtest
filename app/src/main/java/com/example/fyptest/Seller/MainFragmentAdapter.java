@@ -47,7 +47,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     @Override
     public void onBindViewHolder(ImageViewHolder imageViewHolder, int i) {
         final productClass uploadCurrent = productList.get(i);
-        final String prroductID = uploadCurrent.getPro_ID();
+        final String productID = uploadCurrent.getPro_ID();
         final String productName = uploadCurrent.getPro_name();
         final String productPrice = "$" + uploadCurrent.getPro_maxOrderQtySellPrice();
         final String productDuration = "Requires " + uploadCurrent.getPro_durationForGroupPurchase()  + " Days";
@@ -64,7 +64,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         imageViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                swapToProductView(mContext,prroductID);
+                swapToProductView(mContext,productID);
             }
         });
 

@@ -52,7 +52,9 @@
         android:layout_height="100dp"
         android:layout_gravity="start"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_image_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearHeader"
         tools:ignore="ContentDescription" />
@@ -64,6 +66,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Product Price"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,6 +81,7 @@
         android:id="@+id/textViewTargetQty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="Target Qty"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textViewProductPrice"
@@ -89,6 +93,7 @@
         android:id="@+id/textViewDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="Group Duration"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/textViewTargetQty"
@@ -98,22 +103,15 @@
 
     <TextView
         android:id="@+id/textViewProductDescription"
-        android:layout_width="173dp"
-        android:layout_height="78dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="122dp"
+        android:layout_height="65dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:maxWidth="173dp"
-        android:maxHeight="78dp"
         android:text="Product Description"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textViewDuration"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/linearHeader"
-        app:layout_constraintVertical_bias="0.272"
         tools:ignore="HardcodedText" />
 
 </android.support.constraint.ConstraintLayout>
