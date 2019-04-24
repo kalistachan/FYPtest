@@ -80,7 +80,7 @@ public class WatchListFragment extends Fragment {
         displayWatchProducts();
     }
 
-    public void displayWatchProducts() {
+    private void displayWatchProducts() {
         //Extracting productID from watchList to save under a string list
         readData(new FirebaseCallback() {
             @Override
