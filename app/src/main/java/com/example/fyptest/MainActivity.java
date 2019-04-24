@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gotohome = new Intent(MainActivity.this, MainActivity.class);
-                startActivity(gotohome);
+                fragment = new ProductListingFragment();
+                loadFragment(fragment);
             }
         });
 

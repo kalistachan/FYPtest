@@ -77,11 +77,12 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                 .into(imageViewHolder.image_view_upload);
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Order History").child(userIdentity);
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
+        db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("oh_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
+                        final String orderHistoryID = snapshot.child("oh_ID").getValue().toString();
                         String productCheckoutPrice = snapshot.child("oh_orderedPrice").getValue().toString();
                         String quantityPurchase = snapshot.child("oh_totalQuantity").getValue().toString();
                         float amountPaid = Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase);
@@ -110,7 +111,9 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                             imageViewHolder.btnTrackOrder.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Order History").child(userIdentity).child(orderHistoryID).child("oh_os");
+                                    String oh_os = "completed";
+                                    dbProduct.setValue(oh_os);
                                 }
                             });
                         }

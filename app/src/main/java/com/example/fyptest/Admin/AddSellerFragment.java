@@ -69,7 +69,7 @@ public class AddSellerFragment extends Fragment {
                 boolean result = validate(new String[] {email, sellerName, contact});
 
                 if (result) {
-                    final String checkMail = email, checkName = sellerName, checkContact = sellerName;
+                    final String checkMail = email, checkName = sellerName, checkContact = contact;
                     DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("User");
                     DatabaseReference sellerInfoDB = FirebaseDatabase.getInstance().getReference("Seller Information");
 
@@ -80,9 +80,10 @@ public class AddSellerFragment extends Fragment {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 if (snapshot.child("email").getValue().toString().equalsIgnoreCase(checkMail)) {
                                     email = true;
-                                }
-                                if (snapshot.child("contactNum").getValue().toString().equalsIgnoreCase(checkContact)) {
+                                    break;
+                                } else if (snapshot.child("contactNum").getValue().toString().equalsIgnoreCase(checkContact)) {
                                     contact = true;
+                                    break;
                                 }
                             }
                             if (!email && !contact){

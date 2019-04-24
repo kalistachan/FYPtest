@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -49,16 +50,6 @@ public class ProfileFragment extends Fragment {
     Button update, logout;
 
     List<String> list;
-
-//    To save data to SharePreferences
-//    SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-//             editor.putString(saveKey, stringToSave);
-//             editor.apply();
-//
-//    To load the data at a later time
-//    SharedPreferences prefs = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-//    String loadedString = prefs.getString(saveKey, null);
-//             txt_2.setText(loadedString);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -156,6 +147,16 @@ public class ProfileFragment extends Fragment {
                     }
                 }
 
+                if (notification.isChecked()) {
+                    dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_Notification");
+                    String update = notification.getTextOn().toString();
+                    dbCusInfo.setValue(update);
+                } else {
+                    dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_Notification");
+                    String update = notification.getTextOff().toString();
+                    dbCusInfo.setValue(update);
+                }
+
                 clearForm((ViewGroup) view.findViewById(R.id.profileForm));
             }
         });
@@ -199,6 +200,12 @@ public class ProfileFragment extends Fragment {
                 String postal = dataSnapshot.child("cus_postalCode").getValue().toString();
                 address.setHint(add);
                 postalCode.setHint(" Singapore " + postal);
+
+                if (dataSnapshot.child("cus_Notification").getValue().toString().equalsIgnoreCase("Enable")) {
+                    notification.setChecked(true);
+                } else if (dataSnapshot.child("cus_Notification").getValue().toString().equalsIgnoreCase("Disable")) {
+                    notification.setChecked(false);
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

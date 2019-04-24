@@ -90,6 +90,7 @@ public class PurchaseFragment extends Fragment {
                         dbProduct.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                products.clear();
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
                                         productClass productClass = dataSnapshot.child(item).getValue(productClass.class);
