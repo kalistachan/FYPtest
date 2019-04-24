@@ -151,8 +151,7 @@ public class ProductView extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userID)) {
-                                    Log.d("12345", "Condition 1");
-                                    groupBtn.setText("View Goup");
+                                    groupBtn.setText("Leave Group");
                                     removeFromWatchList(prodID, userID);
                                     watchBtn.setVisibility(View.INVISIBLE);
                                     groupBtn.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +162,6 @@ public class ProductView extends Fragment {
                                     });
                                     break;
                                 } else {
-                                    Log.d("12345", "Condition 2");
                                     DatabaseReference dbPro = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
                                     dbPro.addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -186,7 +184,6 @@ public class ProductView extends Fragment {
                         }
                     });
                 } else if (!dataSnapshot.hasChild(prodID)) {
-                    Log.d("12345", "Condition 3");
                     DatabaseReference dbPro = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
                     dbPro.addValueEventListener(new ValueEventListener() {
                         @Override

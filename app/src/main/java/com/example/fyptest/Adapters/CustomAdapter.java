@@ -117,7 +117,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-                                            holder.grpBtn.setText("View Goup");
+                                            holder.grpBtn.setText("View Group");
                                             removeFromWatchList(prodID, userIdentity);
                                             holder.watchBtn.setVisibility(View.INVISIBLE);
                                             holder.grpBtn.setOnClickListener(new View.OnClickListener() {
