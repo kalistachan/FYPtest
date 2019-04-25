@@ -190,7 +190,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                             try {
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                                 Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTime(dateCreated);
