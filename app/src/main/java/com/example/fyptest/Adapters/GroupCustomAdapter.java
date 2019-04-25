@@ -2,8 +2,11 @@ package com.example.fyptest.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +23,6 @@ import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
-import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.ProductView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +44,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     List<productClass> groupList;
     SharedPreferences preferences;
     String userIdentity;
+
     private static GroupCustomAdapter itemListener;
     ProductView pv = new ProductView();
 
@@ -53,6 +56,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     }
 
     @Override
+    public int getItemCount() {
+        return groupList.size();
+    }
+
+    @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.group_image_listing, parent, false);
         return new ImageViewHolder(v);
@@ -60,7 +68,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
-        final GroupFragment gf = new GroupFragment();
         final productClass uploadCurrent = groupList.get(position);
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
@@ -118,7 +125,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             @Override
             public void onCallback1(final String timeRemain) {
                 if (timeRemain != null) {
-                    holder.timeRemain.setText(timeRemain + " days left");
+                    if (Integer.parseInt(timeRemain) > 0) {
+                        holder.timeRemain.setText(timeRemain + " days left");
+                    } else if (Integer.parseInt(timeRemain) == 0){
+                        //Checkout & Remove from group database
+                    }
                 }
             }
         },prodID, uploadCurrent.getPro_durationForGroupPurchase());
@@ -139,12 +150,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         String floatToStringMinPrice = "S$" + Float.toString(minSellPrice);
         return floatToStringMinPrice;
     }
-
-    @Override
-    public int getItemCount() {
-        return groupList.size();
-    }
-
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView prodTextName;
@@ -185,7 +190,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                             try {
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                                 Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTime(dateCreated);
@@ -214,7 +219,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         void onCallback1(String days);
     }
 
-    public void swapToProductView(Context mContext, String prodID) {
+    private void swapToProductView(Context mContext, String prodID) {
         Activity activity = (FragmentActivity) mContext;
         ProductView newProductView = new ProductView();
         Bundle arguments = new Bundle();
@@ -225,6 +230,20 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         transaction.replace(R.id.frame_container, newProductView);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    //Remove if not in use
+    private void notificationTest() {
+        NotificationManager notify = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+        Notification popUp = new Notification.Builder(mContext)
+                .setContentText("This is the body.")
+                .setContentTitle("This is the subject")
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
+                .setLights(Color.WHITE, 3000, 3000)
+                .build();
+        popUp.flags |= Notification.FLAG_AUTO_CANCEL;
+        notify.notify(1, popUp);
     }
 
 }

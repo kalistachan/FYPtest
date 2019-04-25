@@ -1,14 +1,13 @@
 package com.example.fyptest.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,9 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -191,7 +190,7 @@ public class ProductListingFragment extends Fragment {
 
     private void insertProductGroup (String prodID, String gdCusID) {
         Calendar c = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("d-MM-YYYY HH:MM");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String string_pgDateCreated = df.format(c.getTime());
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
         productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
