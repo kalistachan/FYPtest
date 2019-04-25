@@ -34,8 +34,17 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         this.mContext = applicationContext;
         this.productList = productList;
 
-        this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        if (mContext.getSharedPreferences("IDs", MODE_PRIVATE) != null) {
+            this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            if (preferences.getString("userID", "UNKNOWN") != null) {
+                this.userIdentity = preferences.getString("userID", "UNKNOWN");
+            } else {
+                //Navigate to Login Screen
+            }
+        } else {
+            //Navigate to Login Screen
+        }
+
     }
 
     @Override

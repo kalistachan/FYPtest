@@ -9,14 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
-import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
@@ -24,11 +21,6 @@ import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.WatchListFragment;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -38,14 +30,13 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     Fragment fragment;
     BottomNavigationView navigation;
+
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Catching Value thrown from login
         SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
-        String id = prefs.getString("userID", "UNKNOWN");
+        id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
-
-
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
@@ -143,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 //nav_drawer components-----------------------------------------------------------------------------
     }
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

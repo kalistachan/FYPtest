@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-
 import com.example.fyptest.Adapters.GroupCustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
@@ -38,7 +37,7 @@ public class GroupFragment extends Fragment {
     String userIdentity;
 
     public GroupFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
