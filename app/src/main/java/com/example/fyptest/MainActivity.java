@@ -1,5 +1,7 @@
 package com.example.fyptest;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,10 +12,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.database.productClass;
@@ -23,6 +27,7 @@ import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
+import com.example.fyptest.fragments.SearchFragment;
 import com.example.fyptest.fragments.WatchListFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -190,6 +195,51 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint("Enter Product Name");
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                TextView textView=(TextView)findViewById(R.id.action_search);
+                textView.setText(newText);
+                swapToSearchFragment(newText);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                TextView textView=(TextView)findViewById(R.id.action_search);
+                textView.setText(query);
+
+                swapToSearchFragment(query);
+                return true;
+            }
+        };
+
+        searchView.setOnQueryTextListener(queryTextListener);
+
         return true;
+
     }
+
+    public void swapToSearchFragment(String queryText) {
+        Log.d("query text in ", "search fragment value:" + queryText);
+        SearchFragment newSearchFragment = new SearchFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString("query" , queryText);
+        newSearchFragment.setArguments(arguments);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newSearchFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    /* private String getUserName(String loginId) {
+        String userName = "test";
+        return userName;
+    }*/
 }
