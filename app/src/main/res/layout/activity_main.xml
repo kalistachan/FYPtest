@@ -17,6 +17,7 @@
         android:background="@color/color4GBTheme"
         android:elevation="10dp"/>
 
+
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
@@ -39,7 +40,6 @@
         android:layout_alignParentBottom="true"
         android:elevation="10dp"
         app:menu="@menu/navigation" />
-
 
 
 </RelativeLayout>
