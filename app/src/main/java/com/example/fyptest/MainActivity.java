@@ -1,11 +1,15 @@
 package com.example.fyptest;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -29,6 +33,7 @@ import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.SearchFragment;
 import com.example.fyptest.fragments.WatchListFragment;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,12 +56,18 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     Fragment fragment;
     BottomNavigationView navigation;
+    Context context;
+    DatabaseReference db;
+
+    SharedPreferences prefs;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = getApplicationContext();
+        db = FirebaseDatabase.getInstance().getReference("Product Group");
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -81,11 +92,49 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
 
         //Catching Value thrown from login
-        SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
-        String id = prefs.getString("userID", "UNKNOWN");
+        prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+        id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
+        //Child event listener
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    db.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
+                            accessWL(groupProd);
+                        }
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
+                            accessWL(groupProd);
+                        }
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                            //Do something when a child is removed
+                        }
 
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
@@ -236,6 +285,64 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frame_container, newSearchFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void accessWL(final String productID) {
+        DatabaseReference dbUserWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+        dbUserWatchList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.getKey().equalsIgnoreCase(id)) {
+                            DatabaseReference dbWL = FirebaseDatabase.getInstance().getReference("Watch List").child(id);
+                            dbWL.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(productID)) {
+                                            notificationTest(productID);
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void notificationTest(String productID) {
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+        dbProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String productName = dataSnapshot.child("pro_name").getValue().toString();
+                NotificationManager notify = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                Notification popUp = new Notification.Builder(context)
+                        .setContentText("A product group for your watchlist item, " + productName + ", had been created!")
+                        .setContentTitle("Join The Group Now!")
+                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
+                        .setLights(Color.WHITE, 3000, 3000)
+                        .build();
+                popUp.flags |= Notification.FLAG_AUTO_CANCEL;
+                notify.notify(1, popUp);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /* private String getUserName(String loginId) {
