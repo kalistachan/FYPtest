@@ -24,6 +24,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
@@ -57,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment;
     BottomNavigationView navigation;
     Context context;
-    DatabaseReference db;
-
+    DatabaseReference dbProductGroup;
+    List<String> groupProductList;
     SharedPreferences prefs;
     String id;
 
@@ -67,11 +68,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
-        db = FirebaseDatabase.getInstance().getReference("Product Group");
+        dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logosmall);
+        groupProductList = new ArrayList<>();
 
         View homepage = toolbar.getChildAt(0);
         homepage.setOnClickListener(new View.OnClickListener() {
@@ -97,42 +99,33 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
         //Child event listener
-        db.addValueEventListener(new ValueEventListener() {
+        readData(new FirebaseCallback() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    db.addChildEventListener(new ChildEventListener() {
+            public void onCallback1(List<String> itemList) {
+                for (final String item : itemList) {
+                    DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Watch List");
+                    dbGroupDetail.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
-                            accessWL(groupProd);
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChildren()) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                                        if (item.equalsIgnoreCase(snapshotAgain.child("wl_pro_ID").getValue().toString())) {
+                                            String productID = snapshotAgain.child("wl_pro_ID").getValue().toString();
+                                            notificationTest(productID);
+                                            //Log.d("123456", "match!" + snapshotAgain.child("wl_pro_ID").getValue().toString());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
-                            accessWL(groupProd);
-                        }
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                            //Do something when a child is removed
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
                     });
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -345,8 +338,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /* private String getUserName(String loginId) {
-        String userName = "test";
-        return userName;
-    }*/
+    private interface FirebaseCallback {
+        void onCallback1(List<String> itemList);
+    }
+
+    private void readData (final FirebaseCallback firebaseCallback) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    groupProductList.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        groupProductList.add(snapshot.getKey());
+                    }
+                    firebaseCallback.onCallback1(groupProductList);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 }
