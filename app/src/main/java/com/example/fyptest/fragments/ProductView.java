@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductView extends Fragment {
-    DatabaseReference databaseProduct, dbGroupDetails, dbGroup;
+    DatabaseReference databaseProduct, dbGroupDetails;
 
     TextView pvName, categoryTV, descTV, durationTV, originalTV, discTV_1, discTV_2, targetqtyTV,
             purchaseqtyTV, shippingTV, minDiscPercent;
