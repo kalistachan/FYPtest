@@ -2,6 +2,7 @@ package com.example.fyptest.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -99,10 +100,10 @@ public class ProductView extends Fragment {
                 pvName.setText(productName);
                 categoryTV.setText(dataSnapshot.child("pro_productType").getValue().toString());
                 descTV.setText(dataSnapshot.child("pro_description").getValue().toString());
-                durationTV.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
-                originalTV.setText(dataSnapshot.child("pro_retailPrice").getValue().toString());
-                discTV_1.setText(dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
-                discTV_2.setText(dataSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
+                durationTV.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString() + " Days");
+                originalTV.setText("$" + dataSnapshot.child("pro_retailPrice").getValue().toString());
+                discTV_1.setText("$" + dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
+                discTV_2.setText("$" + dataSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
                 shippingTV.setText(dataSnapshot.child("pro_shippingCost").getValue().toString());
                 minDiscPercent.setText("*if " + dataSnapshot.child("pro_minOrderDiscount").getValue().toString() + "% target quantity met");
 

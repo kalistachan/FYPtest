@@ -10,9 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
+import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.google.firebase.database.DataSnapshot;
@@ -23,17 +28,22 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static android.R.layout.simple_spinner_item;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SearchFragment extends Fragment {
     RecyclerView mRecyclerView;
     Context mContext;
     SharedPreferences prefs;
-    String userIdentity;
+    String userIdentity, catSelected;
+    int sortChoice;
     List<productClass> mSearch;
     CustomAdapter mAdapter;
+    Spinner category, sortBy;
+    Button submitBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +58,10 @@ public class SearchFragment extends Fragment {
 
         this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = prefs.getString("userID", "UNKNOWN");
+        category = groupView.findViewById(R.id.spinnerCategory);
+        sortBy = groupView.findViewById(R.id.spinnerSortBy);
+        submitBtn = groupView.findViewById(R.id.buttonSubmit);
+        mSearch = new ArrayList<>();
         return groupView;
     }
 
@@ -56,13 +70,64 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
-
         searchProduct(query);
+
+        populateCategory();
+        populateSortBy();
+        addListenerOnButton();
+
+    }
+
+    public void addListenerOnButton() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                catSelected = category.getSelectedItem().toString();
+                sortChoice = sortBy.getSelectedItemPosition();
+                Log.d("test","value:" + catSelected);
+                Log.d("mSearch list", "value: " + mSearch.get(0).getPro_name() + "cat type: " + mSearch.get(0).getPro_productType());
+            }
+        });
+    }
+
+    private void populateCategory() {
+        DatabaseReference prodType = FirebaseDatabase.getInstance().getReference("Product Type");
+        prodType.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<String> cat = new ArrayList<String>();
+
+                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
+                    String categoryName = areaSnapshot.child("pt_Name").getValue().toString();
+
+                    cat.add(categoryName);
+                }
+
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cat);
+                areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                category.setAdapter(areasAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void populateSortBy() {
+        List<String> sortByValues = new ArrayList<String>();
+        sortByValues.add("Lowest Price");
+        sortByValues.add("Highest Price");
+        ArrayAdapter<String> areasAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, sortByValues);
+        areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortBy.setAdapter(areasAdapter);
     }
 
     public void searchProduct (String inputQuery) {
-        Log.d("query","search product value: " + inputQuery);
-        mSearch = new ArrayList<>();
+
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Product");
 
         Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
@@ -73,10 +138,8 @@ public class SearchFragment extends Fragment {
                 mSearch.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     productClass search = postSnapshot.getValue(productClass.class);
-                    Log.d("search result ", " value in snapshot: " + search.getPro_name());
                     mSearch.add(search);
                 }
-
                 mAdapter = new CustomAdapter(getActivity(), mSearch);
                 mRecyclerView.setAdapter(mAdapter);
             }
