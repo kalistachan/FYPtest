@@ -65,7 +65,7 @@ public class SearchFragment extends Fragment {
         mSearch = new ArrayList<>();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Product");
 
-        Query query = rootRef.orderByChild("pro_name").equalTo(inputQuery);
+        Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
