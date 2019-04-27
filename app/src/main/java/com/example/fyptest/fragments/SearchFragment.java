@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View groupView = inflater.inflate(R.layout.fragment_productlisting, container, false);
+        View groupView = inflater.inflate(R.layout.fragment_searchcriteria, container, false);
         this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
