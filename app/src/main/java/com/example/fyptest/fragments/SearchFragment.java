@@ -56,7 +56,6 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
-
         searchProduct(query);
     }
 
@@ -76,7 +75,6 @@ public class SearchFragment extends Fragment {
                     Log.d("search result ", " value in snapshot: " + search.getPro_name());
                     mSearch.add(search);
                 }
-
                 mAdapter = new CustomAdapter(getActivity(), mSearch);
                 mRecyclerView.setAdapter(mAdapter);
             }

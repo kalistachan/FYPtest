@@ -181,7 +181,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         }
     }
 
-    private void readData (final GroupCustomAdapter.FirebaseCallback firebaseCallback, final String prodID, final String duration) {
+    private void readData (final FirebaseCallback firebaseCallback, final String prodID, final String duration) {
         final String[] diffDays = new String[1];
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
         db.addValueEventListener(new ValueEventListener() {

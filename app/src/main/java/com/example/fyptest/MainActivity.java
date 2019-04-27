@@ -280,40 +280,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void accessWL(final String productID) {
-        DatabaseReference dbUserWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
-        dbUserWatchList.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getKey().equalsIgnoreCase(id)) {
-                            DatabaseReference dbWL = FirebaseDatabase.getInstance().getReference("Watch List").child(id);
-                            dbWL.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(productID)) {
-                                            notificationTest(productID);
-                                        }
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private void notificationTest(String productID) {
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
         dbProduct.addValueEventListener(new ValueEventListener() {
