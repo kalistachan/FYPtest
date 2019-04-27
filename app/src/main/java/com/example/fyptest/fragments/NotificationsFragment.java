@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.example.fyptest.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class NotificationsFragment extends Fragment {
 
 
@@ -26,5 +23,4 @@ public class NotificationsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
-
 }

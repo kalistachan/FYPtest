@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
@@ -25,10 +23,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static android.R.layout.simple_spinner_item;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SearchFragment extends Fragment {
@@ -38,8 +34,6 @@ public class SearchFragment extends Fragment {
     String userIdentity;
     List<productClass> mSearch;
     CustomAdapter mAdapter;
-    Spinner category;
-    Spinner sortBy;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,8 +48,6 @@ public class SearchFragment extends Fragment {
 
         this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = prefs.getString("userID", "UNKNOWN");
-        category = groupView.findViewById(R.id.spinnerCategory);
-        sortBy = groupView.findViewById(R.id.spinnerSortBy);
         return groupView;
     }
 
@@ -64,40 +56,8 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
-        populateCategory();
+
         searchProduct(query);
-    }
-
-    private void populateCategory() {
-        DatabaseReference prodType = FirebaseDatabase.getInstance().getReference("Product Type");
-        prodType.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> cat = new ArrayList<String>();
-
-                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
-                    String categoryName = areaSnapshot.child("pt_Name").getValue().toString();
-                    Log.d("cat", "value: " + categoryName);
-                    cat.add(categoryName);
-                }
-
-                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cat);
-                areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                category.setAdapter(areasAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void populateSortBy() {
-        List<String> sortByValues = new ArrayList<String>(Arrays.asList("Sort Price in Asc","Sort Price in Desc"));
-        ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sortByValues);
-        areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortBy.setAdapter(areasAdapter);
     }
 
     public void searchProduct (String inputQuery) {
