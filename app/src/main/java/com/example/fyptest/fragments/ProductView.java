@@ -164,7 +164,7 @@ public class ProductView extends Fragment {
         });
     }
 
-    private void checkConditionForLeavingGroup(final Button button, final String productID) {
+    public void checkConditionForLeavingGroup(final Button button, final String productID) {
         final DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         final DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);

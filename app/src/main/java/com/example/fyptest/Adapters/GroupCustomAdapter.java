@@ -44,9 +44,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     List<productClass> groupList;
     SharedPreferences preferences;
     String userIdentity;
-
-    private static GroupCustomAdapter itemListener;
-    ProductView pv = new ProductView();
+    DatabaseReference dbGroupDetail;
 
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
@@ -75,12 +73,31 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
         holder.prodPriceView.setText(minPrice);
         holder.prodTextName.setText(prodName);
-        holder.targetQty.setText(targetQty);
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);
+
+        dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+        dbGroupDetail.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                }
+                String buildText = Integer.toString(counter) + " / " + targetQty;
+                holder.targetQty.setText(buildText);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        ProductView productView = new ProductView();
+        productView.checkConditionForLeavingGroup(holder.leaveBtn, prodID);
 
         holder.leaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,20 +247,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         transaction.replace(R.id.frame_container, newProductView);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    //Remove if not in use
-    private void notificationTest() {
-        NotificationManager notify = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
-        Notification popUp = new Notification.Builder(mContext)
-                .setContentText("This is the body.")
-                .setContentTitle("This is the subject")
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
-                .setLights(Color.WHITE, 3000, 3000)
-                .build();
-        popUp.flags |= Notification.FLAG_AUTO_CANCEL;
-        notify.notify(1, popUp);
     }
 
 }
