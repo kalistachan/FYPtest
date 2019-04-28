@@ -66,18 +66,19 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
 
 
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.SearchFragment">
+        tools:context=".fragments.SearchFragment"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="4dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="130dp"/>
+            android:layout_marginTop="130dp" />
 
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

@@ -164,7 +164,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
 
         ImageView image_view_upload;
         TextView prodNameViewName, prodPriceViewName, shipPriceView, shippingFee;
-        LinearLayout parent_layout;
         Button btnRemove, btnAdd;
 
 
