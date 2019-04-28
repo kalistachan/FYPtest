@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
-        //Child event listener
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(List<String> itemList) {
@@ -146,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
         new DrawerBuilder().withActivity(this);
 
         //Primary = bold items, Secondary = normal items
-        PrimaryDrawerItem item_categories = new PrimaryDrawerItem().withName("Categories").withSelectable(false).withIcon(R.drawable.ic_apps_black_24dp);
         PrimaryDrawerItem item_notifications = new PrimaryDrawerItem().withName("Notifications").withSelectable(false).withIcon(R.drawable.ic_notifications_black_24dp);
         PrimaryDrawerItem item_help_centre = new PrimaryDrawerItem().withName("Help Centre").withSelectable(false).withIcon(R.drawable.ic_help_outline_black_24dp);
         PrimaryDrawerItem item_logout = new PrimaryDrawerItem().withName("Logout").withSelectable(false);
@@ -161,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         //item position corresponds to listing of items here (includes dividers, etc.)
-                        item_categories,
                         item_notifications,
                         new DividerDrawerItem(),
                         item_help_centre,
@@ -218,12 +215,6 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;
-
-                /*case R.id.homepage:
-                    fragment = new MainScreen();
-                    //pushing userInfo out of current view
-                    loadFragment(fragment);
-                    return true;*/
             }
             return false;
         }

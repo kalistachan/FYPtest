@@ -190,28 +190,29 @@ public class ProductView extends Fragment {
                             dbProductGroup.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String dateCreated = dataSnapshot.child("string_pgDateCreated").getValue().toString();
-                                    String condition = Integer.toString((int)((Integer.parseInt(pro_durationForGroupPurchase)/2) + 0.5));
-                                    Log.d("Condition Check", "Date duration 50% : " + condition);
+                                    if (dataSnapshot.hasChildren()) {
+                                        String dateCreated = dataSnapshot.child("string_pgDateCreated").getValue().toString();
+                                        String condition = Integer.toString((int)((Integer.parseInt(pro_durationForGroupPurchase)/2) + 0.5));
+                                        Log.d("Condition Check", "Date duration 50% : " + condition);
 
-                                    String conditionDate = ProductListingFragment.addDay(dateCreated, condition);
+                                        String conditionDate = ProductListingFragment.addDay(dateCreated, condition);
 
-                                    Calendar c = Calendar.getInstance();
-                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-                                    String todayDate = df.format(c.getTime());
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                                        String todayDate = df.format(c.getTime());
 
-                                    try {
-                                        Date dateNow = df.parse(todayDate);
-                                        Date dateMarker = df.parse(conditionDate);
-                                        if (dateNow.after(dateMarker)) {
-                                            button.setEnabled(false);
-                                        } else if (dateNow.before(dateMarker)){
-                                            button.setEnabled(true);
+                                        try {
+                                            Date dateNow = df.parse(todayDate);
+                                            Date dateMarker = df.parse(conditionDate);
+                                            if (dateNow.after(dateMarker)) {
+                                                button.setEnabled(false);
+                                            } else if (dateNow.before(dateMarker)){
+                                                button.setEnabled(true);
+                                            }
+                                        } catch (ParseException ex) {
+                                            Log.v("Exception", ex.getLocalizedMessage());
                                         }
-                                    } catch (ParseException ex) {
-                                        Log.v("Exception", ex.getLocalizedMessage());
                                     }
-
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
