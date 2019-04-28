@@ -29,7 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ProductView extends Fragment {
@@ -122,6 +126,7 @@ public class ProductView extends Fragment {
                                     purchaseqtyTV.setText(snapshot.child("gd_qty").getValue().toString());
                                     watchBtn.setVisibility(View.GONE);
                                     groupBtn.setText("LEAVE GROUP");
+                                    checkConditionForLeavingGroup(groupBtn, prodID);
                                     groupBtn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -159,22 +164,61 @@ public class ProductView extends Fragment {
         });
     }
 
-    private void checkConditionForLeavingGroup(final String productID, final String userIdentity) {
+    private void checkConditionForLeavingGroup(final Button button, final String productID) {
         final DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         final DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
 
-        //Checking for the target quantity first before the time
         dbProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Float targetQty = Float.parseFloat(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                final String pro_durationForGroupPurchase = dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString();
                 final int leavingCondition = (int)((targetQty * 0.9) + 0.5);
                 Log.d("Condition Check", "Leaving Condition : " + Integer.toString(leavingCondition));
                 dbGroupDetail.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int counter = 0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                        }
+                        if (counter >= leavingCondition) {
+                            button.setEnabled(false);
+                        } else if (counter < leavingCondition){
+                            button.setEnabled(true);
+                            dbProductGroup.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String dateCreated = dataSnapshot.child("string_pgDateCreated").getValue().toString();
+                                    String condition = Integer.toString((int)((Integer.parseInt(pro_durationForGroupPurchase)/2) + 0.5));
+                                    Log.d("Condition Check", "Date duration 50% : " + condition);
 
+                                    String conditionDate = ProductListingFragment.addDay(dateCreated, condition);
+
+                                    Calendar c = Calendar.getInstance();
+                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                                    String todayDate = df.format(c.getTime());
+
+                                    try {
+                                        Date dateNow = df.parse(todayDate);
+                                        Date dateMarker = df.parse(conditionDate);
+                                        if (dateNow.after(dateMarker)) {
+                                            button.setEnabled(false);
+                                        } else if (dateNow.before(dateMarker)){
+                                            button.setEnabled(true);
+                                        }
+                                    } catch (ParseException ex) {
+                                        Log.v("Exception", ex.getLocalizedMessage());
+                                    }
+
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -163,6 +163,22 @@ public class ProductListingFragment extends Fragment {
         alertdialog.show();
     }
 
+    public static String addDay(String oldDate, String duration) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Calendar c = Calendar.getInstance();
+        int numberofDays = Integer.parseInt(duration);
+        try {
+            c.setTime(dateFormat.parse(oldDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DAY_OF_YEAR,numberofDays);
+        dateFormat=new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Date newDate=new Date(c.getTimeInMillis());
+        String resultDate=dateFormat.format(newDate);
+        return resultDate;
+    }
+
     private void removeFromWatchList(String prodID, String gdCusID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
         db.removeValue();
@@ -219,22 +235,6 @@ public class ProductListingFragment extends Fragment {
         String pg_ID = db.push().getKey();
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         db.child(pg_ID).setValue(groupDetail);
-    }
-
-    private static String addDay(String oldDate, String duration) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        Calendar c = Calendar.getInstance();
-        int numberofDays = Integer.parseInt(duration);
-        try {
-            c.setTime(dateFormat.parse(oldDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        c.add(Calendar.DAY_OF_YEAR,numberofDays);
-        dateFormat=new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        Date newDate=new Date(c.getTimeInMillis());
-        String resultDate=dateFormat.format(newDate);
-        return resultDate;
     }
 }
 
