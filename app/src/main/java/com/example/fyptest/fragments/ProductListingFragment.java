@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -188,22 +189,52 @@ public class ProductListingFragment extends Fragment {
         transaction.commit();
     }
 
-    private void insertProductGroup (String prodID, String gdCusID) {
+    private void insertProductGroup (final String prodID, final String gdCusID) {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        String string_pgDateCreated = df.format(c.getTime());
-        databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
-        productGroupClass productGroup = new productGroupClass(prodID, pgDateCreated, null, string_pgDateCreated);
-        databaseProduct.child(prodID).setValue(productGroup);
-        insertCustGroupDetails(prodID, gdCusID);
+        final String string_pgDateCreated = df.format(c.getTime());
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+        dbProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String pro_durationForGroupPurchase = dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString();
+                String dateEnd = addDay(string_pgDateCreated, pro_durationForGroupPurchase);
+                databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
+                productGroupClass productGroup = new productGroupClass(prodID, dateEnd, string_pgDateCreated);
+                databaseProduct.child(prodID).setValue(productGroup);
+                insertCustGroupDetails(prodID, gdCusID);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {
-        gdJoinDate = Calendar.getInstance().getTime();
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String gdJoinDate = df.format(c.getTime());
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
         String pg_ID = db.push().getKey();
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         db.child(pg_ID).setValue(groupDetail);
+    }
+
+    private static String addDay(String oldDate, String duration) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Calendar c = Calendar.getInstance();
+        int numberofDays = Integer.parseInt(duration);
+        try {
+            c.setTime(dateFormat.parse(oldDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DAY_OF_YEAR,numberofDays);
+        dateFormat=new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Date newDate=new Date(c.getTimeInMillis());
+        String resultDate=dateFormat.format(newDate);
+        return resultDate;
     }
 }
 
