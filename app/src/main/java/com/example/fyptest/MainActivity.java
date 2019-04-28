@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> groupProductList;
     SharedPreferences prefs;
     String id;
+    AccountHeader headerResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,15 +132,16 @@ public class MainActivity extends AppCompatActivity {
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
-        AccountHeader headerResult = new AccountHeaderBuilder()
+
+        //Log.d("custname", "value: " + custName);
+
+        headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
                 .withSelectionListEnabledForSingleProfile(true)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Insert username here").withEmail("$%& Points Earned")
-                )
                 .build();
         //account_header
+        getCusName(id);
 
         new DrawerBuilder().withActivity(this);
 
@@ -269,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void swapToSearchFragment(String queryText) {
-        Log.d("query text in ", "search fragment value:" + queryText);
         SearchFragment newSearchFragment = new SearchFragment();
         Bundle arguments = new Bundle();
         arguments.putString("query" , queryText);
@@ -278,6 +279,32 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frame_container, newSearchFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void getCusName(final String idPass) {
+        final String[] custName = new String[1];
+        final String[] loyaltyPts = new String[1];
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
+                    if (productSnapshot.child("cus_ID").getValue().toString().equalsIgnoreCase(idPass)) {
+                        custName[0] = productSnapshot.child("cus_fName").getValue().toString() + " " + productSnapshot.child("cus_lName").getValue().toString();
+                        loyaltyPts[0] = productSnapshot.child("cus_loyaltyPoint").getValue().toString();
+                        headerResult.addProfiles(
+                                new ProfileDrawerItem().withName(custName[0]).withEmail(loyaltyPts[0] + " Loyalty Points Earned")
+                        );
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void notificationTest(String productID) {
@@ -299,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -323,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
