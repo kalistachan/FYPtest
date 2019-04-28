@@ -3,6 +3,7 @@ package com.example.fyptest.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.R.layout.simple_spinner_item;
@@ -40,7 +43,7 @@ public class SearchFragment extends Fragment {
     SharedPreferences prefs;
     String userIdentity, catSelected;
     int sortChoice;
-    List<productClass> mSearch;
+    List<productClass> mSearch, mAfterSort;
     CustomAdapter mAdapter;
     Spinner category, sortBy;
     Button submitBtn;
@@ -62,6 +65,7 @@ public class SearchFragment extends Fragment {
         sortBy = groupView.findViewById(R.id.spinnerSortBy);
         submitBtn = groupView.findViewById(R.id.buttonSubmit);
         mSearch = new ArrayList<>();
+        mAfterSort = new ArrayList<>();
         return groupView;
     }
 
@@ -71,7 +75,6 @@ public class SearchFragment extends Fragment {
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
         searchProduct(query);
-
         populateCategory();
         populateSortBy();
         addListenerOnButton();
@@ -85,8 +88,34 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 catSelected = category.getSelectedItem().toString();
                 sortChoice = sortBy.getSelectedItemPosition();
-                Log.d("test","value:" + catSelected);
-                Log.d("mSearch list", "value: " + mSearch.get(0).getPro_name() + "cat type: " + mSearch.get(0).getPro_productType());
+                mAfterSort.clear();
+                for (int i = 0 ; i < mSearch.size(); i++) {
+                    if (catSelected.equalsIgnoreCase(mSearch.get(i).getPro_productType())) {
+                        mAfterSort.add(mSearch.get(i));
+                        if (sortChoice == 0) {
+                            //sort by lowest price
+                            Collections.sort(mAfterSort, new Comparator<productClass>() {
+
+                                @Override
+                                public int compare(productClass o1, productClass o2) {
+                                    return (int)(((Float)Float.parseFloat(o1.getPro_maxOrderQtySellPrice()))-((Float)Float.parseFloat(o2.getPro_maxOrderQtySellPrice())));
+                                }
+                            });
+                        } else if (sortChoice == 1) {
+                            //sort by highest price
+                            Collections.sort(mAfterSort, new Comparator<productClass>() {
+
+                                @Override
+                                public int compare(productClass o1, productClass o2) {
+                                    return (int)(((Float)Float.parseFloat(o2.getPro_maxOrderQtySellPrice()))-((Float)Float.parseFloat(o1.getPro_maxOrderQtySellPrice())));
+                                }
+                            });
+                        }
+                    }
+                }
+
+                mAdapter = new CustomAdapter(getActivity(), mAfterSort);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
     }
@@ -112,7 +141,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -126,7 +155,7 @@ public class SearchFragment extends Fragment {
         sortBy.setAdapter(areasAdapter);
     }
 
-    public void searchProduct (String inputQuery) {
+    public void searchProduct (final String inputQuery) {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Product");
 
@@ -137,8 +166,11 @@ public class SearchFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mSearch.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    productClass search = postSnapshot.getValue(productClass.class);
-                    mSearch.add(search);
+                    if (postSnapshot.child("pro_Status").getValue().toString().equals("approved"))
+                    {
+                        productClass search = postSnapshot.getValue(productClass.class);
+                        mSearch.add(search);
+                    }
                 }
                 mAdapter = new CustomAdapter(getActivity(), mSearch);
                 mRecyclerView.setAdapter(mAdapter);
@@ -151,4 +183,7 @@ public class SearchFragment extends Fragment {
         });
     }
 
+
 }
+
+

@@ -1,6 +1,6 @@
 package com.example.fyptest.database;
 
-public class productClass {
+public class productClass  {
     private String pro_ID;
     private String pro_mImageUrl;
     private String pro_name;
@@ -128,4 +128,6 @@ public class productClass {
     public void setPro_mImageUrl(String pro_mImageUrl) {
         this.pro_mImageUrl = pro_mImageUrl;
     }
+
+
 }
