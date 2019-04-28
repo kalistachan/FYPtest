@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class groupDetailClass {
     private String gd_ID;
-    private Date gd_joinDate;
+    private String gd_joinDate;
     private int gd_qty;
     private String gd_pg_pro_ID;
     private String gd_cus_ID;
@@ -13,7 +13,7 @@ public class groupDetailClass {
 
     }
 
-    public groupDetailClass(String gd_ID, Date gd_joinDate, int gd_qty, String gd_pg_pro_ID, String gd_cus_ID) {
+    public groupDetailClass(String gd_ID, String gd_joinDate, int gd_qty, String gd_pg_pro_ID, String gd_cus_ID) {
         this.gd_ID = gd_ID;
         this.gd_joinDate = gd_joinDate;
         this.gd_qty = gd_qty;
@@ -25,7 +25,7 @@ public class groupDetailClass {
         return gd_ID;
     }
 
-    public Date getGd_joinDate() {
+    public String getGd_joinDate() {
         return gd_joinDate;
     }
 
