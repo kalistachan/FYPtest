@@ -28,6 +28,7 @@ import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.fragments.HelpCentreFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     Context context;
     DatabaseReference dbProductGroup;
-    List<String> groupProductList;
+    List<String> watchListItem;
     SharedPreferences prefs;
     String id;
     AccountHeader headerResult;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logosmall);
-        groupProductList = new ArrayList<>();
+        watchListItem = new ArrayList<>();
 
         View homepage = toolbar.getChildAt(0);
         homepage.setOnClickListener(new View.OnClickListener() {
@@ -101,30 +102,41 @@ public class MainActivity extends AppCompatActivity {
 
         readData(new FirebaseCallback() {
             @Override
-            public void onCallback1(List<String> itemList) {
-                for (final String item : itemList) {
-                    DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Watch List");
-                    dbGroupDetail.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.hasChildren()) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                        if (item.equalsIgnoreCase(snapshotAgain.child("wl_pro_ID").getValue().toString())) {
-                                            String productID = snapshotAgain.child("wl_pro_ID").getValue().toString();
-                                            notificationTest(productID);
-                                            //Log.d("123456", "match!" + snapshotAgain.child("wl_pro_ID").getValue().toString());
-                                            break;
+            public void onCallback(List<String> itemList) {
+                if (!itemList.isEmpty()) {
+                    for (final String item : itemList) {
+                        DatabaseReference dbGD = FirebaseDatabase.getInstance().getReference("Group Detail");
+                        dbGD.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(item)) {
+                                    DatabaseReference dbGDAgain = FirebaseDatabase.getInstance().getReference("Group Detail").child(item);
+                                    dbGDAgain.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            boolean notifyUser = true;
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(id)) {
+                                                    notifyUser = false;
+                                                }
+                                            }
+                                            if (notifyUser) {
+                                                notificationTest(item);
+                                            }
                                         }
-                                    }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                                 }
                             }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -179,10 +191,15 @@ public class MainActivity extends AppCompatActivity {
                                 loadFragment(fragment);
                                 break;
                             case 3:
-                                startActivity(new Intent(MainActivity.this, HelpCenterActivity.class));
+                                fragment = new HelpCentreFragment();
+                                loadFragment(fragment);
                                 break;
                             case 5:
-                                startActivity(new Intent(MainActivity.this, loginActivity.class));
+                                SharedPreferences.Editor edit = prefs.edit();
+                                edit.clear();
+                                edit.apply();
+                                startActivity(new Intent(context, loginActivity.class));
+                                break;
                         }
                         return true;
                     }
@@ -309,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 Notification popUp = new Notification.Builder(context)
                         .setContentText("A product group for your watchlist item, " + productName + ", had been created!")
                         .setContentTitle("Join The Group Now!")
-                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setSmallIcon(R.drawable.ic_logo_v1)
                         .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.WHITE, 3000, 3000)
                         .build();
@@ -324,20 +341,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private interface FirebaseCallback {
-        void onCallback1(List<String> itemList);
+        void onCallback(List<String> itemList);
     }
 
     private void readData (final FirebaseCallback firebaseCallback) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List");
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    groupProductList.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        groupProductList.add(snapshot.getKey());
-                    }
-                    firebaseCallback.onCallback1(groupProductList);
+                if (dataSnapshot.hasChild(id)) {
+                    DatabaseReference dbAgain = FirebaseDatabase.getInstance().getReference("Watch List").child(id);
+                    dbAgain.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            watchListItem.clear();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                watchListItem.add(snapshot.child("wl_pro_ID").getValue().toString());
+                            }
+                            firebaseCallback.onCallback(watchListItem);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
             @Override
