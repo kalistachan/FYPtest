@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
-                .withSelectionListEnabledForSingleProfile(true)
+                .withSelectionListEnabledForSingleProfile(false)
                 .build();
         //account_header
         getCusName(id);
@@ -246,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint("Enter Product Name");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -268,7 +270,31 @@ public class MainActivity extends AppCompatActivity {
                 swapToSearchFragment(query);
                 return true;
             }
+
         };
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportFragmentManager().popBackStack();
+                return false;
+            }
+        });
+
+        menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                Toast.makeText(MainActivity.this, "onMenuItemActionExpand called", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getSupportFragmentManager().popBackStack();
+                Toast.makeText(MainActivity.this, "onMenutItemActionCollapse called", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         searchView.setOnQueryTextListener(queryTextListener);
 
