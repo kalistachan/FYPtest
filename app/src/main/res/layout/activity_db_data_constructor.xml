@@ -86,6 +86,28 @@
             android:hint="date"
             tools:ignore="Autofill,HardcodedText" />
 
+        <EditText
+            android:id="@+id/editText9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:maxLines="10"
+            android:minLines="5"
+            android:hint="FAQ Queation"
+            tools:ignore="Autofill,HardcodedText" />
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:maxLines="10"
+            android:minLines="5"
+            android:hint="FAQ Answer"
+            tools:ignore="Autofill,HardcodedText" />
+
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"

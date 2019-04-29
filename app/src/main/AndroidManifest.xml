@@ -33,7 +33,7 @@
         </activity>
 
         <activity android:name=".Admin.AdminMainActivity"
-            android:windowSoftInputMode="stateAlwaysVisible">
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity android:name=".resetPWActivity" />
         <activity android:name=".registerActivity" />
@@ -50,6 +50,10 @@
         <activity
             android:name=".Data_Creation_Class.dbDataConstructor"
             tools:ignore="InnerclassSeparator">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
     </application>

@@ -68,7 +68,7 @@ public class AddProductFragment extends Fragment {
     StorageReference storageReference;
     SharedPreferences prefs;
 
-    String prodId, imageUrl, userIdentity, prodID, userID;
+    String prodId, imageUrl, userIdentity, prodID;
     Bundle arguments;
 
     private Uri filePath;

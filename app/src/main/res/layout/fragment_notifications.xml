@@ -23,7 +23,8 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
 
         <View
             android:id="@+id/view4"

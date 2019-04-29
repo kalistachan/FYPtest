@@ -42,7 +42,7 @@ public class loginActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
 
-        counter = 5;
+        counter = 4;
 
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,9 +85,10 @@ public class loginActivity extends AppCompatActivity {
                                             }
                                         } if (!pw.equals(snapshot.child("password").getValue().toString())) {
                                             if (counter == 0) {
-                                                blockAcc(emailEntered);
+                                                resetPWActivity.resetPW(email);
+                                                startActivity(new Intent(loginActivity.this, loginActivity.class));
                                                 return;
-                                            } if (counter > 0) {
+                                            } else if (counter > 0) {
                                                 toast(2, counter);
                                                 counter --;
                                                 return;
@@ -131,10 +132,4 @@ public class loginActivity extends AppCompatActivity {
             Toast.makeText(this, "Login Fails. You have " + counter + " left.", Toast.LENGTH_LONG).show();
         }
     }
-
-    private void blockAcc(EditText editText) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Block Account");
-    }
-
-    private void removeBlock(EditText editText) {}
 }

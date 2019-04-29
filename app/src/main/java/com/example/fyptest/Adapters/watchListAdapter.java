@@ -152,7 +152,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     private void removeFromWatchList(String prodID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(userIdentity).child(prodID);
         db.removeValue();
-
     }
 
     private void removeItemFromRecycleView(int position) {

@@ -31,12 +31,14 @@ public class FAQ_Adapter extends RecyclerView.Adapter<FAQ_Adapter.ImageViewHolde
 
     @Override
     public void onBindViewHolder(FAQ_Adapter.ImageViewHolder imageViewHolder, int i) {
-
+        faqClass uploadCurrent = infoList.get(i);
+        imageViewHolder.textViewAnswer.setText(uploadCurrent.getFaq_Answer());
+        imageViewHolder.textViewQuestion.setText(uploadCurrent.getFaq_Question());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return infoList.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {

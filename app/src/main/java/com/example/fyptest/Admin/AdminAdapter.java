@@ -1,7 +1,11 @@
 package com.example.fyptest.Admin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.fragments.AddProductFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,6 +47,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(ImageViewHolder imageViewHolder, int i) {
         final productClass uploadCurrent = productList.get(i);
+        final String productID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         final String prodDesc = uploadCurrent.getPro_description();
         final String prodPrice = "$" + uploadCurrent.getPro_maxOrderQtySellPrice();
@@ -52,6 +58,13 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
                 .fit()
                 .centerCrop()
                 .into(imageViewHolder.image_view_upload);
+
+        imageViewHolder.image_view_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapToProductView(mContext,productID);
+            }
+        });
 
         imageViewHolder.textViewProductName.setText(prodName);
         imageViewHolder.textViewProductPrice.setText(prodPrice);
@@ -78,5 +91,18 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
             this.textViewDuration = (TextView) itemView.findViewById(R.id.textViewDuration);
             this.textViewProductDescription = (TextView) itemView.findViewById(R.id.textViewProductDescription);
         }
+    }
+
+    public void swapToProductView(Context mContext, String prodID) {
+        Activity activity = (FragmentActivity) mContext;
+        ManagePendingProduct AddProductFragment = new ManagePendingProduct();
+        Bundle arguments = new Bundle();
+        arguments.putString("ProdID" , prodID);
+        arguments.putString("CusID", userIdentity);
+        AddProductFragment.setArguments(arguments);
+        FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, AddProductFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
