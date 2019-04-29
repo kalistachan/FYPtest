@@ -44,12 +44,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         final View view = LayoutInflater.from(context).inflate(R.layout.notification_listing, viewGroup, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "1", Toast.LENGTH_LONG).show();
-            }
-        });
         return new ImageViewHolder(view);
     }
 
