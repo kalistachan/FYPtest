@@ -39,7 +39,7 @@ public class NotificationsFragment extends Fragment {
     NotificationAdapter adapter;
 
     List<String> watchListProd;
-    List<productGroupClass> productGroupItem;
+    List<productClass> productGroupItem;
 
     public NotificationsFragment() {
 
@@ -87,19 +87,54 @@ public class NotificationsFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.hasChild(item)) {
-                                    productGroupClass productGroupClass = dataSnapshot.getValue(productGroupClass.class);
-                                    productGroupItem.add(productGroupClass);
+                                    DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(item);
+                                    dbGroupDetail.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            boolean checkUser = false;
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+                                                    checkUser = true;
+                                                }
+                                            }
+                                            if (!checkUser) {
+                                                DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product");
+                                                dbProductGroup.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                            if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
+                                                                productClass productClass = snapshot.getValue(productClass.class);
+                                                                productGroupItem.add(productClass);
+                                                            }
+                                                        }
+                                                        adapter = new NotificationAdapter(getActivity(), productGroupItem);
+                                                        recycler_view_Notification.setAdapter(adapter);
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                                 }
-                                //adapter = new NotificationAdapter(getActivity(), productGroupItem);
-                                //recycler_view_Notification.setAdapter(adapter);
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.d("Debug: onCancelled (dbProduct)", databaseError.getMessage());
+
                             }
                         });
                     }
+                } else if (watchListProd.isEmpty()) {
+                    adapter = new NotificationAdapter(getActivity(), productGroupItem);
+                    recycler_view_Notification.setAdapter(adapter);
                 }
             }
         });
@@ -118,6 +153,7 @@ public class NotificationsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     watchListProd.add(snapshot.getKey());
                 }
+                Log.d("Test", "read me");
                 firebaseCallback.onCallback1(watchListProd);
             }
             @Override

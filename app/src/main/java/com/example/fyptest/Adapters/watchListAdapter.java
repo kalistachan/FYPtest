@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
@@ -41,8 +43,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     String userIdentity;
 
     ProductListingFragment pl;
-
-    private static final String TAG = "Debug: Watch List Adapter";
 
     public watchListAdapter(Context context, List<productClass> productList) {
         this.productList = productList;

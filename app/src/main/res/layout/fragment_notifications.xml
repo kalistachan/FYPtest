@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.NotificationsFragment">
 
     <LinearLayout
@@ -24,15 +25,23 @@
             android:textColor="@color/black"
             android:textAlignment="center"/>
 
+        <View
+            android:id="@+id/view4"
+            style="@style/Divider"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Notification"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/linearHeader"
-        android:layout_alignBottom="@id/linearHeader"
+        android:layout_alignParentBottom="false"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="-695dp" />
+        android:layout_marginBottom="1dp"
+        android:isScrollContainer="false"/>
 
 </RelativeLayout>

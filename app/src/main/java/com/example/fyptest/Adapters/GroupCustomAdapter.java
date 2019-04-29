@@ -154,7 +154,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                swapToProductView(mContext,prodID);
+                swapToProductView(mContext,prodID, userIdentity);
             }
         });
     }
@@ -236,7 +236,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         void onCallback1(String days);
     }
 
-    private void swapToProductView(Context mContext, String prodID) {
+    public static void swapToProductView(Context mContext, String prodID, String userIdentity) {
         Activity activity = (FragmentActivity) mContext;
         ProductView newProductView = new ProductView();
         Bundle arguments = new Bundle();

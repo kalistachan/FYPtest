@@ -28,6 +28,7 @@ import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.fragments.HelpCentreFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
@@ -160,9 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 .addDrawerItems(
                         //item position corresponds to listing of items here (includes dividers, etc.)
                         item_notifications,
-                        new DividerDrawerItem(),
                         item_help_centre,
-                        new DividerDrawerItem(),
                         item_logout
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -171,17 +170,18 @@ public class MainActivity extends AppCompatActivity {
                         //do funky stuff with clicked items :D
                         switch (position) {
                             case 1:
-                                fragment = new CategoriesFragment();
-                                loadFragment(fragment);
-                                break;
-                            case 2:
                                 fragment = new NotificationsFragment();
                                 loadFragment(fragment);
                                 break;
-                            case 4:
+                            case 2:
+                                fragment = new HelpCentreFragment();
+                                loadFragment(fragment);
                                 break;
-                            case 6:
-                                startActivity(new Intent(MainActivity.this, loginActivity.class));
+                            case 3:
+                                SharedPreferences.Editor edit = prefs.edit();
+                                edit.clear();
+                                edit.apply();
+                                startActivity(new Intent(context, loginActivity.class));
                         }
                         return true;
                     }
