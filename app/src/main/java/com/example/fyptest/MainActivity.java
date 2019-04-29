@@ -146,13 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Log.d("custname", "value: " + custName);
 
-        AccountHeader headerResult = new AccountHeaderBuilder()
+        headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("insert custName here").withEmail("insert custPoints here")
-                )
-                .withSelectionListEnabledForSingleProfile(false)
+                .withSelectionListEnabledForSingleProfile(true)
                 .build();
         //account_header
         getCusName(id);
