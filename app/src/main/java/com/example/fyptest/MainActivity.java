@@ -28,7 +28,6 @@ import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
-import com.example.fyptest.fragments.HelpCentreFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
@@ -135,10 +134,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Log.d("custname", "value: " + custName);
 
-        headerResult = new AccountHeaderBuilder()
+        AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
-                .withSelectionListEnabledForSingleProfile(true)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("insert custName here").withEmail("insert custPoints here")
+                )
+                .withSelectionListEnabledForSingleProfile(false)
                 .build();
         //account_header
         getCusName(id);
@@ -153,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         //create the drawer and remember the `Drawer` result object
         final Drawer result = new DrawerBuilder()
                 .withCloseOnClick(true)
+                .withDelayOnDrawerClose(0)
                 .withSelectedItem(-1)
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -161,7 +164,9 @@ public class MainActivity extends AppCompatActivity {
                 .addDrawerItems(
                         //item position corresponds to listing of items here (includes dividers, etc.)
                         item_notifications,
+                        new DividerDrawerItem(),
                         item_help_centre,
+                        new DividerDrawerItem(),
                         item_logout
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -173,15 +178,11 @@ public class MainActivity extends AppCompatActivity {
                                 fragment = new NotificationsFragment();
                                 loadFragment(fragment);
                                 break;
-                            case 2:
-                                fragment = new HelpCentreFragment();
-                                loadFragment(fragment);
-                                break;
                             case 3:
-                                SharedPreferences.Editor edit = prefs.edit();
-                                edit.clear();
-                                edit.apply();
-                                startActivity(new Intent(context, loginActivity.class));
+                                startActivity(new Intent(MainActivity.this, HelpCenterActivity.class));
+                                break;
+                            case 5:
+                                startActivity(new Intent(MainActivity.this, loginActivity.class));
                         }
                         return true;
                     }
