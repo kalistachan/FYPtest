@@ -72,15 +72,11 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getProductGroupItem();
-    }
-
-    private void getProductGroupItem() {
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(List<String> itemList) {
+                productGroupItem.clear();
                 if (!watchListProd.isEmpty()) {
-                    productGroupItem.clear();
                     for (final String item : watchListProd) {
                         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
                         dbProductGroup.addValueEventListener(new ValueEventListener() {
@@ -133,6 +129,7 @@ public class NotificationsFragment extends Fragment {
                         });
                     }
                 } else if (watchListProd.isEmpty()) {
+                    productGroupItem.clear();
                     adapter = new NotificationAdapter(getActivity(), productGroupItem);
                     recycler_view_Notification.setAdapter(adapter);
                 }
