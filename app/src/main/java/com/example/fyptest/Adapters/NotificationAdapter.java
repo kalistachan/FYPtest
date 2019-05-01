@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -33,6 +34,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     String userIdentity;
 
     public NotificationAdapter(Context context, List<productClass> productList) {
+        this.itemList = new ArrayList<>();
         this.itemList = productList;
         this.context = context;
 

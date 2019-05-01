@@ -13,10 +13,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -186,17 +188,18 @@ public class MainActivity extends AppCompatActivity {
                             case 1:
                                 fragment = new NotificationsFragment();
                                 loadFragment(fragment);
+                                closeOptionsMenu();
                                 break;
                             case 3:
                                 fragment = new HelpCentreFragment();
                                 loadFragment(fragment);
+                                closeOptionsMenu();
                                 break;
                             case 5:
                                 SharedPreferences.Editor edit = prefs.edit();
                                 edit.clear();
                                 edit.apply();
                                 startActivity(new Intent(context, loginActivity.class));
-                                break;
                         }
                         return true;
                     }
