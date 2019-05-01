@@ -78,7 +78,6 @@ public class SearchFragment extends Fragment {
         populateCategory();
         populateSortBy();
         addListenerOnButton();
-
     }
 
     public void addListenerOnButton() {
@@ -158,22 +157,49 @@ public class SearchFragment extends Fragment {
     public void searchProduct (final String inputQuery) {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Product");
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User");
 
         Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mSearch.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    if (postSnapshot.child("pro_Status").getValue().toString().equals("approved"))
-                    {
-                        productClass search = postSnapshot.getValue(productClass.class);
-                        mSearch.add(search);
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                userRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                        mSearch.clear();
+                        for (DataSnapshot postSnapshot2 : dataSnapshot2.getChildren()) {
+                            if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("seller")) {
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    if (postSnapshot.child("pro_s_ID").getValue().toString().equals(userIdentity))
+                                    {
+                                        productClass search = postSnapshot.getValue(productClass.class);
+                                        mSearch.add(search);
+                                    }
+                                }
+                                mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                mRecyclerView.setAdapter(mAdapter);
+                            } else if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("customer")) {
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    if (postSnapshot.child("pro_Status").getValue().toString().equals("approved"))
+                                    {
+                                        productClass search = postSnapshot.getValue(productClass.class);
+                                        mSearch.add(search);
+                                    }
+                                }
+                                mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                mRecyclerView.setAdapter(mAdapter);
+                            }
+                        }
                     }
-                }
-                mAdapter = new CustomAdapter(getActivity(), mSearch);
-                mRecyclerView.setAdapter(mAdapter);
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
