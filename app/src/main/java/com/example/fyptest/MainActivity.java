@@ -13,10 +13,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +26,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.fragments.HelpCentreFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProfileFragment;
@@ -57,21 +61,23 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment;
     BottomNavigationView navigation;
     Context context;
-    DatabaseReference db;
-
+    DatabaseReference dbProductGroup;
+    List<String> watchListItem;
     SharedPreferences prefs;
     String id;
+    AccountHeader headerResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
-        db = FirebaseDatabase.getInstance().getReference("Product Group");
+        dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logosmall);
+        watchListItem = new ArrayList<>();
 
         View homepage = toolbar.getChildAt(0);
         homepage.setOnClickListener(new View.OnClickListener() {
@@ -96,62 +102,63 @@ public class MainActivity extends AppCompatActivity {
         id = prefs.getString("userID", "UNKNOWN");
         Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
-        //Child event listener
-        db.addValueEventListener(new ValueEventListener() {
+        readData(new FirebaseCallback() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    db.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
-                            accessWL(groupProd);
-                        }
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            final String groupProd = dataSnapshot.child("pg_pro_ID").getValue().toString();
-                            accessWL(groupProd);
-                        }
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                            //Do something when a child is removed
-                        }
+            public void onCallback(List<String> itemList) {
+                if (!itemList.isEmpty()) {
+                    for (final String item : itemList) {
+                        DatabaseReference dbGD = FirebaseDatabase.getInstance().getReference("Group Detail");
+                        dbGD.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(item)) {
+                                    DatabaseReference dbGDAgain = FirebaseDatabase.getInstance().getReference("Group Detail").child(item);
+                                    dbGDAgain.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            boolean notifyUser = true;
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(id)) {
+                                                    notifyUser = false;
+                                                }
+                                            }
+                                            if (notifyUser) {
+                                                notificationTest(item);
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                        }
+                                    });
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
-        AccountHeader headerResult = new AccountHeaderBuilder()
+
+        //Log.d("custname", "value: " + custName);
+
+        headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
-                .withSelectionListEnabledForSingleProfile(true)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Insert username here").withEmail("$%& Points Earned")
-                )
+                .withSelectionListEnabledForSingleProfile(false)
                 .build();
         //account_header
+        getCusName(id);
 
         new DrawerBuilder().withActivity(this);
 
         //Primary = bold items, Secondary = normal items
-        PrimaryDrawerItem item_categories = new PrimaryDrawerItem().withName("Categories").withSelectable(false).withIcon(R.drawable.ic_apps_black_24dp);
         PrimaryDrawerItem item_notifications = new PrimaryDrawerItem().withName("Notifications").withSelectable(false).withIcon(R.drawable.ic_notifications_black_24dp);
         PrimaryDrawerItem item_help_centre = new PrimaryDrawerItem().withName("Help Centre").withSelectable(false).withIcon(R.drawable.ic_help_outline_black_24dp);
         PrimaryDrawerItem item_logout = new PrimaryDrawerItem().withName("Logout").withSelectable(false);
@@ -159,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         //create the drawer and remember the `Drawer` result object
         final Drawer result = new DrawerBuilder()
                 .withCloseOnClick(true)
+                .withDelayOnDrawerClose(0)
                 .withSelectedItem(-1)
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -166,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         //item position corresponds to listing of items here (includes dividers, etc.)
-                        item_categories,
                         item_notifications,
                         new DividerDrawerItem(),
                         item_help_centre,
@@ -179,17 +186,19 @@ public class MainActivity extends AppCompatActivity {
                         //do funky stuff with clicked items :D
                         switch (position) {
                             case 1:
-                                fragment = new CategoriesFragment();
-                                loadFragment(fragment);
-                                break;
-                            case 2:
                                 fragment = new NotificationsFragment();
                                 loadFragment(fragment);
                                 break;
-                            case 4:
+                            case 3:
+                                fragment = new HelpCentreFragment();
+                                loadFragment(fragment);
                                 break;
-                            case 6:
-                                startActivity(new Intent(MainActivity.this, loginActivity.class));
+                            case 5:
+                                SharedPreferences.Editor edit = prefs.edit();
+                                edit.clear();
+                                edit.apply();
+                                startActivity(new Intent(context, loginActivity.class));
+                                break;
                         }
                         return true;
                     }
@@ -223,12 +232,6 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;
-
-                /*case R.id.homepage:
-                    fragment = new MainScreen();
-                    //pushing userInfo out of current view
-                    loadFragment(fragment);
-                    return true;*/
             }
             return false;
         }
@@ -245,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint("Enter Product Name");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -267,7 +271,31 @@ public class MainActivity extends AppCompatActivity {
                 swapToSearchFragment(query);
                 return true;
             }
+
         };
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportFragmentManager().popBackStack();
+                return false;
+            }
+        });
+
+        menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                Toast.makeText(MainActivity.this, "onMenuItemActionExpand called", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getSupportFragmentManager().popBackStack();
+                Toast.makeText(MainActivity.this, "onMenutItemActionCollapse called", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         searchView.setOnQueryTextListener(queryTextListener);
 
@@ -276,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void swapToSearchFragment(String queryText) {
-        Log.d("query text in ", "search fragment value:" + queryText);
         SearchFragment newSearchFragment = new SearchFragment();
         Bundle arguments = new Bundle();
         arguments.putString("query" , queryText);
@@ -287,36 +314,28 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void accessWL(final String productID) {
-        DatabaseReference dbUserWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
-        dbUserWatchList.addValueEventListener(new ValueEventListener() {
+    private void getCusName(final String idPass) {
+        final String[] custName = new String[1];
+        final String[] loyaltyPts = new String[1];
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information");
+        db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getKey().equalsIgnoreCase(id)) {
-                            DatabaseReference dbWL = FirebaseDatabase.getInstance().getReference("Watch List").child(id);
-                            dbWL.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        if (snapshot.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(productID)) {
-                                            notificationTest(productID);
-                                        }
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
+                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
+                    if (productSnapshot.child("cus_ID").getValue().toString().equalsIgnoreCase(idPass)) {
+                        custName[0] = productSnapshot.child("cus_fName").getValue().toString() + " " + productSnapshot.child("cus_lName").getValue().toString();
+                        loyaltyPts[0] = productSnapshot.child("cus_loyaltyPoint").getValue().toString();
+                        headerResult.addProfiles(
+                                new ProfileDrawerItem().withName(custName[0]).withEmail(loyaltyPts[0] + " Loyalty Points Earned")
+                        );
                     }
                 }
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -331,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 Notification popUp = new Notification.Builder(context)
                         .setContentText("A product group for your watchlist item, " + productName + ", had been created!")
                         .setContentTitle("Join The Group Now!")
-                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setSmallIcon(R.drawable.ic_logo_v1)
                         .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.WHITE, 3000, 3000)
                         .build();
@@ -340,13 +359,42 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    /* private String getUserName(String loginId) {
-        String userName = "test";
-        return userName;
-    }*/
+    private interface FirebaseCallback {
+        void onCallback(List<String> itemList);
+    }
+
+    private void readData (final FirebaseCallback firebaseCallback) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(id)) {
+                    DatabaseReference dbAgain = FirebaseDatabase.getInstance().getReference("Watch List").child(id);
+                    dbAgain.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            watchListItem.clear();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                watchListItem.add(snapshot.child("wl_pro_ID").getValue().toString());
+                            }
+                            firebaseCallback.onCallback(watchListItem);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

@@ -22,7 +22,6 @@ public class resetPWActivity extends AppCompatActivity {
     Button submit, back2login;
     EditText enteredEmail;
 
-    DatabaseReference db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,39 +42,14 @@ public class resetPWActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db = FirebaseDatabase.getInstance().getReference("User");
-                final String emailString = enteredEmail.getText().toString().trim();
-                db.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (emailString.equals(snapshot.child("email").getValue().toString())) {
-                                String userID = snapshot.child("userID").getValue().toString();
-                                int pwLength = 8;
-                                DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID);
-//
-                                String email = snapshot.child("email").getValue().toString();
-                                String newPW = autoGeneratePassword(pwLength);
-                                String contactNum = snapshot.child("contactNum").getValue().toString();
-                                String userType = snapshot.child("userType").getValue().toString();
-
-                                userClass userClass = new userClass(userID,email, newPW, contactNum, userType);
-                                newDB.setValue(userClass);
-                                startActivity(new Intent(resetPWActivity.this, loginActivity.class));
-                                break;
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            return;
-                        }
-                    });
-                }
+                String emailString = enteredEmail.getText().toString().trim();
+                resetPW(emailString);
+                startActivity(new Intent(resetPWActivity.this, loginActivity.class));
+            }
         });
     }
 
-    public static String autoGeneratePassword(int passwordLength) {
+    private static String autoGeneratePassword(int passwordLength) {
         char[] chars = "qwer1tyui2opQW3ERTY4UIOPas5dfgh6jklASD7FGHJK8Lzxcv9bnmZ0XCVBNM@!&".toCharArray();
         StringBuilder password = new StringBuilder();
         Random random = new Random();
@@ -86,6 +60,34 @@ public class resetPWActivity extends AppCompatActivity {
         }
 
         return password.toString();
+    }
+
+    public static void resetPW(final String emailString) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (emailString.equals(snapshot.child("email").getValue().toString())) {
+                        String userID = snapshot.child("userID").getValue().toString();
+                        int pwLength = 8;
+                        DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID);
+                        String email = snapshot.child("email").getValue().toString();
+                        String newPW = autoGeneratePassword(pwLength);
+                        String contactNum = snapshot.child("contactNum").getValue().toString();
+                        String userType = snapshot.child("userType").getValue().toString();
+
+                        userClass userClass = new userClass(userID,email, newPW, contactNum, userType);
+                        newDB.setValue(userClass);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                return;
+            }
+        });
     }
 
     public static boolean checkNull(EditText editText) {
@@ -99,18 +101,4 @@ public class resetPWActivity extends AppCompatActivity {
             return true;
         }
     }
-
-
-    //Example of updating for firebase
-    /*private boolean updateArtist(String id, String name, String genre) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("artist").child(id);
-
-        Artist artist = new Artist(id, name, genre);
-
-        databaseReference.setValue(artist);
-
-        Toast.makeText(this, "Artist Updated Successful", Toast.LENGTH_LONG).show();
-
-        return true;
-    }*/
 }

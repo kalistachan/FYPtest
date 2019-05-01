@@ -30,18 +30,10 @@
         <activity
             android:name=".Seller.SellerMainActivity"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".Admin.AdminMainActivity"
-            android:windowSoftInputMode="stateAlwaysVisible">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity android:name=".resetPWActivity" />
         <activity android:name=".registerActivity" />

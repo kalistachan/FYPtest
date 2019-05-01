@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.adminInfoClass;
+import com.example.fyptest.database.faqClass;
 import com.example.fyptest.database.orderStatusClass;
 import com.example.fyptest.database.productType;
 import com.example.fyptest.database.qtyConditionClass;
@@ -22,7 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class dbDataConstructor extends AppCompatActivity {
 
     EditText editText1, editText2, editText3, editText4,
-            editText5, editText6, editText7, editText8;
+            editText5, editText6, editText7, editText8,
+            editText9, editText10;
 
     Button button;
 
@@ -39,15 +41,29 @@ public class dbDataConstructor extends AppCompatActivity {
         editText6 = (EditText) findViewById(R.id.editText6);
         editText7 = (EditText) findViewById(R.id.editText7);
         editText8 = (EditText) findViewById(R.id.editText8);
+        editText9 = (EditText) findViewById(R.id.editText9);
+        editText10 = (EditText) findViewById(R.id.editText10);
+
 
         button = (Button) findViewById(R.id.button);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addorderStatus(editText1);
+                addFAQ();
             }
         });
+    }
+
+    public  void addFAQ() {
+        String question = editText9.getText().toString().trim();
+        String answer = editText10.getText().toString().trim();
+
+        DatabaseReference dbDAQ = FirebaseDatabase.getInstance().getReference("FAQ");
+        String FAQID = dbDAQ.push().getKey();
+
+        faqClass faqClass = new faqClass(FAQID, question, answer);
+        dbDAQ.child(FAQID).setValue(faqClass);
     }
 
     public void addSeller() {

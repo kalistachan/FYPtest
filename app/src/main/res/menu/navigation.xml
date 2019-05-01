@@ -4,13 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/back"
-        android:icon="@drawable/ic_backicon_24dp"
-        android:title="Back"
-        android:checked="true"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/navigation_purchase"
         android:icon="@drawable/ic_purchased_24dp"
         android:title="Purchases"

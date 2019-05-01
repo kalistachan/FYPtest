@@ -3,12 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.NotificationsFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Notifications Fragment"
-        android:textSize="30sp" />
+        android:orientation="vertical"
+        android:elevation="10dp">
+
+        <TextView
+            android:id="@+id/textViewNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8sp"
+            android:layout_marginBottom="8sp"
+            android:text="Notice"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:id="@+id/view4"
+            style="@style/Divider"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearHeader"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="1dp"
+        android:isScrollContainer="false"/>
 
 </RelativeLayout>
