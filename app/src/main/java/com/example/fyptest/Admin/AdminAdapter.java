@@ -59,7 +59,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
                 .centerCrop()
                 .into(imageViewHolder.image_view_upload);
 
-        imageViewHolder.image_view_upload.setOnClickListener(new View.OnClickListener() {
+        imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 swapToProductView(mContext,productID);
