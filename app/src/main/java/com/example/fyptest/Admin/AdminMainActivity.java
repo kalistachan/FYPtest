@@ -1,5 +1,6 @@
 package com.example.fyptest.Admin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Button;
 
 import com.example.fyptest.R;
 import com.example.fyptest.Seller.fragment_main;
+import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.loginActivity;
 
 public class AdminMainActivity extends AppCompatActivity {
@@ -30,6 +32,19 @@ public class AdminMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
+        toolbar = findViewById(R.id.admin_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setLogo(R.drawable.logosmall);
+
+        View homepage = toolbar.getChildAt(0);
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment = new AdminMainFragment();
+                loadFragment(fragment);
+            }
+        });
 
         //Set to view main screen on application start-up
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -75,10 +90,10 @@ public class AdminMainActivity extends AppCompatActivity {
                 loadFragment(fragment);
                 return true;
 
-            case R.id.toolbar_logo:
+            /*case R.id.toolbar_logo:
                 fragment = new AdminMainFragment();
                 loadFragment(fragment);
-                return true;
+                return true;*/
         }
         return false;
     }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.fragments.AddProductFragment;
+import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.SearchFragment;
 import com.example.fyptest.loginActivity;
 
@@ -46,6 +47,14 @@ public class SellerMainActivity extends AppCompatActivity {
 
         //Setting Logo in ToolBar
         toolbar.setLogo(R.drawable.logosmall);
+        View homepage = toolbar.getChildAt(0);
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment = new fragment_main();
+                loadFragment(fragment);
+            }
+        });
 
         btnLogout = (Button) findViewById(R.id.btnLogout);
 
@@ -113,10 +122,10 @@ public class SellerMainActivity extends AppCompatActivity {
                 loadFragment(fragment);
                 return true;
 
-            case R.id.toolbar_logo:
+            /*case R.id.toolbar_logo:
                 fragment = new fragment_main();
                 loadFragment(fragment);
-                return true;
+                return true;*/
         }
         return false;
     }
