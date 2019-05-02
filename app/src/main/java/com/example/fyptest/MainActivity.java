@@ -165,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
         //create the drawer and remember the `Drawer` result object
         final Drawer result = new DrawerBuilder()
-                .withCloseOnClick(true)
-                .withDelayOnDrawerClose(0)
                 .withSelectedItem(-1)
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -203,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 })
+                .withCloseOnClick(true)
+                .withDelayOnDrawerClose(1)
                 .build();
 //nav_drawer components-----------------------------------------------------------------------------
     }

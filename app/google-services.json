@@ -21,6 +21,18 @@
             "package_name": "com.example.fyptest",
             "certificate_hash": "497ddd1c982e27af483e9593c994ed224b932476"
           }
+        },
+        {
+          "client_id": "758192920758-ohtdqkuiqudagd9bau901o8ai3qa0qur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fyptest",
+            "certificate_hash": "94be974d2a3bf46a2e3ca3075da4681d46fa1325"
+          }
+        },
+        {
+          "client_id": "758192920758-p3gjb27a1riu7ld1kaukl4m5b58grs2q.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
