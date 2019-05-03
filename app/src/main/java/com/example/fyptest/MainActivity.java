@@ -397,4 +397,64 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkProductGroupDuration() {
+        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
+        dbProductGroup.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("pg_dateEnd").getValue().toString().equalsIgnoreCase("")) {
+                        final String productID = snapshot.child("pg_pro_ID").getValue().toString();
+                        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+                        dbProduct.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                int totalQty = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                                int minAcceptedOrder = Integer.parseInt(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
+                                int minTarget = 0; //Get the min quantity
+                                calculateCurrentOrderedQuantity(productID, minTarget);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                }
+                if (counter != minOrderQty) {
+                    dismissGroup(productID);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void dismissGroup(String productID) {
+        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
+        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+
+        dbProductGroup.removeValue();
+        dbGroupDetail.removeValue();
+    }
 }
