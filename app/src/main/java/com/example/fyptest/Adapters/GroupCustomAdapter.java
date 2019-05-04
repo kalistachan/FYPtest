@@ -49,7 +49,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
         this.groupList = groupList;
-        this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = preferences.getString("userID", "UNKNOWN");
     }
 
