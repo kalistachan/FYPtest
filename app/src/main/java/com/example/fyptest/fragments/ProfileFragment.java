@@ -254,7 +254,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String fName = dataSnapshot.child("cus_fName").getValue().toString();
                 String lName = dataSnapshot.child("cus_lName").getValue().toString();
-                profileTitle1.setText(fName + " " + lName + " Information");
+                profileTitle1.setText(lName + " " + fName + " Information");
                 String add = dataSnapshot.child("cus_shippingAddress").getValue().toString();
                 String postal = dataSnapshot.child("cus_postalCode").getValue().toString();
                 address.setHint(add);
