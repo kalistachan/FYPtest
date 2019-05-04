@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
+import com.example.fyptest.database.blacklistedCreditCardClass;
 import com.example.fyptest.database.orderHistoryClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
@@ -516,5 +517,17 @@ public class MainActivity extends AppCompatActivity {
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID,
                 oh_os_ID, orderQty, checkoutDate, orderedPrice, shippingCost);
         dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
+    }
+
+    private void dismiss(String cardID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklist");
+        String bcc_ID = db.push().getKey();
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String todayDate = df.format(c.getTime());
+
+        blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardID);
+        db.child(cardID).setValue(blacklistedCreditCardClass);
     }
 }
