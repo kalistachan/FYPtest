@@ -161,7 +161,6 @@ public class SearchFragment extends Fragment {
         final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User");
 
         Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
-      // Query query2 = rootRef.orderByChild("pro_description").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
 
         query.addValueEventListener(new ValueEventListener() {
 

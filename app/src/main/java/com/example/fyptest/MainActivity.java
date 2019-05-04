@@ -232,16 +232,19 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_group:
+                    item.setCheckable(true);
                     fragment = new GroupFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_watchlist:
+                    item.setCheckable(true);
                     fragment = new WatchListFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_profile:
+                    item.setCheckable(true);
                     fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;
