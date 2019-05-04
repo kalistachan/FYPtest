@@ -139,8 +139,6 @@ public class ProductView extends Fragment {
                             }
                             double a = count * 0.9;
                             int i = (int)(a + 0.5);
-                            Log.d("12345", "Before Rounding Off" + Double.toString(a));
-                            Log.d("12345", "After Rounding Off" + Integer.toString(i));
                             String sCount = Integer.toString(count);
                             String construct = sCount + " / " + targetQty;
                             targetqtyTV.setText(construct);
@@ -191,7 +189,7 @@ public class ProductView extends Fragment {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChildren()) {
-                                        String dateCreated = dataSnapshot.child("string_pgDateCreated").getValue().toString();
+                                        String dateCreated = dataSnapshot.child("pg_dateCreated").getValue().toString();
                                         String condition = Integer.toString((int)((Integer.parseInt(pro_durationForGroupPurchase)/2) + 0.5));
                                         Log.d("Condition Check", "Date duration 50% : " + condition);
 

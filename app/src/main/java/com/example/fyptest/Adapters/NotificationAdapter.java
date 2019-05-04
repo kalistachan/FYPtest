@@ -42,7 +42,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.userIdentity = preferences.getString("userID", "UNKNOWN");
     }
 
-
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         final View view = LayoutInflater.from(context).inflate(R.layout.notification_listing, viewGroup, false);

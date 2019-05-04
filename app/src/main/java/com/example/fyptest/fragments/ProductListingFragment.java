@@ -58,8 +58,7 @@ public class ProductListingFragment extends Fragment {
     String userIdentity;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View groupView = inflater.inflate(R.layout.fragment_productlisting, container, false);
         this.mRecyclerView = groupView.findViewById(R.id.recycler_view);
@@ -148,6 +147,7 @@ public class ProductListingFragment extends Fragment {
                     insertCustGroupDetails (prodID, gdCusID);
                 } else if (option == 2) {
                     insertProductGroup(prodID, gdCusID);
+                    insertCustGroupDetails(prodID, gdCusID);
                 }
             }
         });
@@ -209,6 +209,7 @@ public class ProductListingFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         final String string_pgDateCreated = df.format(c.getTime());
+
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
         dbProduct.addValueEventListener(new ValueEventListener() {
             @Override
@@ -218,7 +219,6 @@ public class ProductListingFragment extends Fragment {
                 databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
                 productGroupClass productGroup = new productGroupClass(prodID, dateEnd, string_pgDateCreated);
                 databaseProduct.child(prodID).setValue(productGroup);
-                insertCustGroupDetails(prodID, gdCusID);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -231,10 +231,10 @@ public class ProductListingFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String gdJoinDate = df.format(c.getTime());
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodGroupId);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
         String pg_ID = db.push().getKey();
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
-        db.child(pg_ID).setValue(groupDetail);
+        db.child(prodGroupId).child(pg_ID).setValue(groupDetail);
     }
 }
 

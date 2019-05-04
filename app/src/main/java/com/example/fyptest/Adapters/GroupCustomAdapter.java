@@ -49,7 +49,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
         this.groupList = groupList;
-        this.preferences = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
+        this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
         this.userIdentity = preferences.getString("userID", "UNKNOWN");
     }
 
@@ -207,8 +207,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (snapshot.child("pg_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                             try {
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-                                Date dateCreated = sdf.parse(snapshot.child("string_pgDateCreated").getValue().toString());
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                Date dateCreated = sdf.parse(snapshot.child("pg_dateCreated").getValue().toString());
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTime(dateCreated);
                                 cal.add(Calendar.DATE, Integer.parseInt(duration));
