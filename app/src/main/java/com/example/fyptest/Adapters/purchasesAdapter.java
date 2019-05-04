@@ -85,20 +85,22 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                         final String orderHistoryID = snapshot.child("oh_ID").getValue().toString();
                         String productCheckoutPrice = snapshot.child("oh_orderedPrice").getValue().toString();
                         String quantityPurchase = snapshot.child("oh_totalQuantity").getValue().toString();
-                        float amountPaid = Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase);
+                        float oh_shippingFee = Float.parseFloat(snapshot.child("oh_shippingFee").getValue().toString());
+                        float amountPaid = (Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase)) + oh_shippingFee;
                         String intToStringForPrice = Float.toString(amountPaid);
 
-                        if (amountPaid >= Float.parseFloat(freeShippingCondition)) {
-                            String shippingFee = "$0.00";
-                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
-                            imageViewHolder.totalPaidPrice.setText(intToStringForPrice);
-                        } else {
-                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
-                            float finalCost = amountPaid + Float.parseFloat(shippingFee);
-                            String intToStringForfinalCost = Float.toString(finalCost);
-                            imageViewHolder.totalPaidPrice.setText(intToStringForfinalCost);
-                        }
-
+//                        if (amountPaid >= Float.parseFloat(freeShippingCondition)) {
+//                            String shippingFee = "$0.00";
+//                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
+//                            imageViewHolder.totalPaidPrice.setText(intToStringForPrice);
+//                        } else {
+//                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
+//                            float finalCost = amountPaid + Float.parseFloat(shippingFee);
+//                            String intToStringForfinalCost = Float.toString(finalCost);
+//                            imageViewHolder.totalPaidPrice.setText(intToStringForfinalCost);
+//                        }
+                        imageViewHolder.totalPaidPrice.setText("$" + intToStringForPrice);
+                        imageViewHolder.viewShippingFeePrice.setText("$" + Float.toString(oh_shippingFee));
                         imageViewHolder.prodPriceViewName.setText("$" + productCheckoutPrice);
                         imageViewHolder.quantity.setText("x" + quantityPurchase);
                         imageViewHolder.orderStatusTextView.setText(snapshot.child("oh_os").getValue().toString());

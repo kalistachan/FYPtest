@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
+import com.example.fyptest.database.orderHistoryClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
@@ -52,7 +53,11 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -205,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
                 .withDelayOnDrawerClose(1)
                 .build();
 //nav_drawer components-----------------------------------------------------------------------------
+
+        checkProductGroupDuration();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -404,22 +411,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.child("pg_dateEnd").getValue().toString().equalsIgnoreCase("")) {
-                        final String productID = snapshot.child("pg_pro_ID").getValue().toString();
-                        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
-                        dbProduct.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                int totalQty = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
-                                int minAcceptedOrder = Integer.parseInt(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
-                                int minTarget = 0; //Get the min quantity
-                                calculateCurrentOrderedQuantity(productID, minTarget);
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                    final String productID = snapshot.child("pg_pro_ID").getValue().toString();
+                    String endDate = snapshot.child("pg_dateEnd").getValue().toString();
+                    final String todayDate = df.format(c.getTime());
 
-                            }
-                        });
+                    try {
+                        Date dateEnd = df.parse(endDate);
+                        Date today = df.parse(todayDate);
+
+                        if (dateEnd.before(today) || dateEnd.equals(today)) {
+                            DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+                            dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    int time = 1;
+                                    Log.d("12345", "Time : " + time);
+                                    time++;
+                                    double totalQty = Double.parseDouble(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                                    double minAcceptedOrder = Double.parseDouble(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
+                                    int minTarget = (int)((totalQty * (minAcceptedOrder / 100)) + 0.5); //Get the min quantity
+                                    int maxTarget = (int)(totalQty);
+
+                                    final String pro_minOrderQtySellPrice = dataSnapshot.child("pro_minOrderQtySellPrice").getValue().toString();
+                                    final String shippingFee = dataSnapshot.child("pro_shippingCost").getValue().toString();
+                                    final String freeShipping;
+                                    if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                                        freeShipping = dataSnapshot.child("pro_freeShippingAt").getValue().toString();
+                                    } else {
+                                        freeShipping = null;
+                                    }
+
+                                    calculateCurrentOrderedQuantity(productID, minTarget, maxTarget, todayDate, pro_minOrderQtySellPrice, shippingFee, freeShipping);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -430,7 +463,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty) {
+    private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty, final int maxOrderQty, final String today,
+                                                 final String orderedPrice, final String shippingFee, final String freeShipping) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addValueEventListener(new ValueEventListener() {
             @Override
@@ -439,8 +473,30 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                 }
-                if (counter != minOrderQty) {
+                if (counter < minOrderQty) {
                     dismissGroup(productID);
+                } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter > minOrderQty && counter != maxOrderQty)) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                        final String orderedQty = snapshot.child("gd_qty").getValue().toString();
+
+                        if (freeShipping != null) {
+                            float freeShipment = Float.parseFloat(freeShipping);
+                            float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
+
+                            if (netPrice >= freeShipment) {
+                                String noShippingFee = "0";
+                                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
+                                dismissGroup(productID);
+                            } else {
+                                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                                dismissGroup(productID);
+                            }
+                        } else {
+                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                            dismissGroup(productID);
+                        }
+                    }
                 }
             }
             @Override
@@ -456,5 +512,14 @@ public class MainActivity extends AppCompatActivity {
 
         dbProductGroup.removeValue();
         dbGroupDetail.removeValue();
+    }
+
+    private void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
+        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History");
+        String oh_ID = dbOrderHistory.push().getKey();
+        String oh_os_ID = "processing";
+        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID,
+                oh_os_ID, orderQty, checkoutDate, orderedPrice, shippingCost);
+        dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
     }
 }
