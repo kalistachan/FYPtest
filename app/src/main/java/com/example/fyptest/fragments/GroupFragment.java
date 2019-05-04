@@ -72,34 +72,6 @@ public class GroupFragment extends Fragment {
     }
 
     public void displayGroup () {
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product");
-//        db.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    final String productID = snapshot.child("pro_ID").getValue().toString();
-//                    readData(new FirebaseCallback() {
-//                        @Override
-//                        public void onCallback1(List<String> itemList) {
-//                            for (String item : grpProdID) {
-//                                if (item.equalsIgnoreCase(productID)) {
-//                                    productClass productClass = snapshot.getValue(productClass.class);
-//                                    grpList.add(productClass);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    });
-//                }
-//                mAdapter = new GroupCustomAdapter(getContext(), grpList);
-//                mRecyclerView.setAdapter(mAdapter);
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
         readData(new FirebaseCallback() {
             DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product");
             @Override
@@ -142,7 +114,6 @@ public class GroupFragment extends Fragment {
                         }
                     }
                 }
-                Log.d("12345", "Try : " + grpProdID.toString());
                 firebaseCallback.onCallback1(grpProdID);
             }
             @Override

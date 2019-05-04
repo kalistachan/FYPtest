@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
+import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.groupDetailClass;
 import com.example.fyptest.database.productClass;
@@ -145,9 +146,11 @@ public class ProductListingFragment extends Fragment {
                 setButtonToViewGroup(button, context);
                 if (option == 1) {
                     insertCustGroupDetails (prodID, gdCusID);
+                    checkForCheckout(prodID);
                 } else if (option == 2) {
-                    insertProductGroup(prodID, gdCusID);
+                    insertProductGroup(prodID);
                     insertCustGroupDetails(prodID, gdCusID);
+                    checkForCheckout(prodID);
                 }
             }
         });
@@ -205,7 +208,7 @@ public class ProductListingFragment extends Fragment {
         transaction.commit();
     }
 
-    private void insertProductGroup (final String prodID, final String gdCusID) {
+    private void insertProductGroup (final String prodID) {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         final String string_pgDateCreated = df.format(c.getTime());
@@ -235,6 +238,83 @@ public class ProductListingFragment extends Fragment {
         String pg_ID = db.push().getKey();
         groupDetailClass groupDetail =  new groupDetailClass(pg_ID, gdJoinDate, qtyChosenVal, prodGroupId, gdCusID);
         db.child(prodGroupId).child(pg_ID).setValue(groupDetail);
+    }
+
+    private void checkForCheckout(final String productID) {
+        final DatabaseReference checkTotalQty = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        checkTotalQty.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                }
+                final int finalCount = counter;
+                DatabaseReference getTargetQty = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+                getTargetQty.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int targetQty = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+
+                        final String pro_maxOrderQtySellPrice = dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString();
+                        final String shippingFee = dataSnapshot.child("pro_shippingCost").getValue().toString();
+                        final String freeShipping;
+                        if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                            freeShipping = dataSnapshot.child("pro_freeShippingAt").getValue().toString();
+                        } else {
+                            freeShipping = null;
+                        }
+
+                        if (finalCount == targetQty) {
+                            checkTotalQty.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                                        String qtyOrdered = snapshot.child("gd_qty").getValue().toString();
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                        String todayDate = df.format(c.getTime());
+
+                                        MainActivity ma = new MainActivity();
+
+                                        if (freeShipping != null) {
+                                            float freeShipment = Float.parseFloat(freeShipping);
+                                            float netPrice = (Float.parseFloat(pro_maxOrderQtySellPrice)) * (Float.parseFloat(qtyOrdered));
+
+                                            if (netPrice >= freeShipment) {
+                                                String noShippingFee = "0";
+                                                ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, noShippingFee);
+                                                ma.dismissGroup(productID);
+                                            } else {
+                                                ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                                ma.dismissGroup(productID);
+                                            }
+                                        } else {
+                                            ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                            ma.dismissGroup(productID);
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 

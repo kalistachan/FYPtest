@@ -424,9 +424,6 @@ public class MainActivity extends AppCompatActivity {
                             dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    int time = 1;
-                                    Log.d("12345", "Time : " + time);
-                                    time++;
                                     double totalQty = Double.parseDouble(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                                     double minAcceptedOrder = Double.parseDouble(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
                                     int minTarget = (int)((totalQty * (minAcceptedOrder / 100)) + 0.5); //Get the min quantity
@@ -504,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void dismissGroup(String productID) {
+    public void dismissGroup(String productID) {
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
 
@@ -512,7 +509,7 @@ public class MainActivity extends AppCompatActivity {
         dbGroupDetail.removeValue();
     }
 
-    private void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
+    public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History");
         String oh_ID = dbOrderHistory.push().getKey();
         String oh_os_ID = "processing";
