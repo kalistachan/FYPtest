@@ -74,6 +74,7 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
+       // searchProductDetails(query);
         searchProduct(query);
         populateCategory();
         populateSortBy();
@@ -160,6 +161,65 @@ public class SearchFragment extends Fragment {
         final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User");
 
         Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
+      // Query query2 = rootRef.orderByChild("pro_description").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
+
+        query.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    searchProductDetails(inputQuery);
+                } else {
+                    userRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                            mSearch.clear();
+                            for (DataSnapshot postSnapshot2 : dataSnapshot2.getChildren()) {
+                                if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("seller")) {
+                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                        if (postSnapshot.child("pro_s_ID").getValue().toString().equals(userIdentity))
+                                        {
+                                            productClass search = postSnapshot.getValue(productClass.class);
+                                            mSearch.add(search);
+                                        }
+                                    }
+                                    mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                    mRecyclerView.setAdapter(mAdapter);
+                                } else if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("customer")) {
+                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                        if (postSnapshot.child("pro_Status").getValue().toString().equals("approved"))
+                                        {
+                                            productClass search = postSnapshot.getValue(productClass.class);
+                                            mSearch.add(search);
+                                        }
+                                    }
+                                    mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                    mRecyclerView.setAdapter(mAdapter);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void searchProductDetails (final String inputQuery) {
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Product");
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User");
+
+        Query query = rootRef.orderByChild("pro_description").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
 

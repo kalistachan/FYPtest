@@ -7,28 +7,28 @@
         android:id="@+id/navigation_purchase"
         android:icon="@drawable/ic_purchased_24dp"
         android:title="Purchases"
-        android:checked="true"
-        app:showAsAction="ifRoom" />
+        android:checked="false"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/navigation_group"
         android:icon="@drawable/ic_groupicon_24dp"
         android:title="Groups"
-        android:checked="true"
-        app:showAsAction="ifRoom" />
+        android:checked="false"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/navigation_watchlist"
         android:icon="@drawable/ic_watchicon_30dp"
         android:title="Watch List"
         android:checked="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_profileicon_24dp"
         android:title="Profile"
         android:checked="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
 </menu>

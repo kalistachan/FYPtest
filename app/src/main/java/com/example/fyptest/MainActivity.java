@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                navigation.getMenu().setGroupCheckable(0, false, true);
                 fragment = new ProductListingFragment();
                 loadFragment(fragment);
             }
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        navigation.getMenu().getItem(0).setCheckable(false);
         loadFragment(new ProductListingFragment());
 
         //Set to view main screen on application start-up
@@ -222,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_purchase:
+                    item.setCheckable(true);
                     fragment = new PurchaseFragment();
                     loadFragment(fragment);
                     return true;
