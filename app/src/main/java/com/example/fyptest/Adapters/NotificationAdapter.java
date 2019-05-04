@@ -59,14 +59,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         imageViewHolder.textViewTitle.setText(constructTitle);
         imageViewHolder.textViewContent.setText(constructContent);
 
-        imageViewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GroupCustomAdapter.swapToProductView(context, pro_id, userIdentity);
-            }
-        });
-
-        imageViewHolder.textViewContent.setOnClickListener(new View.OnClickListener() {
+        imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GroupCustomAdapter.swapToProductView(context, pro_id, userIdentity);
