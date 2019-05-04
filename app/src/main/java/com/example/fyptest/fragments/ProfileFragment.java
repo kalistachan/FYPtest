@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.fyptest.R;
 import com.example.fyptest.loginActivity;
+import com.example.fyptest.registerActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -135,8 +136,13 @@ public class ProfileFragment extends Fragment {
 
                 if (!getCCNum.isEmpty()) {
                     if (checkLength(ccNum,16,16)) {
-                        dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_Num");
-                        dbCC.setValue(getCCNum);
+                        registerActivity ra = new registerActivity();
+                        if (ra.isCCValid(Long.parseLong(getCCNum)) == false) {
+                            ccNum.setError("Invalid credit card number");
+                        } else {
+                            dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_Num");
+                            dbCC.setValue(getCCNum);
+                        }
                     }
                 }
 
@@ -216,7 +222,7 @@ public class ProfileFragment extends Fragment {
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ccNum.setHint(dataSnapshot.child("cc_Num").getValue().toString());
+                ccNum.setHint(dataSnapshot.child("cc_Num").getValue().toString().substring(0, 6) + "xxxxxx" + dataSnapshot.child("cc_Num").getValue().toString().substring(12, 16));
                 ccExpiryDate.setHint(dataSnapshot.child("cc_ExpiryDate").getValue().toString());
                 ccCVV.setHint(dataSnapshot.child("cc_CVNum").getValue().toString());
             }
