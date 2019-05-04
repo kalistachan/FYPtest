@@ -115,19 +115,23 @@ public class ProfileFragment extends Fragment {
                         if (checkLength(Password, 8 , 16) && checkLength(confirmPassword, 8 , 16)) {
                             if (confirmingPassword(Password, confirmPassword)) {
                                 dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr).child("password");
-                                dbUser.addValueEventListener(new ValueEventListener() {
+                                dbUser.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (!dataSnapshot.getValue().toString().equals(getPassword)) {
-                                            new AlertDialog.Builder(getActivity())
-                                                    .setTitle("Confirmation")
-                                                    .setMessage("Are you sure you want to change your password?")
-                                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                                            dbUser.setValue(getPassword);
-                                                        }})
-                                                    .setNegativeButton(android.R.string.no,null).show();
+                                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                            alert.setTitle("Confirmation");
+                                            alert.setMessage("Are you sure you want to change your password?");
+                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    dbUser.setValue(getPassword);
+                                                    dialog.dismiss();
+                                                }});
+                                            alert.setNegativeButton(android.R.string.no,null);
+
+                                            AlertDialog alertdialog = alert.create();
+                                            alertdialog.show();
                                         }
                                     }
 
@@ -161,24 +165,28 @@ public class ProfileFragment extends Fragment {
 
                 if (!getCCNum.isEmpty()) {
                     if (checkLength(ccNum,16,16)) {
-                        registerActivity ra = new registerActivity();
-                        if (ra.isCCValid(Long.parseLong(getCCNum)) == false) {
+                        if (isCCValid(Long.parseLong(getCCNum)) == false) {
                             ccNum.setError("Invalid credit card number");
                         } else {
                             dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_Num");
-                            dbCC.addValueEventListener(new ValueEventListener() {
+                            dbCC.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (!dataSnapshot.getValue().toString().equals(getCCNum)) {
-                                        new AlertDialog.Builder(getActivity())
-                                                .setTitle("Confirmation")
-                                                .setMessage("Are you sure you want to change your credit card number?")
-                                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                                        dbCC.setValue(getCCNum);
-                                                    }})
-                                                .setNegativeButton(android.R.string.no, null).show();
+                                        Log.d("cc Num", "value snapshot: " + dataSnapshot.getValue().toString() + " getCCnum value: " + getCCNum);
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                        alert.setTitle("Confirmation");
+                                        alert.setMessage("Are you sure you want to change your credit card number?");
+                                        alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    dbCC.setValue(getCCNum);
+                                                    dialog.dismiss();
+                                                }});
+                                        alert.setNegativeButton(android.R.string.no, null);
+
+                                        AlertDialog alertdialog = alert.create();
+                                        alertdialog.show();
                                     }
                                 }
 
@@ -246,7 +254,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String fName = dataSnapshot.child("cus_fName").getValue().toString();
                 String lName = dataSnapshot.child("cus_lName").getValue().toString();
-                profileTitle1.setText(lName + " " + fName + " Information");
+                profileTitle1.setText(fName + " " + lName + " Information");
                 String add = dataSnapshot.child("cus_shippingAddress").getValue().toString();
                 String postal = dataSnapshot.child("cus_postalCode").getValue().toString();
                 address.setHint(add);
@@ -351,5 +359,64 @@ public class ProfileFragment extends Fragment {
                 clearForm((ViewGroup)view);
             }
         }
+    }
+
+    // Return true if the card number is valid
+    public static boolean isCCValid(long number)
+    {
+        return (getSize(number) >= 13 &&
+                getSize(number) <= 16) &&
+                (prefixMatched(number, 4) ||
+                        prefixMatched(number, 5) ||
+                        prefixMatched(number, 37) ||
+                        prefixMatched(number, 6)) &&
+                ((sumOfDoubleEvenPlace(number) +
+                        sumOfOddPlace(number)) % 10 == 0);
+    }
+
+    public static int sumOfDoubleEvenPlace(long number)
+    {
+        int sum = 0;
+        String num = number + "";
+        for (int i = getSize(number) - 2; i >= 0; i -= 2)
+            sum += getDigit(Integer.parseInt(num.charAt(i) + "") * 2);
+
+        return sum;
+    }
+
+    public static int getDigit(int number)
+    {
+        if (number < 9)
+            return number;
+        return number / 10 + number % 10;
+    }
+
+    public static int sumOfOddPlace(long number)
+    {
+        int sum = 0;
+        String num = number + "";
+        for (int i = getSize(number) - 1; i >= 0; i -= 2)
+            sum += Integer.parseInt(num.charAt(i) + "");
+        return sum;
+    }
+
+    public static boolean prefixMatched(long number, int d)
+    {
+        return getPrefix(number, getSize(d)) == d;
+    }
+
+    public static int getSize(long d)
+    {
+        String num = d + "";
+        return num.length();
+    }
+
+    public static long getPrefix(long number, int k)
+    {
+        if (getSize(number) > k) {
+            String num = number + "";
+            return Long.parseLong(num.substring(0, k));
+        }
+        return number;
     }
 }

@@ -292,14 +292,12 @@ public class MainActivity extends AppCompatActivity {
         menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                Toast.makeText(MainActivity.this, "onMenuItemActionExpand called", Toast.LENGTH_SHORT).show();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 getSupportFragmentManager().popBackStack();
-                Toast.makeText(MainActivity.this, "onMenutItemActionCollapse called", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
