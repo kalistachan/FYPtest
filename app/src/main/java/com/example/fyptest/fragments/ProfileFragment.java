@@ -1,6 +1,8 @@
 package com.example.fyptest.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +19,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.loginActivity;
 import com.example.fyptest.registerActivity;
@@ -86,7 +90,7 @@ public class ProfileFragment extends Fragment {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String getEmail = email.getText().toString(), getContactNo = contactNo.getText().toString(),
+                final String getEmail = email.getText().toString(), getContactNo = contactNo.getText().toString(),
                         getPassword = Password.getText().toString(), getConfirmPassword = confirmPassword.getText().toString(),
                         getAddress = address.getText().toString(), getPostalCode = postalCode.getText().toString(),
                         getCCExpiryDate = ccExpiryDate.getText().toString(), getCCNum = ccNum.getText().toString(),
@@ -111,7 +115,28 @@ public class ProfileFragment extends Fragment {
                         if (checkLength(Password, 8 , 16) && checkLength(confirmPassword, 8 , 16)) {
                             if (confirmingPassword(Password, confirmPassword)) {
                                 dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr).child("password");
-                                dbUser.setValue(getPassword);
+                                dbUser.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (!dataSnapshot.getValue().toString().equals(getPassword)) {
+                                            new AlertDialog.Builder(getActivity())
+                                                    .setTitle("Confirmation")
+                                                    .setMessage("Are you sure you want to change your password?")
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                            dbUser.setValue(getPassword);
+                                                        }})
+                                                    .setNegativeButton(android.R.string.no,null).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        return;
+                                    }
+                                });
+
                             }
                         }
                     }
@@ -141,7 +166,27 @@ public class ProfileFragment extends Fragment {
                             ccNum.setError("Invalid credit card number");
                         } else {
                             dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_Num");
-                            dbCC.setValue(getCCNum);
+                            dbCC.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.getValue().toString().equals(getCCNum)) {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Confirmation")
+                                                .setMessage("Are you sure you want to change your credit card number?")
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        dbCC.setValue(getCCNum);
+                                                    }})
+                                                .setNegativeButton(android.R.string.no, null).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    return;
+                                }
+                            });
                         }
                     }
                 }
