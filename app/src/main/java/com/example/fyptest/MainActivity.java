@@ -155,9 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
 //nav_drawer components-----------------------------------------------------------------------------
         //account_header
-
-        //Log.d("custname", "value: " + custName);
-
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
@@ -208,14 +205,15 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(context, loginActivity.class));
                                 break;
                         }
-                        return true;
+                        return false;
                     }
                 })
                 .withCloseOnClick(true)
                 .withDelayOnDrawerClose(1)
                 .build();
-//nav_drawer components-----------------------------------------------------------------------------
 
+        result.closeDrawer();
+//nav_drawer components-----------------------------------------------------------------------------
         checkProductGroupDuration();
     }
 
