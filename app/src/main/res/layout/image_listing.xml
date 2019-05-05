@@ -41,34 +41,34 @@
 
     <TextView
         android:id="@+id/targetQty"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="14dp"
         android:gravity="start"
         android:textColor="@color/black"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
 
     <TextView
         android:id="@+id/prodPriceViewName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:gravity="start"
         android:textColor="@color/black"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/targetQty" />
 
     <TextView
         android:id="@+id/timeRemain"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:gravity="start"
         android:textColor="@color/black"
