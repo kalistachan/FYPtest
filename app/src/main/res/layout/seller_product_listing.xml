@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginTop="1dp"
     android:background="@drawable/layoutborder"
     android:elevation="5dp"
     android:orientation="vertical">
@@ -16,14 +14,14 @@
         android:id="@+id/linearHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints,Orientation"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        android:orientation="vertical">
+        tools:ignore="MissingConstraints,Orientation">
 
         <TextView
             android:id="@+id/textViewProductStatus"
@@ -42,7 +40,7 @@
             tools:layout_editor_absoluteX="128dp"
             tools:layout_editor_absoluteY="-9dp" />
 
-        <View style="@style/Divider"/>
+        <View style="@style/Divider" />
 
     </LinearLayout>
 
@@ -51,8 +49,11 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="start"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:src="@drawable/ic_image_placeholder"
+        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearHeader" />
 
@@ -60,103 +61,89 @@
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/yellowbuttons"
         android:minHeight="30sp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:text="Remove"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/button5"
-        app:layout_constraintStart_toStartOf="@+id/button5"
-        app:layout_constraintTop_toBottomOf="@+id/button5"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/yellowbuttons"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/orangebuttons"
         android:minHeight="30sp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:text="View/Edit"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearHeader"
-        app:layout_constraintVertical_bias="0.017"
         tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textViewProductName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:minHeight="30dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:gravity="start|left"
         android:text="Product Name"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/linearHeader"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
     <TextView
         android:id="@+id/textViewPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="$0.00"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewTargetQuantity"
-        app:layout_constraintEnd_toStartOf="@+id/button5"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewTargetQuantity"
-        app:layout_constraintTop_toTopOf="@+id/textViewTargetQuantity"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProductName"
         tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
     <TextView
         android:id="@+id/durationValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:text="0day Waiting Time"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/button4"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toTopOf="@+id/textViewProductName"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTargetQuantity"
         tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
     <TextView
         android:id="@+id/textViewTargetQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="0/100"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/linearFooter"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
-        app:layout_constraintTop_toTopOf="@+id/textViewProductName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPrice"
         tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
     <LinearLayout
@@ -170,7 +157,7 @@
         app:layout_constraintTop_toBottomOf="@+id/image_view_upload"
         tools:ignore="MissingConstraints">
 
-        <View style="@style/Divider"/>
+        <View style="@style/Divider" />
 
         <TextView
             android:id="@+id/shippingFee"
@@ -178,20 +165,20 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="1dp"
             android:text="Shipping Fee : $0.00"
-            android:textColor="@color/black"
             android:textAlignment="center"
+            android:textColor="@color/black"
             tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
-        <View style="@style/Divider"/>
+        <View style="@style/Divider" />
 
         <TextView
             android:id="@+id/freeShippingFee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="Eligible for free Shipping : NA"
-            android:textColor="@color/black"
+            android:text="Eligibility for Free Shipping : NA"
             android:textAlignment="center"
+            android:textColor="@color/black"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
