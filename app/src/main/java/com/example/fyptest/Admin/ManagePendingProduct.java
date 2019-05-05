@@ -185,6 +185,8 @@ public class ManagePendingProduct extends Fragment {
                 String shipCost = "$" + dataSnapshot.child("pro_shippingCost").getValue().toString();
                 editTextShipCost.setText(shipCost);
 
+                productType.setEnabled(false);
+
                 if (dataSnapshot.hasChild("pro_freeShippingAt")) {
                     String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
                     checkBoxFreeShipment.setChecked(true);

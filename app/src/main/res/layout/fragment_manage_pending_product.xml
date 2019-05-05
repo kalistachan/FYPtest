@@ -85,8 +85,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter Product Name"
-                    android:inputType="textPersonName"
                     android:layout_weight="1"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="HardcodedText,MissingConstraints" />
 
                 <Spinner
@@ -118,8 +120,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_weight="1"
-                    android:inputType="number"
                     android:hint="Duration"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="Autofill,HardcodedText,TextFields" />
 
                 <TextView
@@ -146,10 +150,12 @@
                 android:layout_marginBottom="0dp"
                 android:ems="10"
                 android:hint="Product Description"
-                android:inputType="textMultiLine"
                 android:keyboardNavigationCluster="true"
                 android:maxLines="8"
                 android:minLines="4"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:focusable="false"
                 tools:ignore="HardcodedText,ObsoleteLayoutParam,UnusedAttribute" />
 
             <!--Product Quantity-->
@@ -186,8 +192,10 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="Enters Quantity"
-                    android:inputType="number"
                     android:textSize="20dp"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -228,8 +236,10 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_weight="1"
                     android:hint="S$0.00"
-                    android:inputType="numberDecimal"
                     android:textSize="20dp"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -269,6 +279,7 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:text="S$0.00"
                     android:textSize="20dp"
+                    android:textColor="@color/black"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -308,6 +319,7 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:text="S$0.00"
                     android:textSize="20dp"
+                    android:textColor="@color/black"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -346,6 +358,7 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:text="100%"
+                    android:textColor="@color/black"
                     android:textSize="20dp" />
 
                 <EditText
@@ -357,8 +370,10 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="number"
                     android:textSize="20dp"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -397,8 +412,10 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="number"
                     android:textSize="20dp"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="MissingConstraints" />
 
                 <EditText
@@ -410,8 +427,10 @@
                     android:layout_marginEnd="@dimen/activity_vertical_margin"
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:hint="100%"
-                    android:inputType="number"
                     android:textSize="20dp"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
@@ -452,7 +471,10 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:hint="Enter Price"/>
+                    android:hint="Enter Price"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"/>
 
             </LinearLayout>
 
@@ -477,7 +499,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="Free Shipping" />
+                    android:text="Free Shipping"
+                    android:clickable="false"/>
 
                 <EditText
                     android:id="@+id/editTextFreeShipCondition"
@@ -489,8 +512,10 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:hint="Enter price to meet"/>
+                    android:hint="Enter price to meet"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:focusable="false"/>
 
             </LinearLayout>
 
