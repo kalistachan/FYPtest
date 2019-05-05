@@ -42,6 +42,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     SharedPreferences preferences;
     String userIdentity;
 
+    CustomAdapter ca;
     ProductListingFragment pl;
 
     public watchListAdapter(Context context, List<productClass> productList) {
@@ -92,13 +93,16 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
                 if (!itemList.isEmpty()) {
                     for (String producdID : itemList) {
                         if (producdID.equalsIgnoreCase(prodID)) {
+                            pl.checkBlacklistedCard(viewHolder.btnAdd, userIdentity);
                             setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Join Group", 1, userIdentity, context, position);
                             break;
                         } else if (!producdID.equalsIgnoreCase(prodID)) {
+                            pl.checkBlacklistedCard(viewHolder.btnAdd, userIdentity);
                             setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Create Group", 2, userIdentity, context, position);
                         }
                     }
                 } else {
+                    pl.checkBlacklistedCard(viewHolder.btnAdd, userIdentity);
                     setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Create Group", 2, userIdentity, context, position);
                 }
             }

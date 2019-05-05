@@ -527,8 +527,8 @@ public class MainActivity extends AppCompatActivity {
         dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
     }
 
-    private void dismiss(String cardID) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklist");
+    private void blacklistCard(String cardID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
         String bcc_ID = db.push().getKey();
 
         Calendar c = Calendar.getInstance();

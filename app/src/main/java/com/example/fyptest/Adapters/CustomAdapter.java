@@ -130,6 +130,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             });
                                             break;
                                         } else {
+                                            pl.checkBlacklistedCard(holder.grpBtn, userIdentity);
                                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Join Group", 1, userIdentity, mContext);
                                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                                         }
@@ -143,11 +144,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             });
                             break;
                         } else {
+                            pl.checkBlacklistedCard(holder.grpBtn, userIdentity);
                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                         }
                     }
                 } else if (itemList.isEmpty()) {
+                    pl.checkBlacklistedCard(holder.grpBtn, userIdentity);
                     setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
                     changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                 }
