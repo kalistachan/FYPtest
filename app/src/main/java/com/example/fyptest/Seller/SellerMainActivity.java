@@ -81,8 +81,9 @@ public class SellerMainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.seller_toolbar, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("Enter Product Name");
+        searchView.setQueryHint("Enter Product Information");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -104,6 +105,27 @@ public class SellerMainActivity extends AppCompatActivity {
                 return true;
             }
         };
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportFragmentManager().popBackStack();
+                return false;
+            }
+        });
+
+        menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getSupportFragmentManager().popBackStack();
+                return true;
+            }
+        });
 
         searchView.setOnQueryTextListener(queryTextListener);
 
