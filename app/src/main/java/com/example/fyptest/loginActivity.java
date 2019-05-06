@@ -131,7 +131,7 @@ public class loginActivity extends AppCompatActivity {
         if (a == 1) {
             Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
         } else if (a == 2) {
-            Toast.makeText(this, "Login Fails. You have " + counter + " left.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_LONG).show();
         }
     }
 }
