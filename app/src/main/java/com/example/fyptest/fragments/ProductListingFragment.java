@@ -116,7 +116,39 @@ public class ProductListingFragment extends Fragment {
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final SeekBar seek = new SeekBar(context);
-        seek.setMax(10);
+
+        DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+        dbGroupDetail.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int counter = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                }
+                final int finalCount = counter;
+                DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                dbProduct.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                        int condition = target - finalCount;
+                        if (condition >= 10) {
+                            seek.setMax(10);
+                        } else if (condition < 10) {
+                            seek.setMax(condition);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         linear.addView(seek);
         linear.addView(qtyText);
 
@@ -302,6 +334,34 @@ public class ProductListingFragment extends Fragment {
 
                                 }
                             });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void checkBlacklistedCard(final Button button, final String userID) {
+        DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
+        dbCC.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final String ccID = dataSnapshot.child("cc_ID").getValue().toString();
+
+                final DatabaseReference dbBL = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
+                dbBL.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(ccID)) {
+                            button.setVisibility(View.INVISIBLE);
                         }
                     }
                     @Override
