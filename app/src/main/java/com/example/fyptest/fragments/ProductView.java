@@ -305,7 +305,7 @@ public class ProductView extends Fragment {
     }
 
     private void setButtonToRemoveWatchList(Button button, final String prodID, final String gdCusID) {
-        button.setText(" REMOVE WATCH PRODUCT ");
+        button.setText(" Remove From Watch List");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
