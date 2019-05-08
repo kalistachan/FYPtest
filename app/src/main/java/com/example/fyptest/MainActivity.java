@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("Enter Product Name");
+        searchView.setQueryHint("Enter Product Information");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {

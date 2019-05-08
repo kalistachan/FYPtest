@@ -98,7 +98,6 @@ public class AddProductFragment extends Fragment {
         this.textViewMaxPrice = (TextView) view.findViewById(R.id.textViewMaxPrice);
         this.textViewMinPrice = (TextView) view.findViewById(R.id.textViewMinPrice);
         this.maxTar = (TextView) view.findViewById(R.id.maxTar);
-        this.dayOrWeek = (TextView) view.findViewById(R.id.dayOrWeek);
 
         this.buttonAddProduct = (Button) view.findViewById(R.id.buttonAddProduct);
         this.buttonCancelProduct = (Button) view.findViewById(R.id.buttonCancelProduct);

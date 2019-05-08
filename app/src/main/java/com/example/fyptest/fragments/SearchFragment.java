@@ -74,7 +74,6 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
         String query = arguments.getString("query");
-       // searchProductDetails(query);
         searchProduct(query);
         populateCategory();
         populateSortBy();
@@ -194,6 +193,17 @@ public class SearchFragment extends Fragment {
                                     }
                                     mAdapter = new CustomAdapter(getActivity(), mSearch);
                                     mRecyclerView.setAdapter(mAdapter);
+                                } else if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("admin")) {
+                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                        Log.d("admin", "value: here");
+                                        if (postSnapshot.child("pro_Status").getValue().toString().equals("pending"))
+                                        {
+                                            productClass search = postSnapshot.getValue(productClass.class);
+                                            mSearch.add(search);
+                                        }
+                                    }
+                                    mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                    mRecyclerView.setAdapter(mAdapter);
                                 }
                             }
                         }
@@ -231,6 +241,7 @@ public class SearchFragment extends Fragment {
                         for (DataSnapshot postSnapshot2 : dataSnapshot2.getChildren()) {
                             if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("seller")) {
                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    Log.d("seller", "value: here");
                                     if (postSnapshot.child("pro_s_ID").getValue().toString().equals(userIdentity))
                                     {
                                         productClass search = postSnapshot.getValue(productClass.class);
@@ -241,7 +252,19 @@ public class SearchFragment extends Fragment {
                                 mRecyclerView.setAdapter(mAdapter);
                             } else if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("customer")) {
                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    Log.d("customer", "value: here");
                                     if (postSnapshot.child("pro_Status").getValue().toString().equals("approved"))
+                                    {
+                                        productClass search = postSnapshot.getValue(productClass.class);
+                                        mSearch.add(search);
+                                    }
+                                }
+                                mAdapter = new CustomAdapter(getActivity(), mSearch);
+                                mRecyclerView.setAdapter(mAdapter);
+                            } else if (postSnapshot2.child("userID").getValue().toString().equalsIgnoreCase(userIdentity) && postSnapshot2.child("userType").getValue().toString().equalsIgnoreCase("admin")) {
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    Log.d("admin", "value: here");
+                                    if (postSnapshot.child("pro_Status").getValue().toString().equals("pending"))
                                     {
                                         productClass search = postSnapshot.getValue(productClass.class);
                                         mSearch.add(search);

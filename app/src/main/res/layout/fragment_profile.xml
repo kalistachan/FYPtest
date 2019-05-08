@@ -38,7 +38,7 @@
             android:textColor="@color/black"
             tools:ignore="HardcodedText,SpUsage"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"/>
+            android:layout_marginTop="8dp"/>
 
         <EditText
             android:id="@+id/email"
@@ -113,7 +113,7 @@
             tools:ignore="Autofill,HardcodedText,SpUsage,TextFields"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin" />
+            android:layout_marginTop="8dp" />
 
         <EditText
             android:id="@+id/ccNum"
@@ -152,51 +152,53 @@
             android:id="@+id/switch1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notification"
-            android:textSize="20dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields"
-            android:checked="true"
-            android:textOn="Enable"
-            android:textOff="Disable"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin" />
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="8dp"
+            android:checked="true"
+            android:text="Notification"
+            android:textOff="Notification"
+            android:textOn="Notification"
+            android:textSize="20dp"
+            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
         <View style="@style/Divider"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/updateBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Update"
-                android:background="@drawable/orangebuttons"
-                tools:ignore="ButtonStyle,HardcodedText"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"/>
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_weight="1"
+                android:background="@drawable/orangebuttons"
+                android:text="Update"
+                tools:ignore="ButtonStyle,HardcodedText" />
 
             <Button
                 android:id="@+id/logoutBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Logout"
-                android:background="@drawable/yellowbuttons"
-                tools:ignore="ButtonStyle,HardcodedText"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginStart="@dimen/activity_vertical_margin"/>
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_weight="1"
+                android:background="@drawable/yellowbuttons"
+                android:text="Logout"
+                tools:ignore="ButtonStyle,HardcodedText" />
 
         </LinearLayout>
 
