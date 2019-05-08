@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.1.0'
     implementation 'com.google.firebase:firebase-auth:16.2.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //implementation  'javax.mail:javax.mail-api:1.5.3'
     //for the nav_drawer
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'

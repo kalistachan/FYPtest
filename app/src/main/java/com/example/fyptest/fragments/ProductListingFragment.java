@@ -402,7 +402,7 @@ public class ProductListingFragment extends Fragment {
         DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 final String ccID = dataSnapshot.child("cc_ID").getValue().toString();
 
                 final DatabaseReference dbBL = FirebaseDatabase.getInstance().getReference("Blacklisted Card");

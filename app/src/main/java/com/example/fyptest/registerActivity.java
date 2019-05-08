@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,30 @@ import com.example.fyptest.fragments.ProfileFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 public class registerActivity extends AppCompatActivity {
 
     private static final String TAG = "registerActivity";
+
+    private static final String ALGORITHM = "AES";
+    private static final String KEY = "1Hbfh667adfDEJ78";
 
     EditText inputEmail, inputPassword, inputPassword2, inputFirstName, inputLastName,
             inputContactNo, inputShippingAddress, inputPostalCode, inputCCNum,
@@ -175,9 +193,16 @@ public class registerActivity extends AppCompatActivity {
                     String expiry = inputExpiryDate.getText().toString();
 
                     //Constructing elements using data class file
-                    userClass userClass = new userClass(userID, cus_email, cus_password, cus_contactNum, "customer");
+                    userClass userClass = null;
+                    creditCardClass creditCardClass = null;
+                    try {
+                        userClass = new userClass(userID, cus_email, encrypt(cus_password), cus_contactNum, "customer");
+                        creditCardClass = new creditCardClass(ccID, encrypt(ccnum), expiry, encrypt(ccCVNum), userID);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     customerInfoClass customerInfoClass = new customerInfoClass(userID, cus_firstName, cus_LastName, cus_address, cus_postalCode, loyaltyPoint, "customer");
-                    creditCardClass creditCardClass = new creditCardClass(ccID, ccnum, expiry, ccCVNum, userID);
+
 
                     //Adding value into database
                     dbUser.child(userID).setValue(userClass);
@@ -191,7 +216,22 @@ public class registerActivity extends AppCompatActivity {
                     //Redirect user back to login screen
                     SharedPreferences prefs = getSharedPreferences("accCreated", MODE_PRIVATE);
                     prefs.edit().putString("Creation Status: ", "Account Created").commit();
-                    startActivity(new Intent(registerActivity.this, loginActivity.class));
+                    Toast.makeText(registerActivity.this, "Account successfully created!", Toast.LENGTH_LONG).show();
+                    final Intent intent = new Intent(registerActivity.this, loginActivity.class);
+
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    thread.start();
                 } if (!result) {
                     test();
                 }
@@ -299,6 +339,36 @@ public class registerActivity extends AppCompatActivity {
 
     public void test() {
         Toast.makeText(this, "Check Field", Toast.LENGTH_LONG).show();
+    }
+
+
+    public static String encrypt(String value) throws Exception
+    {
+        Key key = generateKey();
+        Cipher cipher = Cipher.getInstance(registerActivity.ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte [] encryptedByteValue = cipher.doFinal(value.getBytes("utf-8"));
+        String encryptedValue64 = Base64.encodeToString(encryptedByteValue, Base64.DEFAULT);
+        return encryptedValue64;
+
+    }
+
+    public static String decrypt(String value) throws Exception
+    {
+        Key key = generateKey();
+        Cipher cipher = Cipher.getInstance(registerActivity.ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] decryptedValue64 = Base64.decode(value, Base64.DEFAULT);
+        byte [] decryptedByteValue = cipher.doFinal(decryptedValue64);
+        String decryptedValue = new String(decryptedByteValue,"utf-8");
+        return decryptedValue;
+
+    }
+
+    private static Key generateKey() throws Exception
+    {
+        Key key = new SecretKeySpec(registerActivity.KEY.getBytes(),registerActivity.ALGORITHM);
+        return key;
     }
 
 }

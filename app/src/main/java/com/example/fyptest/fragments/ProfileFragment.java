@@ -118,20 +118,29 @@ public class ProfileFragment extends Fragment {
                                 dbUser.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (!dataSnapshot.getValue().toString().equals(getPassword)) {
-                                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                            alert.setTitle("Confirmation");
-                                            alert.setMessage("Are you sure you want to change your password?");
-                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    dbUser.setValue(getPassword);
-                                                    dialog.dismiss();
-                                                }});
-                                            alert.setNegativeButton(android.R.string.no,null);
+                                        try {
+                                            if (!dataSnapshot.getValue().toString().equals(registerActivity.encrypt(getPassword))) {
+                                                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                                alert.setTitle("Confirmation");
+                                                alert.setMessage("Are you sure you want to change your password?");
+                                                alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                                alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        try {
+                                                            dbUser.setValue(registerActivity.encrypt(getPassword));
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
 
-                                            AlertDialog alertdialog = alert.create();
-                                            alertdialog.show();
+                                                        dialog.dismiss();
+                                                    }});
+                                                alert.setNegativeButton(android.R.string.no,null);
+
+                                                AlertDialog alertdialog = alert.create();
+                                                alertdialog.show();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 
@@ -172,21 +181,29 @@ public class ProfileFragment extends Fragment {
                             dbCC.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (!dataSnapshot.getValue().toString().equals(getCCNum)) {
-                                        Log.d("cc Num", "value snapshot: " + dataSnapshot.getValue().toString() + " getCCnum value: " + getCCNum);
-                                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                        alert.setTitle("Confirmation");
-                                        alert.setMessage("Are you sure you want to change your credit card number?");
-                                        alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    dbCC.setValue(getCCNum);
-                                                    dialog.dismiss();
-                                                }});
-                                        alert.setNegativeButton(android.R.string.no, null);
+                                    try {
+                                        if (!dataSnapshot.getValue().toString().equals(registerActivity.encrypt(getCCNum))) {
+                                            Log.d("cc Num", "value snapshot: " + dataSnapshot.getValue().toString() + " getCCnum value: " + getCCNum);
+                                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                            alert.setTitle("Confirmation");
+                                            alert.setMessage("Are you sure you want to change your credit card number?");
+                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        try {
+                                                            dbCC.setValue(registerActivity.encrypt(getCCNum));
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        dialog.dismiss();
+                                                    }});
+                                            alert.setNegativeButton(android.R.string.no, null);
 
-                                        AlertDialog alertdialog = alert.create();
-                                        alertdialog.show();
+                                            AlertDialog alertdialog = alert.create();
+                                            alertdialog.show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
 
@@ -275,9 +292,15 @@ public class ProfileFragment extends Fragment {
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ccNum.setHint(dataSnapshot.child("cc_Num").getValue().toString().substring(0, 6) + "xxxxxx" + dataSnapshot.child("cc_Num").getValue().toString().substring(12, 16));
+                String decryptedCCNum;
+                try {
+                    decryptedCCNum = registerActivity.decrypt(dataSnapshot.child("cc_Num").getValue().toString());
+                    ccNum.setHint(decryptedCCNum.substring(0, 6) + "xxxxxx" + decryptedCCNum.substring(12, 16));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 ccExpiryDate.setHint(dataSnapshot.child("cc_ExpiryDate").getValue().toString());
-                ccCVV.setHint(dataSnapshot.child("cc_CVNum").getValue().toString());
+                ccCVV.setHint("CVV");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

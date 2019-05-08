@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.fyptest.Email.GMailSender;
 import com.example.fyptest.database.userClass;
@@ -48,7 +49,22 @@ public class resetPWActivity extends AppCompatActivity {
                 String newPW = autoGeneratePassword(8);
                 resetPW(emailString, newPW);
                 sendMail(emailString, newPW);
-                startActivity(new Intent(resetPWActivity.this, loginActivity.class));
+                Toast.makeText(resetPWActivity.this, "A new password has been set to your email", Toast.LENGTH_LONG).show();
+                final Intent intent = new Intent(resetPWActivity.this, loginActivity.class);
+
+                Thread thread = new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                thread.start();
             }
         });
     }
