@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.fyptest.Email.GMailSender;
 import com.example.fyptest.database.userClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,13 +45,15 @@ public class resetPWActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String emailString = enteredEmail.getText().toString().trim();
-                resetPW(emailString);
+                String newPW = autoGeneratePassword(8);
+                resetPW(emailString, newPW);
+                sendMail(emailString, newPW);
                 startActivity(new Intent(resetPWActivity.this, loginActivity.class));
             }
         });
     }
 
-    private static String autoGeneratePassword(int passwordLength) {
+    public static String autoGeneratePassword(int passwordLength) {
         char[] chars = "qwer1tyui2opQW3ERTY4UIOPas5dfgh6jklASD7FGHJK8Lzxcv9bnmZ0XCVBNM@!&".toCharArray();
         StringBuilder password = new StringBuilder();
         Random random = new Random();
@@ -62,7 +66,7 @@ public class resetPWActivity extends AppCompatActivity {
         return password.toString();
     }
 
-    public static void resetPW(final String emailString) {
+    public static void resetPW(final String emailString, final String resetPW) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
         db.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,14 +74,11 @@ public class resetPWActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (emailString.equals(snapshot.child("email").getValue().toString())) {
                         String userID = snapshot.child("userID").getValue().toString();
-                        int pwLength = 8;
                         DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID);
                         String email = snapshot.child("email").getValue().toString();
-                        String newPW = autoGeneratePassword(pwLength);
                         String contactNum = snapshot.child("contactNum").getValue().toString();
                         String userType = snapshot.child("userType").getValue().toString();
-
-                        userClass userClass = new userClass(userID,email, newPW, contactNum, userType);
+                        userClass userClass = new userClass(userID, email, resetPW, contactNum, userType);
                         newDB.setValue(userClass);
                         break;
                     }
@@ -90,7 +91,7 @@ public class resetPWActivity extends AppCompatActivity {
         });
     }
 
-    public static boolean checkNull(EditText editText) {
+    private static boolean checkNull(EditText editText) {
         String text = editText.getText().toString().trim();
         editText.setError(null);
 
@@ -100,5 +101,21 @@ public class resetPWActivity extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    public void sendMail(final String email,final String resetPW) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    GMailSender sender = new GMailSender("fourgroupbuying@gmail.com", "password4gb");
+                    sender.sendMail("Your password has been reset",
+                            "Your new password is : " + resetPW,
+                            "fourgroupbuying@gmail.com", email);
+                } catch (Exception e) {
+                    Log.e("SendMail", e.getMessage(), e);
+                }
+            }
+        }).start();
     }
 }

@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.blacklistedCreditCardClass;
+import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.orderHistoryClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.CategoriesFragment;
@@ -433,6 +434,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     double totalQty = Double.parseDouble(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                                     double minAcceptedOrder = Double.parseDouble(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
+                                    final String productName = dataSnapshot.child("pro_name").getValue().toString();
                                     int minTarget = (int)((totalQty * (minAcceptedOrder / 100)) + 0.5); //Get the min quantity
                                     int maxTarget = (int)(totalQty);
 
@@ -445,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                                         freeShipping = null;
                                     }
 
-                                    calculateCurrentOrderedQuantity(productID, minTarget, maxTarget, todayDate, pro_minOrderQtySellPrice, shippingFee, freeShipping);
+                                    calculateCurrentOrderedQuantity(productID, minTarget, maxTarget, todayDate, pro_minOrderQtySellPrice, shippingFee, freeShipping, productName);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -466,17 +468,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty, final int maxOrderQty, final String today,
-                                                 final String orderedPrice, final String shippingFee, final String freeShipping) {
+                                                 final String orderedPrice, final String shippingFee, final String freeShipping, final String productName) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 int counter = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                 }
                 if (counter < minOrderQty) {
+                    removeNotification(productID, productName, today);
                     dismissGroup(productID);
+
                 } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter > minOrderQty && counter != maxOrderQty)) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
@@ -509,11 +513,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void dismissGroup(String productID) {
-        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
-
-        dbProductGroup.removeValue();
         dbGroupDetail.removeValue();
+        DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
+        dbProductGroup.removeValue();
+    }
+
+    public void removeNotification(final String productID, final String productName, final String todayDate) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<notificationClass> notification = new ArrayList<>();
+                DatabaseReference dbNoti = FirebaseDatabase.getInstance().getReference("Notification");
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                    String noti_Title = "A product group you are in had been dismissed";
+                    String noti_Description = "Product group for " + productName + " was dismissed on " + todayDate + " due to insufficient order";
+
+                    final DatabaseReference addDB = dbNoti.child(customerID);
+                    String noti_ID = addDB.push().getKey();
+                    notificationClass notificationClass = new notificationClass(noti_ID, noti_Title, noti_Description, todayDate, productID);
+                    notification.add(notificationClass);
+                    dbNoti.child(noti_ID).setValue(notificationClass);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("12345", databaseError.getDetails());
+            }
+        });
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {

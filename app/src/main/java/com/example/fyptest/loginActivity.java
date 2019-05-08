@@ -87,7 +87,8 @@ public class loginActivity extends AppCompatActivity {
                                             }
                                         } if (!pw.equals(snapshot.child("password").getValue().toString())) {
                                             if (counter == 0) {
-                                                resetPWActivity.resetPW(email);
+                                                String newPW = resetPWActivity.autoGeneratePassword(8);
+                                                resetPWActivity.resetPW(email, newPW);
                                                 startActivity(new Intent(loginActivity.this, loginActivity.class));
                                                 return;
                                             } else if (counter > 0) {

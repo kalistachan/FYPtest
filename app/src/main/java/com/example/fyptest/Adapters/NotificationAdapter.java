@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
 import com.example.fyptest.fragments.GroupFragment;
@@ -27,15 +28,14 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ImageViewHolder> {
-    List<productClass> itemList;
+    List<notificationClass> notificationItem;
     Context context;
 
     SharedPreferences preferences;
     String userIdentity;
 
-    public NotificationAdapter(Context context, List<productClass> productList) {
-        this.itemList = new ArrayList<>();
-        this.itemList = productList;
+    public NotificationAdapter(Context context, List<notificationClass> notificationItem) {
+        this.notificationItem = notificationItem;
         this.context = context;
 
         this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
@@ -50,25 +50,26 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final NotificationAdapter.ImageViewHolder imageViewHolder, int i) {
-        productClass uploadCurrent = itemList.get(i);
-        final String pro_id = uploadCurrent.getPro_ID();
-        final String pro_Name = uploadCurrent.getPro_name();
-        String constructTitle = "There is a group created for the item " + pro_Name;
-        String constructContent = "Click here to view information about " + pro_Name;
-        imageViewHolder.textViewTitle.setText(constructTitle);
-        imageViewHolder.textViewContent.setText(constructContent);
+        notificationClass uploadCurrent = notificationItem.get(i);
+        final String prodID = uploadCurrent.getNoti_prodID();
+        String title = uploadCurrent.getNoti_Title();
+        String content = uploadCurrent.getNoti_Description();
+        imageViewHolder.textViewTitle.setText(title);
+        imageViewHolder.textViewContent.setText(content);
 
-        imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GroupCustomAdapter.swapToProductView(context, pro_id, userIdentity);
-            }
-        });
+        if (title.equalsIgnoreCase("There is a group created for the item in your Watchlist")) {
+            imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GroupCustomAdapter.swapToProductView(context, prodID, userIdentity);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return notificationItem.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
