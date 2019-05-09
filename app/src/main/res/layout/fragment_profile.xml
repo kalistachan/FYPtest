@@ -148,25 +148,6 @@
 
         <View style="@style/Divider"/>
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="8dp"
-            android:checked="true"
-            android:text="Notification"
-            android:textOff="Notification"
-            android:textOn="Notification"
-            android:textSize="20dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <View style="@style/Divider"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

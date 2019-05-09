@@ -179,7 +179,6 @@ public class ProductListingFragment extends Fragment {
                 setButtonToViewGroup(button, context);
                 if (option == 1) {
                     insertCustGroupDetails (prodID, gdCusID);
-                    removeNotification(gdCusID, prodID);
                     checkForCheckout(prodID);
                 } else if (option == 2) {
                     insertProductGroup(prodID);
@@ -215,32 +214,31 @@ public class ProductListingFragment extends Fragment {
         return resultDate;
     }
 
-    private void removeNotification(final String customerID, final String productID) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID);
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String storedProductID = snapshot.child("noti_prodID").getValue().toString();
-                    if (storedProductID.equalsIgnoreCase(productID)) {
-                        String noti_ID = snapshot.child("noti_ID").getValue().toString();
-                        DatabaseReference dbRemoveValue = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(noti_ID);
-                        dbRemoveValue.removeValue();
-                        break;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void removeNotification(final String customerID, final String productID) {
+//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID);
+//        db.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    String storedProductID = snapshot.child("noti_prodID").getValue().toString();
+//                    if (storedProductID.equalsIgnoreCase(productID)) {
+//                        String noti_ID = snapshot.child("noti_ID").getValue().toString();
+//                        DatabaseReference dbRemoveValue = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(noti_ID);
+//                        dbRemoveValue.removeValue();
+//                        break;
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private void removeFromWatchList(String prodID, String gdCusID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
         db.removeValue();
-
     }
 
     private void setButtonToViewGroup(Button button, final Context context) {
@@ -286,14 +284,10 @@ public class ProductListingFragment extends Fragment {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             final String customerID = snapshot.getKey();
                             for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                String productID = snapshotAgain.child("wl_pro_ID").getValue().toString();
-                                if (productID.equalsIgnoreCase(prodID)) {
-                                    DatabaseReference dbNoti = FirebaseDatabase.getInstance().getReference("Notification");
-                                    String noti_ID = dbNoti.push().getKey();
+                                if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
                                     String noti_Title = "There is a group created for the item in your Watchlist";
                                     String noti_Description = "Click here to view information about " + productName;
-                                    notificationClass notificationClass = new notificationClass(noti_ID, noti_Title, noti_Description, string_pgDateCreated, prodID);
-                                    dbNoti.child(customerID).child(noti_ID).setValue(notificationClass);
+                                    sendNotification(prodID, noti_Title, noti_Description, string_pgDateCreated, customerID);
                                 }
                             }
                         }
@@ -309,6 +303,13 @@ public class ProductListingFragment extends Fragment {
 
             }
         });
+    }
+
+    public static void sendNotification(final String prodID, final String noti_Title, final String noti_Description, final String todayDate, final String customerID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification");
+        String noti_ID = db.push().getKey();
+        notificationClass notificationClass = new notificationClass(noti_ID, noti_Title, noti_Description, todayDate, prodID);
+        db.child(customerID).child(noti_ID).setValue(notificationClass);
     }
 
     private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {
@@ -336,7 +337,7 @@ public class ProductListingFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int targetQty = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
-
+                        final String productName = dataSnapshot.child("pro_name").getValue().toString();
                         final String pro_maxOrderQtySellPrice = dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString();
                         final String shippingFee = dataSnapshot.child("pro_shippingCost").getValue().toString();
                         final String freeShipping;

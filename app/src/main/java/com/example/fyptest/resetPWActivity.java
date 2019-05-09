@@ -45,26 +45,13 @@ public class resetPWActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emailString = enteredEmail.getText().toString().trim();
-                String newPW = autoGeneratePassword(8);
-                resetPW(emailString, newPW);
-                sendMail(emailString, newPW);
-                Toast.makeText(resetPWActivity.this, "A new password has been set to your email", Toast.LENGTH_LONG).show();
-                final Intent intent = new Intent(resetPWActivity.this, loginActivity.class);
-
-                Thread thread = new Thread(){
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                thread.start();
+                if (checkNull(enteredEmail)) {
+                    String emailString = enteredEmail.getText().toString().trim();
+                    String newPW = autoGeneratePassword(8);
+                    resetPW(emailString, newPW);
+                    sendMail(emailString, newPW);
+                    startActivity(new Intent(resetPWActivity.this, loginActivity.class).putExtra("IntentSource", "pwReset"));
+                }
             }
         });
     }
@@ -84,19 +71,20 @@ public class resetPWActivity extends AppCompatActivity {
 
     public static void resetPW(final String emailString, final String resetPW) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("User");
-        db.addValueEventListener(new ValueEventListener() {
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (emailString.equals(snapshot.child("email").getValue().toString())) {
                         String userID = snapshot.child("userID").getValue().toString();
-                        DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID);
-                        String email = snapshot.child("email").getValue().toString();
-                        String contactNum = snapshot.child("contactNum").getValue().toString();
-                        String userType = snapshot.child("userType").getValue().toString();
-                        userClass userClass = new userClass(userID, email, resetPW, contactNum, userType);
-                        newDB.setValue(userClass);
-                        break;
+                        try {
+                            String encryptPW = registerActivity.encrypt(resetPW);
+                            DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID).child("password");
+                            newDB.setValue(resetPW);
+                            break;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -119,7 +107,7 @@ public class resetPWActivity extends AppCompatActivity {
         }
     }
 
-    public void sendMail(final String email,final String resetPW) {
+    public static void sendMail(final String email,final String resetPW) {
         new Thread(new Runnable() {
             @Override
             public void run() {

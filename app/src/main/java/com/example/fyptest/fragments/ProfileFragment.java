@@ -50,8 +50,6 @@ public class ProfileFragment extends Fragment {
 
     TextView profileTitle1;
 
-    Switch notification;
-
     Button update, logout;
 
     List<String> list;
@@ -77,13 +75,10 @@ public class ProfileFragment extends Fragment {
         ccNum = (EditText) view.findViewById(R.id.ccNum);
         ccCVV = (EditText) view.findViewById(R.id.ccCVV);
 
-        notification = (Switch) view.findViewById(R.id.switch1);
         update = (Button) view.findViewById(R.id.updateBtn);
         logout = (Button) view.findViewById(R.id.logoutBtn);
 
         profileTitle1 = (TextView) view.findViewById(R.id.profileTitle1);
-
-        notification.setText(notification.getTextOn());
 
         list = new ArrayList<>();
 
@@ -223,16 +218,6 @@ public class ProfileFragment extends Fragment {
                     }
                 }
 
-                if (notification.isChecked()) {
-                    dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_Notification");
-                    String update = notification.getTextOn().toString();
-                    dbCusInfo.setValue(update);
-                } else {
-                    dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_Notification");
-                    String update = notification.getTextOff().toString();
-                    dbCusInfo.setValue(update);
-                }
-
                 clearForm((ViewGroup) view.findViewById(R.id.profileForm));
             }
         });
@@ -277,11 +262,6 @@ public class ProfileFragment extends Fragment {
                 address.setHint(add);
                 postalCode.setHint(" Singapore " + postal);
 
-                if (dataSnapshot.child("cus_Notification").getValue().toString().equalsIgnoreCase("Enable")) {
-                    notification.setChecked(true);
-                } else if (dataSnapshot.child("cus_Notification").getValue().toString().equalsIgnoreCase("Disable")) {
-                    notification.setChecked(false);
-                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
