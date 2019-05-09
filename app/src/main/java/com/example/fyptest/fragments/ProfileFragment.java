@@ -227,7 +227,7 @@ public class ProfileFragment extends Fragment {
                 SharedPreferences.Editor edit = pref.edit();
                 edit.clear();
                 edit.apply();
-              //  startActivity(new Intent(getActivity(), loginActivity.class));
+                startActivity(new Intent(getActivity(), loginActivity.class));
             }
         });
 
