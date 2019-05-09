@@ -59,7 +59,7 @@ public class AddProductFragment extends Fragment {
     EditText editProductName, editProductPrice, duration, editTextProdDesc, maxDis,
             minTar, minDis, editTextShipCost, editTextFreeShipCondition, editTextTQ;
     Spinner productType;
-    TextView textViewMaxPrice, textViewMinPrice, maxTar, dayOrWeek;
+    TextView textViewMaxPrice, textViewMinPrice, maxTar;
     CheckBox checkBoxFreeShipment;
     Button buttonAddProduct, buttonCancelProduct;
 
@@ -106,9 +106,6 @@ public class AddProductFragment extends Fragment {
         prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
         userIdentity = prefs.getString("userID", null);
 
-        //Retrieving Thrown Object
-        //prodID = arguments.getString("ProdID");
-        //userID = arguments.getString("CusID");
         return view;
     }
 
@@ -119,7 +116,22 @@ public class AddProductFragment extends Fragment {
         if (arguments.getString("ProdID") != null) {
             fillAddProdContent();
             buttonAddProduct.setText("Edit");
+            buttonAddProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
             buttonCancelProduct.setText("Remove");
+
+
+            buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
         else if (arguments.getString("ProdID") == null) {
             buttonAddProduct.setText("Add");

@@ -38,8 +38,19 @@ public class SellerMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_main);
 
-        preferences = getSharedPreferences("IDs", MODE_PRIVATE);
-        userIdentity = preferences.getString("userID", "UNKNOWN");
+//        preferences = getSharedPreferences("IDs", MODE_PRIVATE);
+//        userIdentity = preferences.getString("userID", "UNKNOWN");
+
+        if (getSharedPreferences("IDs", MODE_PRIVATE) != null) {
+            this.preferences = getSharedPreferences("IDs", MODE_PRIVATE);
+            if (preferences.getString("userID", "UNKNOWN") != null) {
+                this.userIdentity = preferences.getString("userID", "UNKNOWN");
+            } else if (preferences.getString("userID", "UNKNOWN") == null){
+                startActivity(new Intent(this, loginActivity.class));
+            }
+        } else if (getSharedPreferences("IDs", MODE_PRIVATE) == null) {
+            startActivity(new Intent(this, loginActivity.class));
+        }
 
         toolbar = findViewById(R.id.seller_toolbar);
         setSupportActionBar(toolbar);
@@ -74,7 +85,6 @@ public class SellerMainActivity extends AppCompatActivity {
                 startActivity(new Intent(SellerMainActivity.this, loginActivity.class));
             }
         });
-
     }
 
     @Override
