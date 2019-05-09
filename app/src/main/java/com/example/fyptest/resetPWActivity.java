@@ -80,7 +80,7 @@ public class resetPWActivity extends AppCompatActivity {
                         try {
                             String encryptPW = registerActivity.encrypt(resetPW);
                             DatabaseReference newDB = FirebaseDatabase.getInstance().getReference("User").child(userID).child("password");
-                            newDB.setValue(resetPW);
+                            newDB.setValue(encryptPW);
                             break;
                         } catch (Exception e) {
                             e.printStackTrace();

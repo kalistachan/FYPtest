@@ -477,29 +477,57 @@ public class MainActivity extends AppCompatActivity {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                 }
                 if (counter < minOrderQty) {
+
+                    sendNotification(productID, productName, today, "dismiss");
+                    dismissGroupDetail(productID);
                     dismissGroup(productID);
 
-                } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter > minOrderQty && counter != maxOrderQty)) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
-                        final String orderedQty = snapshot.child("gd_qty").getValue().toString();
+                } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter != maxOrderQty && counter > minOrderQty)) {
+                    checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        if (freeShipping != null) {
-                            float freeShipment = Float.parseFloat(freeShipping);
-                            float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
+            }
+        });
+    }
 
-                            if (netPrice >= freeShipment) {
-                                String noShippingFee = "0";
-                                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
-                                dismissGroup(productID);
-                            } else {
-                                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                                dismissGroup(productID);
-                            }
-                        } else {
-                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+    private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice, final String freeShipping, final String shippingFee) {
+        DatabaseReference dbGD = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        dbGD.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                    final String orderedQty = snapshot.child("gd_qty").getValue().toString();
+
+                    if (freeShipping != null) {
+                        float freeShipment = Float.parseFloat(freeShipping);
+                        float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
+
+                        if (netPrice >= freeShipment) {
+                            String noShippingFee = "0";
+                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
+                            sendNotification(productID, productName, today, "checkout");
+                            dismissGroupDetail(productID);
                             dismissGroup(productID);
+                            removeProduct(productID);
+
+                        } else if (netPrice < freeShipment){
+                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                            sendNotification(productID, productName, today, "checkout");
+                            dismissGroupDetail(productID);
+                            dismissGroup(productID);
+                            removeProduct(productID);
                         }
+
+                    } else {
+                        checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                        sendNotification(productID, productName, today, "checkout");
+                        dismissGroupDetail(productID);
+                        dismissGroup(productID);
+                        removeProduct(productID);
                     }
                 }
             }
@@ -510,11 +538,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void dismissGroup(final String productID) {
+    public void dismissGroupDetail(final String productID) {
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         dbGroupDetail.removeValue();
+    }
+
+    public void dismissGroup(final String productID) {
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         dbProductGroup.removeValue();
+    }
+
+    public void removeProduct(final String productID) {
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+        dbProduct.removeValue();
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
@@ -526,7 +562,35 @@ public class MainActivity extends AppCompatActivity {
         dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
     }
 
-    private void blacklistCard(String cardID) {
+    public void sendNotification (final String productID, final String productName, final String today, final String condition){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+
+                    String noti_Title = "";
+                    String noti_Description = "";
+                    if (condition.equalsIgnoreCase("dismiss")) {
+                        noti_Title = "A group you are in has been dismissed";
+                        noti_Description = "Product group for " + productName + " has been dismiss at " + today + " due to insufficient order";
+                    } else if (condition.equalsIgnoreCase("checkout")) {
+                        noti_Title = "A group you are in had been checkout";
+                        noti_Description = "Product group for " + productName + " had been checkout at " + today;
+                    }
+
+                    ProductListingFragment.sendNotification(productID, noti_Title, noti_Description, today, customerID);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void blacklistCard(String cardID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
         String bcc_ID = db.push().getKey();
 

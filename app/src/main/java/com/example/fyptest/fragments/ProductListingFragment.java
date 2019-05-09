@@ -117,6 +117,7 @@ public class ProductListingFragment extends Fragment {
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final SeekBar seek = new SeekBar(context);
+        seek.setMin(1);
 
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
         dbGroupDetail.addValueEventListener(new ValueEventListener() {
@@ -134,8 +135,10 @@ public class ProductListingFragment extends Fragment {
                         int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                         int condition = target - finalCount;
                         if (condition >= 10) {
+                            seek.setMin(1);
                             seek.setMax(10);
                         } else if (condition < 10) {
+                            seek.setMin(1);
                             seek.setMax(condition);
                         }
                     }
@@ -156,8 +159,10 @@ public class ProductListingFragment extends Fragment {
         popDialog.setView(linear);
 
         popDialog.setTitle("Please Select Quantity for " + prodName);
+        qtyText.setText(seek.getMin() + "/" + seek.getMax());
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 qtyChosenVal = progress;
             }
@@ -178,7 +183,7 @@ public class ProductListingFragment extends Fragment {
                 removeFromWatchList(prodID, gdCusID);
                 setButtonToViewGroup(button, context);
                 if (option == 1) {
-                    insertCustGroupDetails (prodID, gdCusID);
+                    insertCustGroupDetails(prodID, gdCusID);
                     checkForCheckout(prodID);
                 } else if (option == 2) {
                     insertProductGroup(prodID);
@@ -198,6 +203,7 @@ public class ProductListingFragment extends Fragment {
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
     }
+
     public static String addDay(String oldDate, String duration) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         Calendar c = Calendar.getInstance();
@@ -213,28 +219,6 @@ public class ProductListingFragment extends Fragment {
         String resultDate=dateFormat.format(newDate);
         return resultDate;
     }
-
-//    private void removeNotification(final String customerID, final String productID) {
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID);
-//        db.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String storedProductID = snapshot.child("noti_prodID").getValue().toString();
-//                    if (storedProductID.equalsIgnoreCase(productID)) {
-//                        String noti_ID = snapshot.child("noti_ID").getValue().toString();
-//                        DatabaseReference dbRemoveValue = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(noti_ID);
-//                        dbRemoveValue.removeValue();
-//                        break;
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
     private void removeFromWatchList(String prodID, String gdCusID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
@@ -285,7 +269,7 @@ public class ProductListingFragment extends Fragment {
                             final String customerID = snapshot.getKey();
                             for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
                                 if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                    String noti_Title = "There is a group created for the item in your Watchlist";
+                                    String noti_Title = "A group has been created for the item in your Watchlist";
                                     String noti_Description = "Click here to view information about " + productName;
                                     sendNotification(prodID, noti_Title, noti_Description, string_pgDateCreated, customerID);
                                 }
@@ -368,14 +352,26 @@ public class ProductListingFragment extends Fragment {
                                             if (netPrice >= freeShipment) {
                                                 String noShippingFee = "0";
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, noShippingFee);
+                                                ma.sendNotification(productID, productName, todayDate, "checkout");
+                                                ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
+                                                ma.removeProduct(productID);
+
                                             } else {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                                ma.sendNotification(productID, productName, todayDate, "checkout");
+                                                ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
+                                                ma.removeProduct(productID);
+
                                             }
                                         } else {
                                             ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                            ma.sendNotification(productID, productName, todayDate, "checkout");
+                                            ma.dismissGroupDetail(productID);
                                             ma.dismissGroup(productID);
+                                            ma.removeProduct(productID);
+
                                         }
                                     }
                                 }
