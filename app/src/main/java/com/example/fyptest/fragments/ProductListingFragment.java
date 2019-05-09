@@ -177,13 +177,17 @@ public class ProductListingFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 removeFromWatchList(prodID, gdCusID);
                 setButtonToViewGroup(button, context);
-                if (option == 1) {
-                    insertCustGroupDetails (prodID, gdCusID);
-                    checkForCheckout(prodID);
-                } else if (option == 2) {
-                    insertProductGroup(prodID);
-                    insertCustGroupDetails(prodID, gdCusID);
-                    checkForCheckout(prodID);
+                if (qtyChosenVal != 0) {
+                    if (option == 1) {
+                        insertCustGroupDetails(prodID, gdCusID);
+                        checkForCheckout(prodID);
+                    } else if (option == 2) {
+                        insertProductGroup(prodID);
+                        insertCustGroupDetails(prodID, gdCusID);
+                        checkForCheckout(prodID);
+                    }
+                } else {
+                    Toast.makeText(context, "Please choose at least 1 quantity", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -198,6 +202,7 @@ public class ProductListingFragment extends Fragment {
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
     }
+
     public static String addDay(String oldDate, String duration) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         Calendar c = Calendar.getInstance();
