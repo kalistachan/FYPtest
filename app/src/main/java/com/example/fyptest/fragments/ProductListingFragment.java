@@ -27,6 +27,7 @@ import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.groupDetailClass;
+import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
 import com.google.firebase.database.DataSnapshot;
@@ -106,7 +107,7 @@ public class ProductListingFragment extends Fragment {
 
     }
 
-    public void ShowDialog(final Context context, final String prodID, String prodName, final Button button, final int option, final String gdCusID) {
+    public void ShowDialog(final Context context, final String prodID, final String prodName, final Button button, final int option, final String gdCusID) {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
         LinearLayout linear = new LinearLayout(context);
 
@@ -178,6 +179,7 @@ public class ProductListingFragment extends Fragment {
                 setButtonToViewGroup(button, context);
                 if (option == 1) {
                     insertCustGroupDetails (prodID, gdCusID);
+                    removeNotification(gdCusID, prodID);
                     checkForCheckout(prodID);
                 } else if (option == 2) {
                     insertProductGroup(prodID);
@@ -197,7 +199,6 @@ public class ProductListingFragment extends Fragment {
         AlertDialog alertdialog = popDialog.create();
         alertdialog.show();
     }
-
     public static String addDay(String oldDate, String duration) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         Calendar c = Calendar.getInstance();
@@ -212,6 +213,28 @@ public class ProductListingFragment extends Fragment {
         Date newDate=new Date(c.getTimeInMillis());
         String resultDate=dateFormat.format(newDate);
         return resultDate;
+    }
+
+    private void removeNotification(final String customerID, final String productID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID);
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String storedProductID = snapshot.child("noti_prodID").getValue().toString();
+                    if (storedProductID.equalsIgnoreCase(productID)) {
+                        String noti_ID = snapshot.child("noti_ID").getValue().toString();
+                        DatabaseReference dbRemoveValue = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(noti_ID);
+                        dbRemoveValue.removeValue();
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void removeFromWatchList(String prodID, String gdCusID) {
@@ -248,15 +271,41 @@ public class ProductListingFragment extends Fragment {
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
         dbProduct.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 String pro_durationForGroupPurchase = dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString();
+                final String productName = dataSnapshot.child("pro_name").getValue().toString();
                 String dateEnd = addDay(string_pgDateCreated, pro_durationForGroupPurchase);
                 databaseProduct = FirebaseDatabase.getInstance().getReference("Product Group");
                 productGroupClass productGroup = new productGroupClass(prodID, dateEnd, string_pgDateCreated);
                 databaseProduct.child(prodID).setValue(productGroup);
+
+                DatabaseReference dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");
+                dbWatchList.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            final String customerID = snapshot.getKey();
+                            for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                                String productID = snapshotAgain.child("wl_pro_ID").getValue().toString();
+                                if (productID.equalsIgnoreCase(prodID)) {
+                                    DatabaseReference dbNoti = FirebaseDatabase.getInstance().getReference("Notification");
+                                    String noti_ID = dbNoti.push().getKey();
+                                    String noti_Title = "There is a group created for the item in your Watchlist";
+                                    String noti_Description = "Click here to view information about " + productName;
+                                    notificationClass notificationClass = new notificationClass(noti_ID, noti_Title, noti_Description, string_pgDateCreated, prodID);
+                                    dbNoti.child(customerID).child(noti_ID).setValue(notificationClass);
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -353,7 +402,7 @@ public class ProductListingFragment extends Fragment {
         DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 final String ccID = dataSnapshot.child("cc_ID").getValue().toString();
 
                 final DatabaseReference dbBL = FirebaseDatabase.getInstance().getReference("Blacklisted Card");

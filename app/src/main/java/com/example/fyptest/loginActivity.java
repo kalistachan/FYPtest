@@ -60,41 +60,52 @@ public class loginActivity extends AppCompatActivity {
                     if (checkNull(emailEntered) && checkNull(passwordEntered)) {
                         final String email = emailEntered.getText().toString();
                         final String pw = passwordEntered.getText().toString();
+
                         DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("User");
                         userDB.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     if (email.equalsIgnoreCase(snapshot.child("email").getValue().toString())) {
-                                        if (pw.equals(snapshot.child("password").getValue().toString())) {
-                                            String role = snapshot.child("userType").getValue().toString();
-                                            String id = snapshot.child("userID").getValue().toString();
-                                            if (role.equals("customer")) {
-                                                //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
-                                                startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                return;
-                                            } if (role.equals("seller")) {
-                                                //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
-                                                startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
-                                                return;
-                                            } if (role.equals("admin")) {
-                                                //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
-                                                startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
-                                                return;
+                                        try {
+                                            if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
+                                                String role = snapshot.child("userType").getValue().toString();
+                                                String id = snapshot.child("userID").getValue().toString();
+                                                if (role.equals("customer")) {
+                                                    //Directing user to their main screen
+                                                    prefs.edit().putString("userID", id).apply();
+                                                    startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                                    return;
+                                                } if (role.equals("seller")) {
+                                                    //Directing user to their main screen
+                                                    prefs.edit().putString("userID", id).apply();
+                                                    startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
+                                                    return;
+                                                } if (role.equals("admin")) {
+                                                    //Directing user to their main screen
+                                                    prefs.edit().putString("userID", id).apply();
+                                                    startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
+                                                    return;
+                                                }
                                             }
-                                        } if (!pw.equals(snapshot.child("password").getValue().toString())) {
-                                            if (counter == 0) {
-                                                resetPWActivity.resetPW(email);
-                                                startActivity(new Intent(loginActivity.this, loginActivity.class));
-                                                return;
-                                            } else if (counter > 0) {
-                                                toast(2, counter);
-                                                counter --;
-                                                return;
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        try {
+                                            if (!pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
+                                                if (counter == 0) {
+                                                    String newPW = resetPWActivity.autoGeneratePassword(8);
+                                                    resetPWActivity.resetPW(email, newPW);
+                                                    startActivity(new Intent(loginActivity.this, loginActivity.class));
+                                                    return;
+                                                } else if (counter > 0) {
+                                                    toast(2, counter);
+                                                    counter --;
+                                                    return;
+                                                }
                                             }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
                                 } toast(1, counter);
