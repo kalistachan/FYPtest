@@ -134,8 +134,10 @@ public class ProductListingFragment extends Fragment {
                         int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                         int condition = target - finalCount;
                         if (condition >= 10) {
+                            seek.setMin(1);
                             seek.setMax(10);
                         } else if (condition < 10) {
+                            seek.setMin(1);
                             seek.setMax(condition);
                         }
                     }
