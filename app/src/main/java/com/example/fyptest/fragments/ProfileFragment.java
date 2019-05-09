@@ -178,7 +178,6 @@ public class ProfileFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     try {
                                         if (!dataSnapshot.getValue().toString().equals(registerActivity.encrypt(getCCNum))) {
-                                            Log.d("cc Num", "value snapshot: " + dataSnapshot.getValue().toString() + " getCCnum value: " + getCCNum);
                                             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                                             alert.setTitle("Confirmation");
                                             alert.setMessage("Are you sure you want to change your credit card number?");
@@ -228,7 +227,7 @@ public class ProfileFragment extends Fragment {
                 SharedPreferences.Editor edit = pref.edit();
                 edit.clear();
                 edit.apply();
-                startActivity(new Intent(getActivity(), loginActivity.class));
+              //  startActivity(new Intent(getActivity(), loginActivity.class));
             }
         });
 
