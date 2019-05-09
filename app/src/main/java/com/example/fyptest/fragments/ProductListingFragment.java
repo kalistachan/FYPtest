@@ -110,6 +110,7 @@ public class ProductListingFragment extends Fragment {
     public void ShowDialog(final Context context, final String prodID, final String prodName, final Button button, final int option, final String gdCusID) {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
         LinearLayout linear = new LinearLayout(context);
+        final int seekMin = 1;
 
         linear.setOrientation(LinearLayout.VERTICAL);
         qtyText = new TextView(context);
@@ -117,7 +118,6 @@ public class ProductListingFragment extends Fragment {
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final SeekBar seek = new SeekBar(context);
-        seek.setMin(1);
 
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
         dbGroupDetail.addValueEventListener(new ValueEventListener() {
@@ -135,11 +135,11 @@ public class ProductListingFragment extends Fragment {
                         int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                         int condition = target - finalCount;
                         if (condition >= 10) {
-                            seek.setMin(1);
                             seek.setMax(10);
+                            qtyText.setText(seekMin + "/" + seek.getMax());
                         } else if (condition < 10) {
-                            seek.setMin(1);
                             seek.setMax(condition);
+                            qtyText.setText(seekMin + "/" + seek.getMax());
                         }
                     }
                     @Override
@@ -159,12 +159,15 @@ public class ProductListingFragment extends Fragment {
         popDialog.setView(linear);
 
         popDialog.setTitle("Please Select Quantity for " + prodName);
-        qtyText.setText(seek.getMin() + "/" + seek.getMax());
+
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                qtyChosenVal = progress;
+                qtyChosenVal = seekMin + progress;
+                if (qtyChosenVal > seekBar.getMax()) {
+                    qtyChosenVal = seekBar.getMax();
+                }
             }
 
             public void onStartTrackingTouch(SeekBar arg0) {
