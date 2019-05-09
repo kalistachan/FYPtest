@@ -71,6 +71,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         imageViewHolder.textViewTargetQty.setText(targetQty);
         imageViewHolder.textViewDuration.setText(duration);
         imageViewHolder.textViewProductDescription.setText(prodDesc);
+
     }
 
     @Override

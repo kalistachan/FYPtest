@@ -285,7 +285,7 @@ public class ProductListingFragment extends Fragment {
                             final String customerID = snapshot.getKey();
                             for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
                                 if (snapshotAgain.child("wl_pro_ID").getValue().toString().equalsIgnoreCase(prodID)) {
-                                    String noti_Title = "There is a group created for the item in your Watchlist";
+                                    String noti_Title = "A group has been created for the item in your Watchlist";
                                     String noti_Description = "Click here to view information about " + productName;
                                     sendNotification(prodID, noti_Title, noti_Description, string_pgDateCreated, customerID);
                                 }
@@ -368,13 +368,19 @@ public class ProductListingFragment extends Fragment {
                                             if (netPrice >= freeShipment) {
                                                 String noShippingFee = "0";
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, noShippingFee);
+                                                ma.sendNotification(productID, productName, todayDate, "checkout");
+                                                ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
                                             } else {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                                ma.sendNotification(productID, productName, todayDate, "checkout");
+                                                ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
                                             }
                                         } else {
                                             ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
+                                            ma.sendNotification(productID, productName, todayDate, "checkout");
+                                            ma.dismissGroupDetail(productID);
                                             ma.dismissGroup(productID);
                                         }
                                     }
