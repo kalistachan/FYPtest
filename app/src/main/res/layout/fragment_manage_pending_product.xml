@@ -121,7 +121,7 @@
             android:hint="Enter Product Description"
             android:inputType="textMultiLine"
             android:keyboardNavigationCluster="true"
-            android:maxLines="4"
+            android:maxLines="6"
             android:minLines="1"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -183,7 +183,7 @@
 
         <EditText
             android:id="@+id/editProductPrice"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:gravity="right|end"
