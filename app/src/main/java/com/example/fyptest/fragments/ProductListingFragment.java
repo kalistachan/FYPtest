@@ -117,6 +117,7 @@ public class ProductListingFragment extends Fragment {
         qtyText.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final SeekBar seek = new SeekBar(context);
+        seek.setMin(1);
 
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
         dbGroupDetail.addValueEventListener(new ValueEventListener() {
@@ -156,8 +157,10 @@ public class ProductListingFragment extends Fragment {
         popDialog.setView(linear);
 
         popDialog.setTitle("Please Select Quantity for " + prodName);
+        qtyText.setText(seek.getMin() + "/" + seek.getMax());
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 qtyChosenVal = progress;
             }
@@ -177,17 +180,13 @@ public class ProductListingFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 removeFromWatchList(prodID, gdCusID);
                 setButtonToViewGroup(button, context);
-                if (qtyChosenVal != 0) {
-                    if (option == 1) {
-                        insertCustGroupDetails(prodID, gdCusID);
-                        checkForCheckout(prodID);
-                    } else if (option == 2) {
-                        insertProductGroup(prodID);
-                        insertCustGroupDetails(prodID, gdCusID);
-                        checkForCheckout(prodID);
-                    }
-                } else {
-                    Toast.makeText(context, "Please choose at least 1 quantity", Toast.LENGTH_SHORT).show();
+                if (option == 1) {
+                    insertCustGroupDetails(prodID, gdCusID);
+                    checkForCheckout(prodID);
+                } else if (option == 2) {
+                    insertProductGroup(prodID);
+                    insertCustGroupDetails(prodID, gdCusID);
+                    checkForCheckout(prodID);
                 }
             }
         });
