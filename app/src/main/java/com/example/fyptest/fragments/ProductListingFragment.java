@@ -219,28 +219,6 @@ public class ProductListingFragment extends Fragment {
         return resultDate;
     }
 
-//    private void removeNotification(final String customerID, final String productID) {
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID);
-//        db.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    String storedProductID = snapshot.child("noti_prodID").getValue().toString();
-//                    if (storedProductID.equalsIgnoreCase(productID)) {
-//                        String noti_ID = snapshot.child("noti_ID").getValue().toString();
-//                        DatabaseReference dbRemoveValue = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(noti_ID);
-//                        dbRemoveValue.removeValue();
-//                        break;
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-
     private void removeFromWatchList(String prodID, String gdCusID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
         db.removeValue();
@@ -376,17 +354,23 @@ public class ProductListingFragment extends Fragment {
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
                                                 ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
+                                                ma.removeProduct(productID);
+
                                             } else {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
                                                 ma.dismissGroupDetail(productID);
                                                 ma.dismissGroup(productID);
+                                                ma.removeProduct(productID);
+
                                             }
                                         } else {
                                             ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                             ma.sendNotification(productID, productName, todayDate, "checkout");
                                             ma.dismissGroupDetail(productID);
                                             ma.dismissGroup(productID);
+                                            ma.removeProduct(productID);
+
                                         }
                                     }
                                 }

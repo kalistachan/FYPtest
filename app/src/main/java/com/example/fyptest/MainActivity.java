@@ -512,17 +512,22 @@ public class MainActivity extends AppCompatActivity {
                             sendNotification(productID, productName, today, "checkout");
                             dismissGroupDetail(productID);
                             dismissGroup(productID);
+                            removeProduct(productID);
+
                         } else if (netPrice < freeShipment){
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             dismissGroupDetail(productID);
                             dismissGroup(productID);
+                            removeProduct(productID);
                         }
+
                     } else {
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
                         dismissGroupDetail(productID);
                         dismissGroup(productID);
+                        removeProduct(productID);
                     }
                 }
             }
@@ -541,6 +546,11 @@ public class MainActivity extends AppCompatActivity {
     public void dismissGroup(final String productID) {
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         dbProductGroup.removeValue();
+    }
+
+    public void removeProduct(final String productID) {
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+        dbProduct.removeValue();
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {

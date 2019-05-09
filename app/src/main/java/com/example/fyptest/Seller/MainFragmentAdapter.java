@@ -2,8 +2,10 @@ package com.example.fyptest.Seller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,12 @@ import android.widget.TextView;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.AddProductFragment;
+import com.example.fyptest.loginActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,10 +47,12 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
             if (preferences.getString("userID", "UNKNOWN") != null) {
                 this.userIdentity = preferences.getString("userID", "UNKNOWN");
             } else {
-                //Navigate to Login Screen
+                Intent intent = new Intent(mContext, loginActivity.class);
+                mContext.startActivities(new Intent[]{intent});
             }
         } else {
-            //Navigate to Login Screen
+            Intent intent = new Intent(mContext, loginActivity.class);
+            mContext.startActivities(new Intent[]{intent});
         }
 
     }
@@ -54,7 +64,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder imageViewHolder, int i) {
+    public void onBindViewHolder(final ImageViewHolder imageViewHolder, int i) {
         final productClass uploadCurrent = productList.get(i);
         final String productID = uploadCurrent.getPro_ID();
         final String productName = uploadCurrent.getPro_name();
@@ -91,6 +101,28 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
             String setText = "Eligible for free Shipping : If order $" + freeShipping + " or more";
             imageViewHolder.freeShippingFee.setText(setText);
         }
+
+        DatabaseReference checkProductStatus = FirebaseDatabase.getInstance().getReference("Product Group");
+        checkProductStatus.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("")) {
+                    imageViewHolder.btnRemove.setEnabled(false);
+                } else {
+                    imageViewHolder.btnRemove.setEnabled(true);
+                    imageViewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            removeProduct(productID);
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -101,7 +133,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView textViewProductStatus, textViewProductName, textViewPrice, durationValue, textViewTargetQuantity, shippingFee, freeShippingFee;
         ImageView imageView;
-        Button btnEdit, btnRemove;
+        Button btnRemove;
 
         public ImageViewHolder(View view) {
             super(view);
@@ -113,12 +145,16 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
             this.shippingFee = (TextView) view.findViewById(R.id.shippingFee);
             this.freeShippingFee = (TextView) view.findViewById(R.id.freeShippingFee);
             this.imageView = (ImageView) view.findViewById(R.id.image_view_upload);
-            this.btnEdit = (Button) view.findViewById(R.id.button5);
             this.btnRemove = (Button) view.findViewById(R.id.button4);
         }
     }
 
-    public void swapToProductView(Context mContext, String prodID) {
+    public void removeProduct(String productID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+        db.removeValue();
+    }
+
+    private void swapToProductView(Context mContext, String prodID) {
         Activity activity = (FragmentActivity) mContext;
         AddProductFragment AddProductFragment = new AddProductFragment();
         Bundle arguments = new Bundle();
