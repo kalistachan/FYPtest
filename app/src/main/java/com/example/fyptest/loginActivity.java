@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 
-public class loginActivity extends AppCompatActivity {
+public class loginActivity extends AppCompatActivity implements Serializable {
 
     EditText emailEntered, passwordEntered;
     Button buttonLogin, buttonRegister;
@@ -43,6 +45,14 @@ public class loginActivity extends AppCompatActivity {
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+        if (getIntent().getSerializableExtra("IntentSource") != null) {
+            String result = getIntent().getSerializableExtra("IntentSource").toString();
+            if (result.equalsIgnoreCase("pwReset")) {
+                Toast.makeText(loginActivity.this, "Your password has been reset, a new password will be send to your email", Toast.LENGTH_LONG).show();
+            } else if (result.equalsIgnoreCase("accCreated")) {
+                Toast.makeText(loginActivity.this, "Account successfully created!", Toast.LENGTH_LONG).show();
+            }
+        }
 
         counter = 4;
 
@@ -96,6 +106,7 @@ public class loginActivity extends AppCompatActivity {
                                                 if (counter == 0) {
                                                     String newPW = resetPWActivity.autoGeneratePassword(8);
                                                     resetPWActivity.resetPW(email, newPW);
+                                                    resetPWActivity.sendMail(email, newPW);
                                                     startActivity(new Intent(loginActivity.this, loginActivity.class));
                                                     return;
                                                 } else if (counter > 0) {

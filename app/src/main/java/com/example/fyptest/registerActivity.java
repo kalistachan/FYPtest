@@ -214,26 +214,10 @@ public class registerActivity extends AppCompatActivity {
                     inputExpiryDate.setText("Select Expiry Date");
 
                     //Redirect user back to login screen
-                    SharedPreferences prefs = getSharedPreferences("accCreated", MODE_PRIVATE);
-                    prefs.edit().putString("Creation Status: ", "Account Created").commit();
-                    Toast.makeText(registerActivity.this, "Account successfully created!", Toast.LENGTH_LONG).show();
-                    final Intent intent = new Intent(registerActivity.this, loginActivity.class);
+                    startActivity(new Intent(registerActivity.this, loginActivity.class).putExtra("IntentSource", "accCreated"));
 
-                    Thread thread = new Thread(){
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    thread.start();
                 } if (!result) {
-                    test();
+                    Toast.makeText(registerActivity.this, "Check Field", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -336,11 +320,6 @@ public class registerActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void test() {
-        Toast.makeText(this, "Check Field", Toast.LENGTH_LONG).show();
-    }
-
 
     public static String encrypt(String value) throws Exception
     {
