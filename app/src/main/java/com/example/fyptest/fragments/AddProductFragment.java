@@ -211,7 +211,7 @@ public class AddProductFragment extends Fragment {
                             float retailPrice = Float.parseFloat(text2);
                             float value = 100;
                             float maxDisc = Float.parseFloat(text1) / value;
-                            float maxSellPrice = retailPrice * maxDisc;
+                            float maxSellPrice = retailPrice - (retailPrice * maxDisc);
                             String floatToString = "S$" + Float.toString(maxSellPrice);
                             textViewMaxPrice.setText(floatToString);
                         } else {
@@ -239,7 +239,7 @@ public class AddProductFragment extends Fragment {
                             float retailPrice = Float.parseFloat(text2);
                             float value = 100;
                             float minDisc = Float.parseFloat(text1) / value;
-                            float maxSellPrice = retailPrice * minDisc;
+                            float maxSellPrice = retailPrice - retailPrice * minDisc;
                             String floatToString = "S$" + Float.toString(maxSellPrice);
                             textViewMinPrice.setText(floatToString);
                         } else {
@@ -278,7 +278,7 @@ public class AddProductFragment extends Fragment {
                             float retailPrice = Float.parseFloat(retailPriceText);
                             float value = 100;
                             float minDisc = Float.parseFloat(minDisText) / value;
-                            float minSellPrice = retailPrice * minDisc;
+                            float minSellPrice = retailPrice - retailPrice * minDisc;
                             String floatToString = "S$" + Float.toString(minSellPrice);
                             textViewMinPrice.setText(floatToString);
                         } else {
