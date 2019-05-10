@@ -364,8 +364,7 @@ public class ProfileFragment extends Fragment {
     }
 
     // Return true if the card number is valid
-    public static boolean isCCValid(long number)
-    {
+    public static boolean isCCValid(long number) {
         return (getSize(number) >= 13 &&
                 getSize(number) <= 16) &&
                 (prefixMatched(number, 4) ||
@@ -376,8 +375,7 @@ public class ProfileFragment extends Fragment {
                         sumOfOddPlace(number)) % 10 == 0);
     }
 
-    public static int sumOfDoubleEvenPlace(long number)
-    {
+    public static int sumOfDoubleEvenPlace(long number) {
         int sum = 0;
         String num = number + "";
         for (int i = getSize(number) - 2; i >= 0; i -= 2)
@@ -386,15 +384,13 @@ public class ProfileFragment extends Fragment {
         return sum;
     }
 
-    public static int getDigit(int number)
-    {
+    public static int getDigit(int number) {
         if (number < 9)
             return number;
         return number / 10 + number % 10;
     }
 
-    public static int sumOfOddPlace(long number)
-    {
+    public static int sumOfOddPlace(long number) {
         int sum = 0;
         String num = number + "";
         for (int i = getSize(number) - 1; i >= 0; i -= 2)
@@ -402,19 +398,16 @@ public class ProfileFragment extends Fragment {
         return sum;
     }
 
-    public static boolean prefixMatched(long number, int d)
-    {
+    public static boolean prefixMatched(long number, int d) {
         return getPrefix(number, getSize(d)) == d;
     }
 
-    public static int getSize(long d)
-    {
+    public static int getSize(long d) {
         String num = d + "";
         return num.length();
     }
 
-    public static long getPrefix(long number, int k)
-    {
+    public static long getPrefix(long number, int k) {
         if (getSize(number) > k) {
             String num = number + "";
             return Long.parseLong(num.substring(0, k));

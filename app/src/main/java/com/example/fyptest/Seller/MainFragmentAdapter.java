@@ -94,7 +94,11 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         imageViewHolder.textViewTargetQuantity.setText(productTargetQuantity);
         imageViewHolder.shippingFee.setText(productShippingFee);
 
-        if (freeShipping.isEmpty() || Integer.parseInt(freeShipping) == 0) {
+
+        if (freeShipping == null || freeShipping == "") {
+            String setText = "Eligible for free Shipping : NA";
+            imageViewHolder.freeShippingFee.setText(setText);
+        } else if (freeShipping.isEmpty() || Integer.parseInt(freeShipping) == 0) {
             String setText = "Eligible for free Shipping : NA";
             imageViewHolder.freeShippingFee.setText(setText);
         } else {
@@ -149,7 +153,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         }
     }
 
-    public void removeProduct(String productID) {
+    public static void removeProduct(String productID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(productID);
         db.removeValue();
     }

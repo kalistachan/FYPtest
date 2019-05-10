@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fyptest.R;
+import com.example.fyptest.Seller.MainFragmentAdapter;
 import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.productClass;
 import com.google.android.gms.tasks.Continuation;
@@ -114,25 +115,48 @@ public class AddProductFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (arguments.getString("ProdID") != null) {
+            final String productID = arguments.getString("ProdID");
             fillAddProdContent();
+
             buttonAddProduct.setText("Edit");
-            buttonAddProduct.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
             buttonCancelProduct.setText("Remove");
-
-
-            buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+            db.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onClick(View v) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild("")) {
+                        buttonAddProduct.setEnabled(false);
+                        buttonCancelProduct.setEnabled(false);
+                    } else {
+                        buttonAddProduct.setEnabled(true);
+                        buttonAddProduct.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String pro_name = "", pro_description = "", pro_retailPrice = "", pro_maxOrderQtySellPrice = textViewMaxPrice.getText().toString(),
+                                        pro_minOrderQtySellPrice = textViewMinPrice.getText().toString(), pro_maxOrderDiscount = "", pro_minOrderAccepted = "", pro_minOrderDiscount = "",
+                                        pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
+                                        pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
+
+                            Log.d("12345", "Preseed");
+                            }
+                        });
+
+                        buttonCancelProduct.setEnabled(true);
+                        buttonCancelProduct.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MainFragmentAdapter.removeProduct(productID);
+                            }
+                        });
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
         }
+
         else if (arguments.getString("ProdID") == null) {
             buttonAddProduct.setText("Add");
             buttonCancelProduct.setText("Cancel");
@@ -445,10 +469,9 @@ public class AddProductFragment extends Fragment {
     private void fillAddProdContent() {
         prodID = arguments.getString("ProdID");
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-        dbProduct.addValueEventListener(new ValueEventListener() {
+        dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("12345", dataSnapshot.getValue().toString());
                 Picasso.get()
                         .load(dataSnapshot.child("pro_mImageUrl").getValue().toString())
                         .into(imgView);
@@ -476,5 +499,4 @@ public class AddProductFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
-
 }

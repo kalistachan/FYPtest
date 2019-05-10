@@ -67,6 +67,10 @@ public class fragment_main extends Fragment {
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("pro_s_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
+//                        String freeShipping = "";
+//                        if (snapshot.hasChild("pro_freeShippingAt")) {
+//                            freeShipping = snapshot.child("pro_freeShippingAt").getValue().toString();
+//                        }
                         productClass product = snapshot.getValue(productClass.class);
                         productList.add(product);
                     }
