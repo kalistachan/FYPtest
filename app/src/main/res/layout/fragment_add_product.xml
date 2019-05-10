@@ -401,6 +401,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:gravity="right|end"
+            android:inputType="numberDecimal"
             android:hint="0.00"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textViewShipCost"

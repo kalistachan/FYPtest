@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -139,7 +140,7 @@ public class AddProductFragment extends Fragment {
                                         pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
                                         pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
 
-                            Log.d("12345", "Preseed");
+                            Log.d("12345", "Press");
                             }
                         });
 
@@ -168,6 +169,18 @@ public class AddProductFragment extends Fragment {
         else if (arguments.getString("ProdID") == null) {
             buttonAddProduct.setText("Add");
             buttonCancelProduct.setText("Cancel");
+
+            editTextFreeShipCondition.setEnabled(false);
+            checkBoxFreeShipment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        editTextFreeShipCondition.setEnabled(true);
+                    } else {
+                        editTextFreeShipCondition.setEnabled(false);
+                    }
+                }
+            });
 
             buttonAddProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,7 +214,9 @@ public class AddProductFragment extends Fragment {
 
                     if (checkBoxFreeShipment.isChecked()) {
                         if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
-                    } else { pro_freeShippingAt = null;}
+                    } else if (!checkBoxFreeShipment.isChecked()) {
+                        pro_freeShippingAt = null;
+                    }
 
                     if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
 

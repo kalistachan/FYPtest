@@ -68,7 +68,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         final productClass uploadCurrent = productList.get(i);
         final String productID = uploadCurrent.getPro_ID();
         final String productName = uploadCurrent.getPro_name();
-        final String productPrice = "$" + uploadCurrent.getPro_maxOrderQtySellPrice();
+        final String productPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
         final String productDuration = "Requires " + uploadCurrent.getPro_durationForGroupPurchase()  + " Days";
         final String productTargetQuantity = "0/" + uploadCurrent.getPro_targetQuantity();
         final String productShippingFee = "Shipping Fee : $" +uploadCurrent.getPro_shippingCost();
