@@ -140,7 +140,45 @@ public class AddProductFragment extends Fragment {
                                         pro_shippingCost = "", pro_freeShippingAt = "", pro_durationForGroupPurchase = "", pro_Status = "pending", pro_aproveBy = null,
                                         pro_productType = productType.getSelectedItem().toString(), pro_s_ID = userIdentity, pro_targetQuantity = "";
 
-                            Log.d("12345", "Press");
+                                if (checkNull(editProductName)) {pro_name = editProductName.getText().toString().trim();}
+
+                                if (checkNull(editTextProdDesc)) {pro_description = editTextProdDesc.getText().toString().trim();}
+
+                                if (checkNull(editProductPrice)) {pro_retailPrice = editProductPrice.getText().toString().trim();}
+
+                                if (checkNull(duration)) {
+                                    if (Integer.parseInt(duration.getText().toString()) < 4 || Integer.parseInt(duration.getText().toString()) > 30) {
+                                        duration.setError("Invalid Duration");
+                                    } else {
+                                        pro_durationForGroupPurchase = duration.getText().toString().trim();
+                                    }
+                                }
+
+                                if (checkNull(maxDis)) {pro_maxOrderDiscount = maxDis.getText().toString().trim();}
+
+                                if (checkNull(minTar)) {pro_minOrderAccepted = minTar.getText().toString().trim();}
+
+                                if (checkNull(minDis)) {pro_minOrderDiscount = minDis.getText().toString().trim();}
+
+                                if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
+
+                                if (checkBoxFreeShipment.isChecked()) {
+                                    if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
+                                } else if (!checkBoxFreeShipment.isChecked()) {
+                                    pro_freeShippingAt = null;
+                                }
+
+                                if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
+
+                                boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
+                                        pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
+                                        pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
+
+                                if (result) {
+                                    addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
+                                            pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
+                                            pro_productType, pro_s_ID, pro_targetQuantity);
+                                }
                             }
                         });
 
@@ -513,9 +551,11 @@ public class AddProductFragment extends Fragment {
                 if (dataSnapshot.hasChild("pro_freeShippingAt")) {
                     String freeShipping = dataSnapshot.child("pro_freeShippingAt").getValue().toString();
                     checkBoxFreeShipment.setChecked(true);
+                    editTextFreeShipCondition.setEnabled(true);
                     editTextFreeShipCondition.setText(freeShipping);
                 } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
                     checkBoxFreeShipment.setChecked(false);
+                    editTextFreeShipCondition.setEnabled(true);
                 }
             }
             @Override

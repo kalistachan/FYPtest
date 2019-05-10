@@ -50,9 +50,6 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
                 Intent intent = new Intent(mContext, loginActivity.class);
                 mContext.startActivities(new Intent[]{intent});
             }
-        } else {
-            Intent intent = new Intent(mContext, loginActivity.class);
-            mContext.startActivities(new Intent[]{intent});
         }
 
     }
