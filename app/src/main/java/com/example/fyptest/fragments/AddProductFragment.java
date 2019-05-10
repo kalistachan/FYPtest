@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.Seller.MainFragmentAdapter;
 import com.example.fyptest.Seller.fragment_main;
@@ -146,6 +148,12 @@ public class AddProductFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 MainFragmentAdapter.removeProduct(productID);
+                                fragment_main fragment = new fragment_main();
+                                Activity activity = (FragmentActivity) getContext();
+                                FragmentTransaction transaction = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
                             }
                         });
                     }
@@ -484,11 +492,11 @@ public class AddProductFragment extends Fragment {
                 maxDis.setText(dataSnapshot.child("pro_maxOrderDiscount").getValue().toString());
                 minTar.setText(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
                 minDis.setText(dataSnapshot.child("pro_minOrderDiscount").getValue().toString());
-                String shipCost = "$" + dataSnapshot.child("pro_shippingCost").getValue().toString();
+                String shipCost = dataSnapshot.child("pro_shippingCost").getValue().toString();
                 editTextShipCost.setText(shipCost);
 
                 if (dataSnapshot.hasChild("pro_freeShippingAt")) {
-                    String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
+                    String freeShipping = dataSnapshot.child("pro_freeShippingAt").getValue().toString();
                     checkBoxFreeShipment.setChecked(true);
                     editTextFreeShipCondition.setText(freeShipping);
                 } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
