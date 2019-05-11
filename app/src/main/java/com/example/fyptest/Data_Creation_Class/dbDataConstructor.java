@@ -1,6 +1,5 @@
 package com.example.fyptest.Data_Creation_Class;
 
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,7 +13,6 @@ import com.example.fyptest.database.adminInfoClass;
 import com.example.fyptest.database.faqClass;
 import com.example.fyptest.database.orderStatusClass;
 import com.example.fyptest.database.productType;
-import com.example.fyptest.database.qtyConditionClass;
 import com.example.fyptest.database.sellerInfoClass;
 import com.example.fyptest.database.userClass;
 import com.google.firebase.database.DatabaseReference;

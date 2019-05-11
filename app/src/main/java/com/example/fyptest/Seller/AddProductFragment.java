@@ -249,8 +249,15 @@ public class AddProductFragment extends Fragment {
 
                     if (checkNull(editTextShipCost)) {pro_shippingCost = editTextShipCost.getText().toString().trim();}
 
+                    boolean checkNull = false;
                     if (checkBoxFreeShipment.isChecked()) {
-                        if (checkNull(editTextFreeShipCondition)) {pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();}
+                        if (checkNull(editTextFreeShipCondition)) {
+                            pro_freeShippingAt = editTextFreeShipCondition.getText().toString().trim();
+                            checkNull = true;
+                        }
+                        else if (!checkNull(editTextFreeShipCondition)) {
+                            checkNull = false;
+                        }
                     } else if (!checkBoxFreeShipment.isChecked()) {
                         pro_freeShippingAt = null;
                     }
@@ -261,7 +268,7 @@ public class AddProductFragment extends Fragment {
                             pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
                             pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
 
-                    if (result) {
+                    if (result && checkNull) {
                         addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
                                 pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
                                 pro_productType, pro_s_ID, pro_targetQuantity);
@@ -460,7 +467,7 @@ public class AddProductFragment extends Fragment {
             }
         } else {
             final DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-            dbProduct.addValueEventListener(new ValueEventListener() {
+            dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                     String pro_image = dataSnapshot.child("pro_mImageUrl").getValue().toString();
@@ -565,15 +572,11 @@ public class AddProductFragment extends Fragment {
                     DatabaseReference pro_Type = dbProduct.child("pro_productType");
                     pro_Type.setValue(pro_productType);
 
-                    if (dataSnapshot.hasChild("pro_freeShippingAt") && pro_freeShippingAt != null) {
-                        DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
-                        pro_freeShip.setValue(pro_freeShippingAt);
-                    } else if (dataSnapshot.hasChild("pro_freeShippingAt") && pro_freeShippingAt == null) {
-                        DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
-                        pro_freeShip.setValue(null);
-                    }else if (!dataSnapshot.hasChild("pro_freeShippingAt") && pro_freeShippingAt != null) {
-                        DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
-                        pro_freeShip.setValue(pro_freeShippingAt);
+                    if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                        if (!pro_freeShippingAt.isEmpty()) {
+                            DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
+                            pro_freeShip.setValue(pro_freeShippingAt);
+                        }
                     }
 
                     DatabaseReference pro_maxSellPrice = dbProduct.child("pro_maxOrderQtySellPrice");
@@ -581,6 +584,13 @@ public class AddProductFragment extends Fragment {
 
                     DatabaseReference pro_minSellPrice = dbProduct.child("pro_minOrderQtySellPrice");
                     pro_minSellPrice.setValue(pro_minOrderQtySellPrice);
+
+                    //Redirecting user back to productListing Screen
+                    Fragment newFragment = new fragment_main();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, newFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
 
                     Toast.makeText(getContext(), "Product Successfully Updated", Toast.LENGTH_SHORT).show();
 
