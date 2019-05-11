@@ -80,7 +80,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    if (email.equalsIgnoreCase(snapshot.child("email").getValue().toString())) {
+                                    if (snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
                                         try {
                                             if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
                                                 String role = snapshot.child("userType").getValue().toString();
@@ -114,7 +114,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                                     startActivity(new Intent(loginActivity.this, loginActivity.class));
                                                     break;
                                                 } else if (counter > 0) {
-                                                    toast(2, counter);
+                                                    Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_SHORT).show();
                                                     counter --;
                                                     break;
                                                 }
@@ -122,8 +122,8 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                    } else if (!email.equalsIgnoreCase(snapshot.child("email").getValue().toString())) {
-                                        toast(1, counter);
+                                    } else if (!snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
+                                        Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -153,14 +153,6 @@ public class loginActivity extends AppCompatActivity implements Serializable {
             return false;
         } else {
             return true;
-        }
-    }
-
-    private void toast(int a, int counter) {
-        if (a == 1) {
-            Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
-        } else if (a == 2) {
-            Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_LONG).show();
         }
     }
 }
