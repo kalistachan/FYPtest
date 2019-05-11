@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminMainFragment extends Fragment {
-    SharedPreferences preferences;
-    String userIdentity;
     Context context;
 
     RecyclerView recyclerView;
@@ -49,9 +47,6 @@ public class AdminMainFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         this.context = getContext();
-
-        this.preferences = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", null);
 
         this.productList = new ArrayList<>();
         this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
