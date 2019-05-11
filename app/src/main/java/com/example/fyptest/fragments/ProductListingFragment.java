@@ -296,7 +296,7 @@ public class ProductListingFragment extends Fragment {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification");
         String noti_ID = db.push().getKey();
         notificationClass notificationClass = new notificationClass(noti_ID, noti_Title, noti_Description, todayDate, prodID);
-        db.child(customerID).child(noti_ID).setValue(notificationClass);
+        db.child(customerID).child(prodID).setValue(notificationClass);
     }
 
     private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {

@@ -76,7 +76,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
                 .centerCrop()
                 .into(imageViewHolder.imageView);
 
-        imageViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+        imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 swapToProductView(mContext,productID);
@@ -106,7 +106,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         checkProductStatus.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("")) {
+                if (dataSnapshot.hasChild(productID)) {
                     imageViewHolder.btnRemove.setEnabled(false);
                 } else {
                     imageViewHolder.btnRemove.setEnabled(true);

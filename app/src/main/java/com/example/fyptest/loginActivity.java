@@ -112,18 +112,19 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                                     resetPWActivity.resetPW(email, newPW);
                                                     resetPWActivity.sendMail(email, newPW);
                                                     startActivity(new Intent(loginActivity.this, loginActivity.class));
-                                                    return;
+                                                    break;
                                                 } else if (counter > 0) {
                                                     toast(2, counter);
                                                     counter --;
-                                                    return;
+                                                    break;
                                                 }
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                    } else {
+                                    } else if (!email.equalsIgnoreCase(snapshot.child("email").getValue().toString())) {
                                         toast(1, counter);
+                                        break;
                                     }
                                 }
                             }
