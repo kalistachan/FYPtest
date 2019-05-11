@@ -174,7 +174,7 @@
             android:id="@+id/textView31"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="S$"
+            android:text="$"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textViewRP"
@@ -216,7 +216,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="right|end"
-            android:text="S$0.00"
+            android:text="$0.00"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView1"
@@ -245,7 +245,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="right|end"
-            android:text="S$0.00"
+            android:text="$0.00"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView2"
@@ -399,7 +399,7 @@
             android:id="@+id/textView32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="S$"
+            android:text="$"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textViewShipCost"
@@ -432,6 +432,17 @@
             android:text="Free Shipping"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewShipCost" />
+
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="$"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/checkBoxFreeShipment"
+            app:layout_constraintEnd_toStartOf="@+id/editTextFreeShipCondition"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxFreeShipment" />
 
         <EditText
             android:id="@+id/editTextFreeShipCondition"
