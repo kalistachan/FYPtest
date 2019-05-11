@@ -30,6 +30,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
     TextView forgotPassword;
 
     SharedPreferences prefs;
+    Toast toast;
 
     int counter;
 
@@ -80,54 +81,46 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    if (snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
                                         try {
-                                            if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
-                                                String role = snapshot.child("userType").getValue().toString();
-                                                String id = snapshot.child("userID").getValue().toString();
-                                                if (role.equals("customer")) {
-                                                    //Directing user to their main screen
-                                                    prefs.edit().putString("userID", id).apply();
-                                                    startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                    break;
-                                                } if (role.equals("seller")) {
-                                                    //Directing user to their main screen
-                                                    prefs.edit().putString("userID", id).apply();
-                                                    startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
-                                                    break;
-                                                } if (role.equals("admin")) {
-                                                    //Directing user to their main screen
-                                                    prefs.edit().putString("userID", id).apply();
-                                                    startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
-                                                    break;
+                                            if (snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
+                                                if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
+                                                    String role = snapshot.child("userType").getValue().toString();
+                                                    String id = snapshot.child("userID").getValue().toString();
+                                                    if (role.equals("customer")) {
+                                                        //Directing user to their main screen
+                                                        toast.cancel();
+                                                        prefs.edit().putString("userID", id).apply();
+                                                        startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                                    } else if (role.equals("seller")) {
+                                                        //Directing user to their main screen
+                                                        prefs.edit().putString("userID", id).apply();
+                                                        startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
+                                                    } else if (role.equals("admin")) {
+                                                        //Directing user to their main screen
+                                                        prefs.edit().putString("userID", id).apply();
+                                                        startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
+                                                    }
+                                                } else if (!pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
+                                                    if (counter == 0) {
+                                                        String newPW = resetPWActivity.autoGeneratePassword(8);
+                                                        resetPWActivity.resetPW(email, newPW);
+                                                        resetPWActivity.sendMail(email, newPW);
+                                                        startActivity(new Intent(loginActivity.this, loginActivity.class));
+                                                    } else if (counter > 0) {
+                                                        toast = Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_SHORT);
+                                                        toast.show();
+                                                        counter --;
+                                                    }
                                                 }
+                                            } else {
+                                                toast = Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT);
+                                                toast.show();
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        try {
-                                            if (!pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
-                                                if (counter == 0) {
-                                                    String newPW = resetPWActivity.autoGeneratePassword(8);
-                                                    resetPWActivity.resetPW(email, newPW);
-                                                    resetPWActivity.sendMail(email, newPW);
-                                                    startActivity(new Intent(loginActivity.this, loginActivity.class));
-                                                    break;
-                                                } else if (counter > 0) {
-                                                    Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_SHORT).show();
-                                                    counter --;
-                                                    break;
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else if (!snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
-                                        Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT).show();
-                                        break;
                                     }
                                 }
-                            }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
                         });

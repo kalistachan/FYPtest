@@ -88,14 +88,16 @@ public class ProductListingFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 prodList.clear();
-                for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
-                    if (productSnapshot.child("pro_Status").getValue().toString().equals("approved")) {
-                        productClass product = productSnapshot.getValue(productClass.class);
-                        prodList.add(product);
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot productSnapshot: dataSnapshot.getChildren()){
+                        if (productSnapshot.child("pro_Status").getValue().toString().equals("approved")) {
+                            productClass product = productSnapshot.getValue(productClass.class);
+                            prodList.add(product);
+                        }
                     }
+                    mAdapter = new CustomAdapter(getActivity(), prodList);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
-                mAdapter = new CustomAdapter(getActivity(), prodList);
-                mRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
