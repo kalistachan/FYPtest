@@ -560,6 +560,14 @@ public class MainActivity extends AppCompatActivity {
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID,
                 oh_os_ID, orderQty, checkoutDate, orderedPrice, shippingCost);
         dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
+        addLoyaltyPoint(customerID, orderedPrice);
+    }
+
+    private void addLoyaltyPoint(String customerID, String orderedPrice) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+        int loyaltyPoint = (int)Integer.parseInt(orderedPrice);
+        db.setValue(loyaltyPoint);
+
     }
 
     public void sendNotification (final String productID, final String productName, final String today, final String condition){
