@@ -94,7 +94,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         holder.prodTextName.setText(prodName);
-        holder.prodTextPrice.setText("$" + uploadCurrent.getPro_maxOrderQtySellPrice());
+        holder.prodTextPrice.setText(uploadCurrent.getPro_maxOrderQtySellPrice());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

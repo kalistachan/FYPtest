@@ -40,7 +40,7 @@ public class ProductView extends Fragment {
     DatabaseReference databaseProduct, dbGroupDetails;
 
     TextView pvName, categoryTV, descTV, durationTV, originalTV, discTV_1, discTV_2, targetqtyTV,
-            purchaseqtyTV, shippingTV, minDiscPercent;
+            purchaseqtyTV, shippingTV, minDiscPercent, freeShipping;
 
     ImageView image;
 
@@ -76,6 +76,7 @@ public class ProductView extends Fragment {
         minDiscPercent = groupView.findViewById(R.id.minDiscPercent);
         groupBtn = groupView.findViewById(R.id.button2);
         watchBtn = groupView.findViewById(R.id.button3);
+        freeShipping = groupView.findViewById(R.id.fsTV);
 
         pl = new ProductListingFragment();
         return groupView;
@@ -107,10 +108,15 @@ public class ProductView extends Fragment {
                 descTV.setText(dataSnapshot.child("pro_description").getValue().toString());
                 durationTV.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString() + " Days");
                 originalTV.setText("$" + dataSnapshot.child("pro_retailPrice").getValue().toString());
-                discTV_1.setText("$" + dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
-                discTV_2.setText("$" + dataSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
+                discTV_1.setText(dataSnapshot.child("pro_maxOrderQtySellPrice").getValue().toString());
+                discTV_2.setText(dataSnapshot.child("pro_minOrderQtySellPrice").getValue().toString());
                 shippingTV.setText("$" + dataSnapshot.child("pro_shippingCost").getValue().toString());
                 minDiscPercent.setText("*if " + dataSnapshot.child("pro_minOrderDiscount").getValue().toString() + "% target quantity met");
+                if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                    freeShipping.setText("$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString());
+                } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
+                    freeShipping.setText("Not Applicable");
+                }
 
                 dbGroupDetails = FirebaseDatabase.getInstance().getReference("Group Detail");
                 dbGroupDetails.addValueEventListener(new ValueEventListener() {
