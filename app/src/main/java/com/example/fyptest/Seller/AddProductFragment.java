@@ -462,7 +462,8 @@ public class AddProductFragment extends Fragment {
             final DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
             dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                    String pro_image = dataSnapshot.child("pro_mImageUrl").getValue().toString();
                     if(filePath != null) {
                         final ProgressDialog progressDialog = new ProgressDialog(getContext());
                         progressDialog.setTitle("Uploading...");
@@ -489,76 +490,9 @@ public class AddProductFragment extends Fragment {
                                         if (task.isSuccessful()) {
                                             progressDialog.dismiss();
                                             imageUrl = task.getResult().toString();
+
                                             DatabaseReference pro_image = dbProduct.child("pro_mImageUrl");
                                             pro_image.setValue(imageUrl);
-
-                                            if (!pro_name.isEmpty()) {
-                                                DatabaseReference pro_na = dbProduct.child("pro_name");
-                                                pro_na.setValue(pro_name);
-                                            }
-
-                                            if (!pro_description.isEmpty()) {
-                                                DatabaseReference pro_desc = dbProduct.child("pro_description");
-                                                pro_desc.setValue(pro_description);
-                                            }
-
-                                            if (!pro_retailPrice.isEmpty()) {
-                                                DatabaseReference pro_rp = dbProduct.child("pro_retailPrice");
-                                                pro_rp.setValue(pro_retailPrice);
-                                            }
-
-                                            if(!pro_maxOrderDiscount.isEmpty()) {
-                                                DatabaseReference pro_mDisc = dbProduct.child("pro_maxOrderDiscount");
-                                                pro_mDisc.setValue(pro_maxOrderDiscount);
-                                            }
-
-                                            if(!pro_minOrderAccepted.isEmpty()) {
-                                                DatabaseReference pro_mOrder = dbProduct.child("pro_minOrderAccepted");
-                                                pro_mOrder.setValue(pro_minOrderAccepted);
-                                            }
-
-                                            if(!pro_minOrderDiscount.isEmpty()) {
-                                                DatabaseReference pro_mOrderDisc = dbProduct.child("pro_minOrderDiscount");
-                                                pro_mOrderDisc.setValue(pro_minOrderDiscount);
-                                            }
-
-                                            if (!pro_durationForGroupPurchase.isEmpty()) {
-                                                DatabaseReference pro_duration = dbProduct.child("pro_durationForGroupPurchase");
-                                                pro_duration.setValue(pro_durationForGroupPurchase);
-                                            }
-
-                                            if (!pro_targetQuantity.isEmpty()) {
-                                                DatabaseReference pro_tq = dbProduct.child("pro_targetQuantity");
-                                                pro_tq.setValue(pro_targetQuantity);
-                                            }
-
-                                            if(!pro_shippingCost.isEmpty()) {
-                                                DatabaseReference pro_shipCost = dbProduct.child("pro_shippingCost");
-                                                pro_shipCost.setValue(pro_shippingCost);
-                                            }
-
-                                            DatabaseReference pro_Type = dbProduct.child("pro_productType");
-                                            pro_Type.setValue(pro_productType);
-
-                                            if (!pro_freeShippingAt.isEmpty()) {
-                                                DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
-                                                pro_freeShip.setValue(pro_freeShippingAt);
-                                            }
-
-                                            DatabaseReference pro_maxSellPrice = dbProduct.child("pro_maxOrderQtySellPrice");
-                                            pro_maxSellPrice.setValue(pro_maxOrderQtySellPrice);
-
-                                            DatabaseReference pro_minSellPrice = dbProduct.child("pro_minOrderQtySellPrice");
-                                            pro_minSellPrice.setValue(pro_minOrderQtySellPrice);
-
-                                            //Redirecting user back to productListing Screen
-                                            Fragment newFragment = new fragment_main();
-                                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                            transaction.replace(R.id.frame_container, newFragment);
-                                            transaction.addToBackStack(null);
-                                            transaction.commit();
-
-                                            Toast.makeText(getContext(), "Product Successfully Updated", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -578,9 +512,80 @@ public class AddProductFragment extends Fragment {
                             }
                         });
                     } else {
-                        Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+                        if (pro_image == null) {
+                            Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
+                    if (!pro_name.isEmpty()) {
+                        DatabaseReference pro_na = dbProduct.child("pro_name");
+                        pro_na.setValue(pro_name);
+                    }
+
+                    if (!pro_description.isEmpty()) {
+                        DatabaseReference pro_desc = dbProduct.child("pro_description");
+                        pro_desc.setValue(pro_description);
+                    }
+
+                    if (!pro_retailPrice.isEmpty()) {
+                        DatabaseReference pro_rp = dbProduct.child("pro_retailPrice");
+                        pro_rp.setValue(pro_retailPrice);
+                    }
+
+                    if(!pro_maxOrderDiscount.isEmpty()) {
+                        DatabaseReference pro_mDisc = dbProduct.child("pro_maxOrderDiscount");
+                        pro_mDisc.setValue(pro_maxOrderDiscount);
+                    }
+
+                    if(!pro_minOrderAccepted.isEmpty()) {
+                        DatabaseReference pro_mOrder = dbProduct.child("pro_minOrderAccepted");
+                        pro_mOrder.setValue(pro_minOrderAccepted);
+                    }
+
+                    if(!pro_minOrderDiscount.isEmpty()) {
+                        DatabaseReference pro_mOrderDisc = dbProduct.child("pro_minOrderDiscount");
+                        pro_mOrderDisc.setValue(pro_minOrderDiscount);
+                    }
+
+                    if (!pro_durationForGroupPurchase.isEmpty()) {
+                        DatabaseReference pro_duration = dbProduct.child("pro_durationForGroupPurchase");
+                        pro_duration.setValue(pro_durationForGroupPurchase);
+                    }
+
+                    if (!pro_targetQuantity.isEmpty()) {
+                        DatabaseReference pro_tq = dbProduct.child("pro_targetQuantity");
+                        pro_tq.setValue(pro_targetQuantity);
+                    }
+
+                    if(!pro_shippingCost.isEmpty()) {
+                        DatabaseReference pro_shipCost = dbProduct.child("pro_shippingCost");
+                        pro_shipCost.setValue(pro_shippingCost);
+                    }
+
+                    DatabaseReference pro_Type = dbProduct.child("pro_productType");
+                    pro_Type.setValue(pro_productType);
+
+                    if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                        if (!pro_freeShippingAt.isEmpty()) {
+                            DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
+                            pro_freeShip.setValue(pro_freeShippingAt);
+                        }
+                    }
+
+                    DatabaseReference pro_maxSellPrice = dbProduct.child("pro_maxOrderQtySellPrice");
+                    pro_maxSellPrice.setValue(pro_maxOrderQtySellPrice);
+
+                    DatabaseReference pro_minSellPrice = dbProduct.child("pro_minOrderQtySellPrice");
+                    pro_minSellPrice.setValue(pro_minOrderQtySellPrice);
+
+                    //Redirecting user back to productListing Screen
+                    Fragment newFragment = new fragment_main();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, newFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                    Toast.makeText(getContext(), "Product Successfully Updated", Toast.LENGTH_SHORT).show();
 
                 }
                 @Override
