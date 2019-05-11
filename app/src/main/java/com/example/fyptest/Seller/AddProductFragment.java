@@ -123,11 +123,11 @@ public class AddProductFragment extends Fragment {
 
             buttonAddProduct.setText("Edit");
             buttonCancelProduct.setText("Remove");
-            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group");
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
             db.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChild("")) {
+                    if (dataSnapshot.hasChildren()) {
                         buttonAddProduct.setEnabled(false);
                         buttonCancelProduct.setEnabled(false);
                     } else {
