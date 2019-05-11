@@ -72,7 +72,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                         final String pw = passwordEntered.getText().toString();
 
                         DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("User");
-                        userDB.addValueEventListener(new ValueEventListener() {
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -85,17 +85,17 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                                     //Directing user to their main screen
                                                     prefs.edit().putString("userID", id).apply();
                                                     startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                    return;
+                                                    break;
                                                 } if (role.equals("seller")) {
                                                     //Directing user to their main screen
                                                     prefs.edit().putString("userID", id).apply();
                                                     startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
-                                                    return;
+                                                    break;
                                                 } if (role.equals("admin")) {
                                                     //Directing user to their main screen
                                                     prefs.edit().putString("userID", id).apply();
                                                     startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
-                                                    return;
+                                                    break;
                                                 }
                                             }
                                         } catch (Exception e) {
@@ -118,8 +118,10 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+                                    } else {
+                                        toast(1, counter);
                                     }
-                                } toast(1, counter);
+                                }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -151,9 +153,9 @@ public class loginActivity extends AppCompatActivity implements Serializable {
 
     private void toast(int a, int counter) {
         if (a == 1) {
-            Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
+            Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_LONG).show();
         } else if (a == 2) {
-            Toast.makeText(this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_LONG).show();
+            Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_LONG).show();
         }
     }
 }

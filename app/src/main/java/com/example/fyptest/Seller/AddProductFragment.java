@@ -1,4 +1,4 @@
-package com.example.fyptest.fragments;
+package com.example.fyptest.Seller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -297,14 +297,14 @@ public class AddProductFragment extends Fragment {
                             float value = 100;
                             float maxDisc = Float.parseFloat(text1) / value;
                             float maxSellPrice = retailPrice - (retailPrice * maxDisc);
-                            String floatToString = "S$" + String.format("%.2f", maxSellPrice);
-                            textViewMaxPrice.setText(floatToString);
+                            String floatToString = String.format("%.2f", maxSellPrice);
+                            textViewMaxPrice.setText("$" + (floatToString));
                         } else {
-                            editProductPrice.setHint("S$0.00");
-                            textViewMaxPrice.setText("S$0.00");
+                            editProductPrice.setHint("$0.00");
+                            textViewMaxPrice.setText("$0.00");
                         }
                     } else {
-                        textViewMaxPrice.setText("S$0.00");
+                        textViewMaxPrice.setText("$0.00");
                         maxDis.setHint("100%");
                     }
                 }
@@ -325,14 +325,14 @@ public class AddProductFragment extends Fragment {
                             float value = 100;
                             float minDisc = Float.parseFloat(text1) / value;
                             float maxSellPrice = retailPrice - retailPrice * minDisc;
-                            String floatToString = "S$" + String.format("%.2f", maxSellPrice);
-                            textViewMinPrice.setText(floatToString);
+                            String floatToString = String.format("%.2f", maxSellPrice);
+                            textViewMinPrice.setText("$" + (floatToString));
                         } else {
-                            editProductPrice.setHint("S$0.00");
-                            textViewMinPrice.setText("S$0.00");
+                            editProductPrice.setHint("$0.00");
+                            textViewMinPrice.setText("$0.00");
                         }
                     } else {
-                        textViewMinPrice.setText("S$0.00");
+                        textViewMinPrice.setText("$0.00");
                         minDis.setHint("100%");
                     }
                 }
@@ -354,24 +354,24 @@ public class AddProductFragment extends Fragment {
                             float value = 100;
                             float maxDisc = Float.parseFloat(maxDisText) / value;
                             float maxSellPrice = retailPrice - retailPrice * maxDisc;
-                            String floatToString = "S$" +  String.format("%.2f", maxSellPrice);
-                            textViewMaxPrice.setText(floatToString);
+                            String floatToString = String.format("%.2f", maxSellPrice);
+                            textViewMaxPrice.setText("$" + (floatToString));
                         } else {
-                            textViewMaxPrice.setText("S$0.00");
+                            textViewMaxPrice.setText("$0.00");
                         }
                         if (!TextUtils.isEmpty(minDisText)) {
                             float retailPrice = Float.parseFloat(retailPriceText);
                             float value = 100;
                             float minDisc = Float.parseFloat(minDisText) / value;
                             float minSellPrice = retailPrice - retailPrice * minDisc;
-                            String floatToString = "S$" + String.format("%.2f", minSellPrice);
-                            textViewMinPrice.setText(floatToString);
+                            String floatToString = String.format("%.2f", minSellPrice);
+                            textViewMinPrice.setText("$" + (floatToString));
                         } else {
-                            textViewMinPrice.setText("S$0.00");
+                            textViewMinPrice.setText("$0.00");
                         }
                     } else {
-                        textViewMaxPrice.setText("S$0.00");
-                        textViewMinPrice.setText("S$0.00");
+                        textViewMaxPrice.setText("$0.00");
+                        textViewMinPrice.setText("$0.00");
                     }
                 }
                 @Override
