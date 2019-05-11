@@ -118,8 +118,10 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+                                    } else {
+                                        toast(1, counter);
                                     }
-                                } toast(1, counter);
+                                }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
