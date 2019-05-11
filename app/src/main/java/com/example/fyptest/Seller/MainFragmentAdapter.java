@@ -67,7 +67,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         final String productPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
         final String productDuration = "Requires " + uploadCurrent.getPro_durationForGroupPurchase()  + " Days";
         final String productTargetQuantity = "0/" + uploadCurrent.getPro_targetQuantity();
-        final String productShippingFee = "Shipping Fee : S$" +uploadCurrent.getPro_shippingCost();
+        final String productShippingFee = "Shipping Fee : $" +uploadCurrent.getPro_shippingCost();
         final String freeShipping = uploadCurrent.getPro_freeShippingAt();
         final String productStatus = uploadCurrent.getPro_Status().toUpperCase();
         Picasso.get()
@@ -98,7 +98,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
             String setText = "Eligible for free Shipping : NA";
             imageViewHolder.freeShippingFee.setText(setText);
         } else {
-            String setText = "Eligible for free Shipping : If order S$" + freeShipping + " or more";
+            String setText = "Eligible for free Shipping : If order $" + freeShipping + " or more";
             imageViewHolder.freeShippingFee.setText(setText);
         }
 
