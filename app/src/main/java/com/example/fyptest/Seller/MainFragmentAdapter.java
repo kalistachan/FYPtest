@@ -76,7 +76,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
                 .centerCrop()
                 .into(imageViewHolder.imageView);
 
-        imageViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+        imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 swapToProductView(mContext,productID);
