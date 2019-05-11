@@ -30,10 +30,7 @@
         <activity
             android:name=".Seller.SellerMainActivity"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".Admin.AdminMainActivity"
@@ -45,19 +42,13 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
             android:name=".Data_Creation_Class.dbDataConstructor"
             tools:ignore="InnerclassSeparator">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
     </application>
