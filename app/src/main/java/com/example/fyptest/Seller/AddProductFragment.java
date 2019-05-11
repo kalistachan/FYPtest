@@ -460,7 +460,7 @@ public class AddProductFragment extends Fragment {
             }
         } else {
             final DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-            dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
+            dbProduct.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                     String pro_image = dataSnapshot.child("pro_mImageUrl").getValue().toString();
