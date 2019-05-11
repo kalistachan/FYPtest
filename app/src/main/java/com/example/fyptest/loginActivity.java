@@ -45,6 +45,10 @@ public class loginActivity extends AppCompatActivity implements Serializable {
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.clear();
+        edit.apply();
+
         if (getIntent().getSerializableExtra("IntentSource") != null) {
             String result = getIntent().getSerializableExtra("IntentSource").toString();
             if (result.equalsIgnoreCase("pwReset")) {
