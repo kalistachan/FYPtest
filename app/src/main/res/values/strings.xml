@@ -15,10 +15,10 @@
 
     <array name="productType">
         <item></item>
-        <item>cosmetic</item>
-        <item>toiletries</item>
-        <item>fashion</item>
-        <item>IT gadget</item>
+        <item>Cosmetic</item>
+        <item>Toiletries</item>
+        <item>Fashion</item>
+        <item>IT Gadget</item>
         <item>Food</item>
     </array>
 </resources>

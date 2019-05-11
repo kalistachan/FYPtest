@@ -196,6 +196,7 @@
             tools:ignore="MissingConstraints" />
 
         <!--Max Selling Price-->
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="0dp"
@@ -393,22 +394,33 @@
             app:layout_constraintTop_toBottomOf="@+id/view2"
             android:textColor="@color/black" />
 
+        <!--Shipping-->
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S$"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewShipCost"
+            app:layout_constraintEnd_toStartOf="@+id/editTextShipCost"
+            app:layout_constraintTop_toTopOf="@+id/textViewShipCost" />
+
         <EditText
             android:id="@+id/editTextShipCost"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:gravity="right|end"
-            android:inputType="numberDecimal"
             android:hint="0.00"
+            android:inputType="numberDecimal"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textViewShipCost"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textViewShipCost" />
 
-        <!--Shipping-->
         <CheckBox
             android:id="@+id/checkBoxFreeShipment"
             android:layout_width="wrap_content"
