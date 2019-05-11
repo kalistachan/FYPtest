@@ -202,9 +202,11 @@ public class ManagePendingProduct extends Fragment {
                     if (dataSnapshot.hasChild("pro_freeShippingAt")) {
                         String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
                         checkBoxFreeShipment.setChecked(true);
+                        editTextFreeShipCondition.setEnabled(false);
                         editTextFreeShipCondition.setText(freeShipping);
                     } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
                         checkBoxFreeShipment.setChecked(false);
+                        editTextFreeShipCondition.setEnabled(false);
                     }
                 }
             }
