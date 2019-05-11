@@ -394,70 +394,202 @@ public class AddProductFragment extends Fragment {
         storage= FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
-        prodId = databaseProduct.push().getKey();
+        prodID = arguments.getString("ProdID");
+        if (prodID.equalsIgnoreCase(null)) {
+            prodId = databaseProduct.push().getKey();
+            if(filePath != null) {
+                final ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setTitle("Uploading...");
+                progressDialog.show();
 
-        if(filePath != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+                final StorageReference ref = storageReference.child("images/"+ prodId + "." + getFileExtension(filePath));
+                final UploadTask uploadTask = ref.putFile(filePath);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-            final StorageReference ref = storageReference.child("images/"+ prodId + "." + getFileExtension(filePath));
-            final UploadTask uploadTask = ref.putFile(filePath);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                // Continue with the task to get the download URL
+                                return ref.getDownloadUrl();
                             }
-                            // Continue with the task to get the download URL
-                            return ref.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                progressDialog.dismiss();
-                                imageUrl = task.getResult().toString();
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    imageUrl = task.getResult().toString();
 
-                                productClass productClass = new productClass(prodId, imageUrl, pro_name, pro_description, pro_retailPrice,
-                                        pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
-                                        pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID, pro_targetQuantity);
+                                    productClass productClass = new productClass(prodId, imageUrl, pro_name, pro_description, pro_retailPrice,
+                                            pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
+                                            pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID, pro_targetQuantity);
 
-                                databaseProduct.child(prodId).setValue(productClass);
+                                    databaseProduct.child(prodId).setValue(productClass);
 
-                                //Redirecting user back to productListing Screen
-                                Fragment newFragment = new fragment_main();
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.frame_container, newFragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
+                                    //Redirecting user back to productListing Screen
+                                    Fragment newFragment = new fragment_main();
+                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.frame_container, newFragment);
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
 
-                                Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Product Successfully Added", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                            .getTotalByteCount());
-                    progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                }
-            });
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                .getTotalByteCount());
+                        progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+            final DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+            dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(filePath != null) {
+                        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+                        progressDialog.setTitle("Uploading...");
+                        progressDialog.show();
+
+                        final StorageReference ref = storageReference.child("images/"+ prodID + "." + getFileExtension(filePath));
+                        final UploadTask uploadTask = ref.putFile(filePath);
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+                                        // Continue with the task to get the download URL
+                                        return ref.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            progressDialog.dismiss();
+                                            imageUrl = task.getResult().toString();
+                                            DatabaseReference pro_image = dbProduct.child("pro_mImageUrl");
+                                            pro_image.setValue(imageUrl);
+
+                                            if (!pro_name.isEmpty()) {
+                                                DatabaseReference pro_name = dbProduct.child("pro_name");
+                                                pro_name.setValue(pro_name);
+                                            }
+
+                                            if (!pro_description.isEmpty()) {
+                                                DatabaseReference pro_desc = dbProduct.child("pro_description");
+                                                pro_desc.setValue(pro_description);
+                                            }
+
+                                            if (!pro_retailPrice.isEmpty()) {
+                                                DatabaseReference pro_rp = dbProduct.child("pro_retailPrice");
+                                                pro_rp.setValue(pro_retailPrice);
+                                            }
+
+                                            if(!pro_maxOrderDiscount.isEmpty()) {
+                                                DatabaseReference pro_mDisc = dbProduct.child("pro_maxOrderDiscount");
+                                                pro_mDisc.setValue(pro_maxOrderDiscount);
+                                            }
+
+                                            if(!pro_minOrderAccepted.isEmpty()) {
+                                                DatabaseReference pro_mOrder = dbProduct.child("pro_minOrderAccepted");
+                                                pro_mOrder.setValue(pro_minOrderAccepted);
+                                            }
+
+                                            if(!pro_minOrderDiscount.isEmpty()) {
+                                                DatabaseReference pro_mOrderDisc = dbProduct.child("pro_minOrderDiscount");
+                                                pro_mOrderDisc.setValue(pro_minOrderDiscount);
+                                            }
+
+                                            if (!pro_durationForGroupPurchase.isEmpty()) {
+                                                DatabaseReference pro_duration = dbProduct.child("pro_durationForGroupPurchase");
+                                                pro_duration.setValue(pro_durationForGroupPurchase);
+                                            }
+
+                                            if (!pro_targetQuantity.isEmpty()) {
+                                                DatabaseReference pro_tq = dbProduct.child("pro_targetQuantity");
+                                                pro_tq.setValue(pro_targetQuantity);
+                                            }
+
+                                            if(!pro_shippingCost.isEmpty()) {
+                                                DatabaseReference pro_shippingCost = dbProduct.child("pro_shippingCost");
+                                                pro_shippingCost.setValue(pro_shippingCost);
+                                            }
+
+                                            DatabaseReference pro_productType = dbProduct.child("pro_productType");
+                                            pro_productType.setValue(pro_productType);
+
+                                            if (!pro_freeShippingAt.isEmpty()) {
+                                                DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
+                                                pro_freeShip.setValue(pro_freeShippingAt);
+                                            }
+
+                                            DatabaseReference pro_maxSellPrice = dbProduct.child("pro_maxOrderQtySellPrice");
+                                            pro_maxSellPrice.setValue(pro_maxOrderQtySellPrice);
+
+                                            DatabaseReference pro_minSellPrice = dbProduct.child("pro_minOrderQtySellPrice");
+                                            pro_minSellPrice.setValue(pro_minOrderQtySellPrice);
+
+                                            //Redirecting user back to productListing Screen
+                                            Fragment newFragment = new fragment_main();
+                                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.frame_container, newFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+
+                                            Toast.makeText(getContext(), "Product Successfully Updated", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                        .getTotalByteCount());
+                                progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
+            });
         }
+
+
     }
 
     public void setSpinText(Spinner spin, String text) {
@@ -562,4 +694,5 @@ public class AddProductFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
+
 }
