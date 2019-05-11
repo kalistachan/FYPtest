@@ -395,7 +395,7 @@ public class AddProductFragment extends Fragment {
         storageReference = storage.getReference();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
         prodID = arguments.getString("ProdID");
-        if (prodID.equalsIgnoreCase(null)) {
+        if (prodID == null) {
             prodId = databaseProduct.push().getKey();
             if(filePath != null) {
                 final ProgressDialog progressDialog = new ProgressDialog(getContext());
