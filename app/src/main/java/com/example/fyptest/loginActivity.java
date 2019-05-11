@@ -45,6 +45,8 @@ public class loginActivity extends AppCompatActivity implements Serializable {
         buttonLogin = (Button) findViewById(R.id.buttonLogin);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
+        final String[] password = new String[1];
+
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
         SharedPreferences.Editor edit = prefs.edit();
         edit.clear();
@@ -80,48 +82,60 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                         userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                boolean foundEmail = false;
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
+                                        foundEmail = true;
                                         try {
-                                            if (snapshot.child("email").getValue().toString().equalsIgnoreCase(email)) {
-                                                if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
-                                                    String role = snapshot.child("userType").getValue().toString();
-                                                    String id = snapshot.child("userID").getValue().toString();
-                                                    if (role.equalsIgnoreCase("customer")) {
-                                                        //Directing user to their main screen
-                                                        prefs.edit().putString("userID", id).apply();
-                                                        startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                    } else if (role.equalsIgnoreCase("seller")) {
-                                                        //Directing user to their main screen
-                                                        prefs.edit().putString("userID", id).apply();
-                                                        startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
-                                                    } else if (role.equals("admin")) {
-                                                        //Directing user to their main screen
-                                                        prefs.edit().putString("userID", id).apply();
-                                                        startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
-                                                    }
-                                                } else if (!pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
-                                                    if (counter == 0) {
-                                                        String newPW = resetPWActivity.autoGeneratePassword(8);
-                                                        resetPWActivity.resetPW(email, newPW);
-                                                        resetPWActivity.sendMail(email, newPW);
-                                                        startActivity(new Intent(loginActivity.this, loginActivity.class));
-                                                    } else if (counter > 0) {
-                                                        toast = Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_SHORT);
-                                                        toast.show();
-                                                        counter --;
-                                                    }
-                                                }
-                                            } else {
-                                                toast = Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT);
-                                                toast.show();
-                                            }
+                                            password[0] = registerActivity.decrypt(snapshot.child("password").getValue().toString());
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+                                        final String decryptedPassword = password[0];
+                                        if (pw.equalsIgnoreCase(decryptedPassword)) {
+                                            String role = snapshot.child("userType").getValue().toString();
+                                            String id = snapshot.child("userID").getValue().toString();
+                                            if (role.equalsIgnoreCase("customer")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                                break;
+                                            } else if (role.equalsIgnoreCase("seller")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
+                                                break;
+                                            } else if (role.equalsIgnoreCase("admin")) {
+                                                //Directing user to their main screen
+                                                prefs.edit().putString("userID", id).apply();
+                                                startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
+                                                break;
+                                            }
+                                        } else {
+                                            if (counter == 0) {
+                                                String newPW = resetPWActivity.autoGeneratePassword(8);
+                                                resetPWActivity.resetPW(email, newPW);
+                                                resetPWActivity.sendMail(email, newPW);
+                                                startActivity(new Intent(loginActivity.this, loginActivity.class));
+                                                break;
+                                            } else if (counter > 0) {
+                                                toast = Toast.makeText(loginActivity.this, "Login Failed. You have " + counter + " left.", Toast.LENGTH_SHORT);
+                                                toast.show();
+                                                counter--;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
+                                if (!foundEmail) {
+                                    toast = Toast.makeText(loginActivity.this, "Invalid Email or Password", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            }
                             @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
                         });
                     }
                 }
