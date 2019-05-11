@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
-import com.example.fyptest.fragments.AddProductFragment;
 import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -14,6 +14,7 @@ import com.example.fyptest.R;
 import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.sellerInfoClass;
 import com.example.fyptest.database.userClass;
+import com.example.fyptest.resetPWActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,7 +72,6 @@ public class AddSellerFragment extends Fragment {
                 if (result) {
                     final String checkMail = email, checkName = sellerName, checkContact = contact;
                     DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("User");
-                    DatabaseReference sellerInfoDB = FirebaseDatabase.getInstance().getReference("Seller Information");
 
                     userDB.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -124,6 +124,8 @@ public class AddSellerFragment extends Fragment {
 
         userDB.child(userID).setValue(userClass);
         sellerInfoDB.child(userID).setValue(sellerInfoClass);
+
+        resetPWActivity.sendMail(addEmail, pw);
     }
 
     private static boolean checkNull(EditText editText) {

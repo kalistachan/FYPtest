@@ -113,7 +113,7 @@ public class resetPWActivity extends AppCompatActivity {
             public void run() {
                 try {
                     GMailSender sender = new GMailSender("fourgroupbuying@gmail.com", "password4gb");
-                    sender.sendMail("Your password has been reset",
+                    sender.sendMail("A new password for your 4GB account had been generated",
                             "Your new password is : " + resetPW,
                             "fourgroupbuying@gmail.com", email);
                 } catch (Exception e) {

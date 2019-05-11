@@ -1,4 +1,4 @@
-package com.example.fyptest.fragments;
+package com.example.fyptest.Seller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
