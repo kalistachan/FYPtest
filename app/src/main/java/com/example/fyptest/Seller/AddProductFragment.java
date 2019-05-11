@@ -203,7 +203,6 @@ public class AddProductFragment extends Fragment {
                 }
             });
         }
-
         else if (arguments.getString("ProdID") == null) {
             buttonAddProduct.setText("Add");
             buttonCancelProduct.setText("Cancel");
@@ -494,8 +493,8 @@ public class AddProductFragment extends Fragment {
                                             pro_image.setValue(imageUrl);
 
                                             if (!pro_name.isEmpty()) {
-                                                DatabaseReference pro_name = dbProduct.child("pro_name");
-                                                pro_name.setValue(pro_name);
+                                                DatabaseReference pro_na = dbProduct.child("pro_name");
+                                                pro_na.setValue(pro_name);
                                             }
 
                                             if (!pro_description.isEmpty()) {
@@ -534,12 +533,12 @@ public class AddProductFragment extends Fragment {
                                             }
 
                                             if(!pro_shippingCost.isEmpty()) {
-                                                DatabaseReference pro_shippingCost = dbProduct.child("pro_shippingCost");
-                                                pro_shippingCost.setValue(pro_shippingCost);
+                                                DatabaseReference pro_shipCost = dbProduct.child("pro_shippingCost");
+                                                pro_shipCost.setValue(pro_shippingCost);
                                             }
 
-                                            DatabaseReference pro_productType = dbProduct.child("pro_productType");
-                                            pro_productType.setValue(pro_productType);
+                                            DatabaseReference pro_Type = dbProduct.child("pro_productType");
+                                            pro_Type.setValue(pro_productType);
 
                                             if (!pro_freeShippingAt.isEmpty()) {
                                                 DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
