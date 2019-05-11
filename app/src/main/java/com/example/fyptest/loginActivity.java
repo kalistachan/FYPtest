@@ -86,12 +86,11 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                                 if (pw.equals(registerActivity.decrypt(snapshot.child("password").getValue().toString()))) {
                                                     String role = snapshot.child("userType").getValue().toString();
                                                     String id = snapshot.child("userID").getValue().toString();
-                                                    if (role.equals("customer")) {
+                                                    if (role.equalsIgnoreCase("customer")) {
                                                         //Directing user to their main screen
-                                                        toast.cancel();
                                                         prefs.edit().putString("userID", id).apply();
                                                         startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                                    } else if (role.equals("seller")) {
+                                                    } else if (role.equalsIgnoreCase("seller")) {
                                                         //Directing user to their main screen
                                                         prefs.edit().putString("userID", id).apply();
                                                         startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
