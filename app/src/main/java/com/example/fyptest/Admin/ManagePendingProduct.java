@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -145,6 +146,7 @@ public class ManagePendingProduct extends Fragment {
             @Override
             public void onClick(View v) {
                 approvePendingProduct(prodID);
+                navigateAdminMain();
             }
         });
 
@@ -152,6 +154,8 @@ public class ManagePendingProduct extends Fragment {
             @Override
             public void onClick(View v) {
                 rejectPendingProduct(prodID);
+                arguments.clear();
+                navigateAdminMain();
             }
         });
     }
@@ -164,35 +168,44 @@ public class ManagePendingProduct extends Fragment {
         }
     }
 
+    private void navigateAdminMain() {
+        Fragment newFragment = new AdminMainFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private void fillAddProdContent() {
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-        dbProduct.addValueEventListener(new ValueEventListener() {
+        dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("12345", dataSnapshot.getValue().toString());
-                Picasso.get()
-                        .load(dataSnapshot.child("pro_mImageUrl").getValue().toString())
-                        .into(imgView);
-                editProductName.setText(dataSnapshot.child("pro_name").getValue().toString());
-                setSpinText(productType, dataSnapshot.child("pro_productType").getValue().toString());
-                duration.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
-                editTextProdDesc.setText(dataSnapshot.child("pro_description").getValue().toString());
-                editTextTQ.setText(dataSnapshot.child("pro_targetQuantity").getValue().toString());
-                editProductPrice.setText(dataSnapshot.child("pro_retailPrice").getValue().toString());
-                maxDis.setText(dataSnapshot.child("pro_maxOrderDiscount").getValue().toString());
-                minTar.setText(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
-                minDis.setText(dataSnapshot.child("pro_minOrderDiscount").getValue().toString());
-                String shipCost = "$" + dataSnapshot.child("pro_shippingCost").getValue().toString();
-                editTextShipCost.setText(shipCost);
+                if (dataSnapshot.child("pro_Status").getValue().toString().equalsIgnoreCase("pending")) {
+                    Picasso.get()
+                            .load(dataSnapshot.child("pro_mImageUrl").getValue().toString())
+                            .into(imgView);
+                    editProductName.setText(dataSnapshot.child("pro_name").getValue().toString());
+                    setSpinText(productType, dataSnapshot.child("pro_productType").getValue().toString());
+                    duration.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
+                    editTextProdDesc.setText(dataSnapshot.child("pro_description").getValue().toString());
+                    editTextTQ.setText(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                    editProductPrice.setText(dataSnapshot.child("pro_retailPrice").getValue().toString());
+                    maxDis.setText(dataSnapshot.child("pro_maxOrderDiscount").getValue().toString());
+                    minTar.setText(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
+                    minDis.setText(dataSnapshot.child("pro_minOrderDiscount").getValue().toString());
+                    String shipCost = "$" + dataSnapshot.child("pro_shippingCost").getValue().toString();
+                    editTextShipCost.setText(shipCost);
 
-                productType.setEnabled(false);
+                    productType.setEnabled(false);
 
-                if (dataSnapshot.hasChild("pro_freeShippingAt")) {
-                    String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
-                    checkBoxFreeShipment.setChecked(true);
-                    editTextFreeShipCondition.setText(freeShipping);
-                } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
-                    checkBoxFreeShipment.setChecked(false);
+                    if (dataSnapshot.hasChild("pro_freeShippingAt")) {
+                        String freeShipping = "$" + dataSnapshot.child("pro_freeShippingAt").getValue().toString();
+                        checkBoxFreeShipment.setChecked(true);
+                        editTextFreeShipCondition.setText(freeShipping);
+                    } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
+                        checkBoxFreeShipment.setChecked(false);
+                    }
                 }
             }
             @Override
