@@ -218,44 +218,60 @@
             android:id="@+id/originalTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:foreground="@drawable/red_line"
             android:gravity="end"
             android:textColor="@color/black"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/pv_original"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/durationTV" />
+            app:layout_constraintTop_toTopOf="@+id/pv_original" />
+
+        <TextView
+            android:id="@+id/textView41"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/pv_discount_1"
+            app:layout_constraintEnd_toStartOf="@+id/dc1TV"
+            app:layout_constraintTop_toTopOf="@+id/pv_discount_1" />
 
         <TextView
             android:id="@+id/dc1TV"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="end"
-            android:text="TextView"
+            android:text="0.00"
             android:textColor="@color/black"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/pv_discount_1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pv_discount_1"
-            app:layout_constraintTop_toBottomOf="@+id/originalTV" />
+            app:layout_constraintTop_toTopOf="@+id/pv_discount_1" />
+
+        <TextView
+            android:id="@+id/textView40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/pv_discount_2"
+            app:layout_constraintEnd_toStartOf="@+id/dc2TV"
+            app:layout_constraintTop_toTopOf="@+id/pv_discount_2" />
 
         <TextView
             android:id="@+id/dc2TV"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="23dp"
             android:layout_marginEnd="8dp"
             android:gravity="end"
-            android:text="TextView"
+            android:text="0.00"
             android:textColor="@color/black"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/pv_discount_2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/pv_discount_2"
-            app:layout_constraintTop_toBottomOf="@+id/dc1TV" />
+            app:layout_constraintTop_toTopOf="@+id/pv_discount_2" />
 
 
         <View
