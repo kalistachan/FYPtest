@@ -344,19 +344,21 @@ public class ProductListingFragment extends Fragment {
                         }
 
                         if (finalCount == targetQty) {
-                            checkTotalQty.addListenerForSingleValueEvent(new ValueEventListener() {
+                            DatabaseReference groupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+                            groupDetail.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     MainActivity ma = new MainActivity();
+
+                                    Calendar c = Calendar.getInstance();
+                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                    String todayDate = df.format(c.getTime());
 
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                         String qtyOrdered = snapshot.child("gd_qty").getValue().toString();
 
-                                        Calendar c = Calendar.getInstance();
-                                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-                                        String todayDate = df.format(c.getTime());
-
+                                        Log.d("12345", "Checkout For Max");
 
                                         if (freeShipping != null) {
                                             float freeShipment = Float.parseFloat(freeShipping);
@@ -381,7 +383,11 @@ public class ProductListingFragment extends Fragment {
 
                                         }
                                     }
+                                    String Subject = "A group for your product has been checkout";
+                                    String Body = "Product group for " + productName + " has been checkout on " + todayDate;
+
                                     ma.dismissGroup(productID);
+                                    ma.emailSeller(productID, Subject, Body);
                                     //ma.removeProduct(productID);
                                 }
                                 @Override

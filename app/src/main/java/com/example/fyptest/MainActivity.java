@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
                     Calendar c = Calendar.getInstance();
                     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                     final String productID = snapshot.child("pg_pro_ID").getValue().toString();
-                    String endDate = snapshot.child("pg_dateEnd").getValue().toString();
+                    final String endDate = snapshot.child("pg_dateEnd").getValue().toString();
                     final String todayDate = df.format(c.getTime());
 
                     try {
@@ -486,6 +486,7 @@ public class MainActivity extends AppCompatActivity {
                     emailSeller(productID, Subject, Body);
 
                 } else if (counter >= minOrderQty && counter < maxOrderQty) {
+                    Log.d("12345", "CheckOut for Min Order");
                     checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee);
                 }
             }
@@ -524,15 +525,15 @@ public class MainActivity extends AppCompatActivity {
                             dismissGroupDetail(productID);
                         }
 
-                    } else {
+                    } else if (freeShipping == null){
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
                         dismissGroupDetail(productID);
                     }
                 }
                 dismissGroup(productID);
-                //removeProduct(productID);
                 emailSeller(productID, Subject, Body);
+                //removeProduct(productID);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -615,29 +616,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void emailSeller(final String ProductID, final String Subject, final String Body) {
+    public void emailSeller(final String ProductID, final String Subject, final String Body) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(ProductID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    final String sellerID = snapshot.child("pro_s_ID").getValue().toString();
-                    if (sellerID.equalsIgnoreCase(ProductID)) {
-                        DatabaseReference dbSellerInfo = FirebaseDatabase.getInstance().getReference("User").child(sellerID);
-                        dbSellerInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String sellerEmail = dataSnapshot.child("email").getValue().toString();
-                                resetPWActivity.sendMailRelatedToProduct(sellerEmail, Subject, Body);
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
+                final String sellerID = dataSnapshot.child("pro_s_ID").getValue().toString();
+                DatabaseReference dbSellerInfo = FirebaseDatabase.getInstance().getReference("User").child(sellerID);
+                dbSellerInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String sellerEmail = dataSnapshot.child("email").getValue().toString();
+                        resetPWActivity.sendMailRelatedToProduct(sellerEmail, Subject, Body);
                     }
-                    break;
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
