@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
                     String Body = "Product group for " + productName + " had been dismiss on " + today;
                     emailSeller(productID, Subject, Body);
 
-                } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter != maxOrderQty && counter > minOrderQty)) {
+                } else if (counter >= minOrderQty && counter < maxOrderQty) {
                     checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee);
                 }
             }

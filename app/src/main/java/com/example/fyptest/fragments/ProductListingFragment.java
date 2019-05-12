@@ -124,7 +124,7 @@ public class ProductListingFragment extends Fragment {
         dbGroupDetail.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
+                //if (dataSnapshot.hasChildren()) {
                     int counter = 0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
@@ -149,7 +149,7 @@ public class ProductListingFragment extends Fragment {
 
                         }
                     });
-                }
+                //}
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -320,7 +320,7 @@ public class ProductListingFragment extends Fragment {
 
     private void checkForCheckout(final String productID) {
         final DatabaseReference checkTotalQty = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
-        checkTotalQty.addValueEventListener(new ValueEventListener() {
+        checkTotalQty.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int counter = 0;
@@ -344,7 +344,7 @@ public class ProductListingFragment extends Fragment {
                         }
 
                         if (finalCount == targetQty) {
-                            checkTotalQty.addValueEventListener(new ValueEventListener() {
+                            checkTotalQty.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     MainActivity ma = new MainActivity();
