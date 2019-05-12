@@ -63,6 +63,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.security.auth.Subject;
+
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
@@ -473,8 +475,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int counter = 0;
+                String customerID = "";
+                String orderedQty = "";
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                    customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                    orderedQty = snapshot.child("gd_qty").getValue().toString();
                 }
                 if (counter < minOrderQty) {
                     sendNotification(productID, productName, today, "dismiss");
@@ -487,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (counter >= minOrderQty && counter < maxOrderQty) {
                     Log.d("12345", "CheckOut for Min Order");
-                    checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee);
+                    checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
                 }
             }
             @Override
@@ -497,49 +503,35 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice, final String freeShipping, final String shippingFee) {
-        DatabaseReference dbGD = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
-        dbGD.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String Subject = "A group for your product has been checkout";
-                String Body = "Product group for " + productName + " has been checkout on " + today;
+    private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice, final String freeShipping,
+                                  final String shippingFee, final String orderedQty, final String customerID) {
+        String Subject = "A group for your product has been checkout";
+        String Body = "Product group for " + productName + " has been checkout on " + today;
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
-                    final String orderedQty = snapshot.child("gd_qty").getValue().toString();
+        if (freeShipping != null) {
+            float freeShipment = Float.parseFloat(freeShipping);
+            float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
 
-                    if (freeShipping != null) {
-                        float freeShipment = Float.parseFloat(freeShipping);
-                        float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
+            if (netPrice >= freeShipment) {
+                String noShippingFee = "0";
+                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
+                sendNotification(productID, productName, today, "checkout");
+                dismissGroupDetail(productID);
 
-                        if (netPrice >= freeShipment) {
-                            String noShippingFee = "0";
-                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
-                            sendNotification(productID, productName, today, "checkout");
-                            dismissGroupDetail(productID);
-
-                        } else if (netPrice < freeShipment){
-                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                            sendNotification(productID, productName, today, "checkout");
-                            dismissGroupDetail(productID);
-                        }
-
-                    } else if (freeShipping == null){
-                        checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                        sendNotification(productID, productName, today, "checkout");
-                        dismissGroupDetail(productID);
-                    }
-                }
-                dismissGroup(productID);
-                emailSeller(productID, Subject, Body);
-                //removeProduct(productID);
+            } else if (netPrice < freeShipment){
+                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                sendNotification(productID, productName, today, "checkout");
+                dismissGroupDetail(productID);
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+        } else if (freeShipping == null){
+            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+            sendNotification(productID, productName, today, "checkout");
+            dismissGroupDetail(productID);
+        }
+        dismissGroup(productID);
+        emailSeller(productID, Subject, Body);
+        //removeProduct(productID);
     }
 
     public void dismissGroupDetail(final String productID) {
