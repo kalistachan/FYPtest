@@ -185,7 +185,7 @@ public class AddProductFragment extends Fragment {
 
                                 if (checkNull(duration)) {
                                     if (Integer.parseInt(duration.getText().toString()) < 4 || Integer.parseInt(duration.getText().toString()) > 30) {
-                                        duration.setError("Invalid Duration");
+                                        duration.setError("Between 4 to 30");
                                     } else {
                                         pro_durationForGroupPurchase = duration.getText().toString().trim();
                                     }
@@ -326,7 +326,7 @@ public class AddProductFragment extends Fragment {
         }
 
         //OnChangeListener to change MaxSellPrice & MinSellPrice as minDisc, maxDis & productPrice has change
-        if (!editProductPrice.getText().toString().equals("$0.00")) {
+        if (!editProductPrice.getText().toString().equals("0.00")) {
             maxDis.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -341,13 +341,13 @@ public class AddProductFragment extends Fragment {
                             float maxDisc = Float.parseFloat(text1) / value;
                             float maxSellPrice = retailPrice - (retailPrice * maxDisc);
                             String floatToString = String.format("%.2f", maxSellPrice);
-                            textViewMaxPrice.setText("$" + (floatToString));
+                            textViewMaxPrice.setText(floatToString);
                         } else {
-                            editProductPrice.setHint("$0.00");
-                            textViewMaxPrice.setText("$0.00");
+                            editProductPrice.setHint("0.00");
+                            textViewMaxPrice.setText("0.00");
                         }
                     } else {
-                        textViewMaxPrice.setText("$0.00");
+                        textViewMaxPrice.setText("0.00");
                         maxDis.setHint("100%");
                     }
                 }
@@ -367,15 +367,15 @@ public class AddProductFragment extends Fragment {
                             float retailPrice = Float.parseFloat(text2);
                             float value = 100;
                             float minDisc = Float.parseFloat(text1) / value;
-                            float maxSellPrice = retailPrice - retailPrice * minDisc;
-                            String floatToString = String.format("%.2f", maxSellPrice);
-                            textViewMinPrice.setText("$" + (floatToString));
+                            float minSellPrice = retailPrice - retailPrice * minDisc;
+                            String floatToString = String.format("%.2f", minSellPrice);
+                            textViewMinPrice.setText(floatToString);
                         } else {
-                            editProductPrice.setHint("$0.00");
-                            textViewMinPrice.setText("$0.00");
+                            editProductPrice.setHint("0.00");
+                            textViewMinPrice.setText("0.00");
                         }
                     } else {
-                        textViewMinPrice.setText("$0.00");
+                        textViewMinPrice.setText("0.00");
                         minDis.setHint("100%");
                     }
                 }
@@ -398,9 +398,9 @@ public class AddProductFragment extends Fragment {
                             float maxDisc = Float.parseFloat(maxDisText) / value;
                             float maxSellPrice = retailPrice - retailPrice * maxDisc;
                             String floatToString = String.format("%.2f", maxSellPrice);
-                            textViewMaxPrice.setText("$" + (floatToString));
+                            textViewMaxPrice.setText(floatToString);
                         } else {
-                            textViewMaxPrice.setText("$0.00");
+                            textViewMaxPrice.setText("0.00");
                         }
                         if (!TextUtils.isEmpty(minDisText)) {
                             float retailPrice = Float.parseFloat(retailPriceText);
@@ -408,13 +408,13 @@ public class AddProductFragment extends Fragment {
                             float minDisc = Float.parseFloat(minDisText) / value;
                             float minSellPrice = retailPrice - retailPrice * minDisc;
                             String floatToString = String.format("%.2f", minSellPrice);
-                            textViewMinPrice.setText("$" + (floatToString));
+                            textViewMinPrice.setText(floatToString);
                         } else {
-                            textViewMinPrice.setText("$0.00");
+                            textViewMinPrice.setText("0.00");
                         }
                     } else {
-                        textViewMaxPrice.setText("$0.00");
-                        textViewMinPrice.setText("$0.00");
+                        textViewMaxPrice.setText("0.00");
+                        textViewMinPrice.setText("0.00");
                     }
                 }
                 @Override

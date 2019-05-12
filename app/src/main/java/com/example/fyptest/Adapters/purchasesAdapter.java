@@ -100,7 +100,7 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
 //                            imageViewHolder.totalPaidPrice.setText(intToStringForfinalCost);
 //                        }
                         imageViewHolder.totalPaidPrice.setText("$" + intToStringForPrice);
-                        imageViewHolder.viewShippingFeePrice.setText("$" + Float.toString(oh_shippingFee));
+                        imageViewHolder.viewShippingFeePrice.setText("$" + String.format("%.2f",(oh_shippingFee)));
                         imageViewHolder.prodPriceViewName.setText("$" + productCheckoutPrice);
                         imageViewHolder.quantity.setText("x" + quantityPurchase);
                         imageViewHolder.orderStatusTextView.setText(snapshot.child("oh_os").getValue().toString());
