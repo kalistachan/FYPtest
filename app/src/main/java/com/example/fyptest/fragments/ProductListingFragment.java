@@ -54,7 +54,6 @@ public class ProductListingFragment extends Fragment {
     Context mContext;
     int qtyChosenVal;
     TextView qtyText;
-    Date pgDateCreated, gdJoinDate;
     boolean[] abc;
     SharedPreferences prefs;
     String userIdentity;
@@ -125,30 +124,32 @@ public class ProductListingFragment extends Fragment {
         dbGroupDetail.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int counter = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
-                }
-                final int finalCount = counter;
-                DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-                dbProduct.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
-                        int condition = target - finalCount;
-                        if (condition >= 10) {
-                            seek.setMax(10);
-                            qtyText.setText(seekMin + "/" + seek.getMax());
-                        } else if (condition < 10) {
-                            seek.setMax(condition);
-                            qtyText.setText(seekMin + "/" + seek.getMax());
+                if (dataSnapshot.hasChildren()) {
+                    int counter = 0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                    }
+                    final int finalCount = counter;
+                    DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                    dbProduct.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
+                            int condition = target - finalCount;
+                            if (condition >= 10) {
+                                seek.setMax(10);
+                                qtyText.setText(seekMin + "/" + seek.getMax());
+                            } else if (condition < 10) {
+                                seek.setMax(condition);
+                                qtyText.setText(seekMin + "/" + seek.getMax());
+                            }
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -189,6 +190,7 @@ public class ProductListingFragment extends Fragment {
                 setButtonToViewGroup(button, context);
                 if (option == 1) {
                     insertCustGroupDetails(prodID, gdCusID);
+                    removeNotification(gdCusID, prodID);
                     checkForCheckout(prodID);
                 } else if (option == 2) {
                     insertProductGroup(prodID);
@@ -301,6 +303,11 @@ public class ProductListingFragment extends Fragment {
         db.child(customerID).child(prodID).setValue(notificationClass);
     }
 
+    public static void removeNotification(final String customerID, final String productID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(productID);
+        db.removeValue();
+    }
+
     private void insertCustGroupDetails (final String prodGroupId, final String gdCusID) {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
@@ -340,6 +347,8 @@ public class ProductListingFragment extends Fragment {
                             checkTotalQty.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    MainActivity ma = new MainActivity();
+
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                         String qtyOrdered = snapshot.child("gd_qty").getValue().toString();
@@ -348,7 +357,6 @@ public class ProductListingFragment extends Fragment {
                                         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                                         String todayDate = df.format(c.getTime());
 
-                                        MainActivity ma = new MainActivity();
 
                                         if (freeShipping != null) {
                                             float freeShipment = Float.parseFloat(freeShipping);
@@ -359,26 +367,22 @@ public class ProductListingFragment extends Fragment {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, noShippingFee);
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
                                                 ma.dismissGroupDetail(productID);
-                                                ma.dismissGroup(productID);
-                                                ma.removeProduct(productID);
 
                                             } else {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
                                                 ma.dismissGroupDetail(productID);
-                                                ma.dismissGroup(productID);
-                                                ma.removeProduct(productID);
 
                                             }
                                         } else {
                                             ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                             ma.sendNotification(productID, productName, todayDate, "checkout");
                                             ma.dismissGroupDetail(productID);
-                                            ma.dismissGroup(productID);
-                                            ma.removeProduct(productID);
 
                                         }
                                     }
+                                    ma.dismissGroup(productID);
+                                    //ma.removeProduct(productID);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {

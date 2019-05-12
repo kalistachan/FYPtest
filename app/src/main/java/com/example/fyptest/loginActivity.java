@@ -114,8 +114,10 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                         } else {
                                             if (counter == 0) {
                                                 String newPW = resetPWActivity.autoGeneratePassword(8);
+                                                String emailSubject = "A new password for your 4GB account had been generated";
+                                                String emailBody = "Your new password is";
                                                 resetPWActivity.resetPW(email, newPW);
-                                                resetPWActivity.sendMail(email, newPW);
+                                                resetPWActivity.sendMail(email, newPW, emailSubject, emailBody);
                                                 startActivity(new Intent(loginActivity.this, loginActivity.class));
                                                 break;
                                             } else if (counter > 0) {

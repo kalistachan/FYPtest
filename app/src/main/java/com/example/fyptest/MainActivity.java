@@ -477,10 +477,13 @@ public class MainActivity extends AppCompatActivity {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                 }
                 if (counter < minOrderQty) {
-
                     sendNotification(productID, productName, today, "dismiss");
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
+                    removeProduct(productID);
+                    String Subject = "A group for your product had been dismissed";
+                    String Body = "Product group for " + productName + " had been dismiss on " + today;
+                    emailSeller(productID, Subject, Body);
 
                 } else if ((counter != maxOrderQty && counter == minOrderQty) || (counter != maxOrderQty && counter > minOrderQty)) {
                     checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee);
@@ -498,6 +501,9 @@ public class MainActivity extends AppCompatActivity {
         dbGD.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String Subject = "A group for your product has been checkout";
+                String Body = "Product group for " + productName + " has been checkout on " + today;
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                     final String orderedQty = snapshot.child("gd_qty").getValue().toString();
@@ -511,25 +517,22 @@ public class MainActivity extends AppCompatActivity {
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             dismissGroupDetail(productID);
-                            dismissGroup(productID);
-                            removeProduct(productID);
 
                         } else if (netPrice < freeShipment){
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             dismissGroupDetail(productID);
-                            dismissGroup(productID);
-                            removeProduct(productID);
                         }
 
                     } else {
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
                         dismissGroupDetail(productID);
-                        dismissGroup(productID);
-                        removeProduct(productID);
                     }
                 }
+                dismissGroup(productID);
+                //removeProduct(productID);
+                emailSeller(productID, Subject, Body);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -560,11 +563,25 @@ public class MainActivity extends AppCompatActivity {
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID,
                 oh_os_ID, orderQty, checkoutDate, orderedPrice, shippingCost);
         dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
-        addLoyaltyPoint(customerID, orderedPrice);
+        //addLoyaltyPoint(customerID, orderedPrice);
     }
 
-    private void addLoyaltyPoint(String customerID, String orderedPrice) {
+    private void addLoyaltyPoint(final String customerID, final String orderedPrice) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatabaseReference dbAddValue = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+                int loyaltyPoint = Integer.parseInt(dataSnapshot.getValue().toString());
+                int amountPaid = Integer.parseInt(orderedPrice);
+                loyaltyPoint = loyaltyPoint + amountPaid;
+                dbAddValue.setValue(loyaltyPoint);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         int loyaltyPoint = (int)Integer.parseInt(orderedPrice);
         db.setValue(loyaltyPoint);
 
@@ -589,6 +606,37 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     ProductListingFragment.sendNotification(productID, noti_Title, noti_Description, today, customerID);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void emailSeller(final String ProductID, final String Subject, final String Body) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(ProductID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final String sellerID = snapshot.child("pro_s_ID").getValue().toString();
+                    if (sellerID.equalsIgnoreCase(ProductID)) {
+                        DatabaseReference dbSellerInfo = FirebaseDatabase.getInstance().getReference("User").child(sellerID);
+                        dbSellerInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String sellerEmail = dataSnapshot.child("email").getValue().toString();
+                                resetPWActivity.sendMailRelatedToProduct(sellerEmail, Subject, Body);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                    break;
                 }
             }
             @Override

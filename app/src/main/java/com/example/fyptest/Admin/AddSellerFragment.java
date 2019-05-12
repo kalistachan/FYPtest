@@ -125,7 +125,9 @@ public class AddSellerFragment extends Fragment {
         userDB.child(userID).setValue(userClass);
         sellerInfoDB.child(userID).setValue(sellerInfoClass);
 
-        resetPWActivity.sendMail(addEmail, pw);
+        String emailSubject = "A new password for your 4GB account had been generated";
+        String emailBody = "Your new password is";
+        resetPWActivity.sendMail(addEmail, pw, emailSubject, emailBody);
     }
 
     private static boolean checkNull(EditText editText) {

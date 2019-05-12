@@ -48,8 +48,10 @@ public class resetPWActivity extends AppCompatActivity {
                 if (checkNull(enteredEmail)) {
                     String emailString = enteredEmail.getText().toString().trim();
                     String newPW = autoGeneratePassword(8);
+                    String emailSubject = "A new password for your 4GB account had been generated";
+                    String emailBody = "Your new password is";
                     resetPW(emailString, newPW);
-                    sendMail(emailString, newPW);
+                    sendMail(emailString, newPW, emailSubject, emailBody);
                     startActivity(new Intent(resetPWActivity.this, loginActivity.class).putExtra("IntentSource", "pwReset"));
                 }
             }
@@ -107,15 +109,31 @@ public class resetPWActivity extends AppCompatActivity {
         }
     }
 
-    public static void sendMail(final String email,final String resetPW) {
+    public static void sendMail(final String email,final String resetPW, final String Subject, final String body) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     GMailSender sender = new GMailSender("fourgroupbuying@gmail.com", "password4gb");
-                    sender.sendMail("A new password for your 4GB account had been generated",
-                            "Your new password is : " + resetPW,
+                    sender.sendMail(Subject,
+                            body + " : " + resetPW,
                             "fourgroupbuying@gmail.com", email);
+                } catch (Exception e) {
+                    Log.e("SendMail", e.getMessage(), e);
+                }
+            }
+        }).start();
+    }
+
+    public static void sendMailRelatedToProduct(final String Recipient, final String Subject, final String Body) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    GMailSender sender = new GMailSender("fourgroupbuying@gmail.com", "password4gb");
+                    sender.sendMail(Subject,
+                            Body,
+                            "fourgroupbuying@gmail.com", Recipient);
                 } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
                 }
