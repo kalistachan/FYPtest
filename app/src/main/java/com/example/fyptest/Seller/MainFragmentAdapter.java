@@ -154,7 +154,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         db.removeValue();
     }
 
-    private void swapToProductView(Context mContext, String prodID) {
+    public void swapToProductView(Context mContext, String prodID) {
         Activity activity = (FragmentActivity) mContext;
         AddProductFragment AddProductFragment = new AddProductFragment();
         Bundle arguments = new Bundle();

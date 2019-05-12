@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,12 +17,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -37,6 +40,7 @@ import com.example.fyptest.R;
 import com.example.fyptest.Seller.MainFragmentAdapter;
 import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.fragments.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +58,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -117,6 +123,24 @@ public class AddProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filePath =  chooseImage();
+            }
+        });
+
+        checkBoxFreeShipment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    editTextFreeShipCondition.setEnabled(true);
+                } else {
+                    editTextFreeShipCondition.setEnabled(false);
+                }
+            }
+        });
+
         if (arguments.getString("ProdID") != null) {
             final String productID = arguments.getString("ProdID");
             fillAddProdContent();
@@ -128,6 +152,19 @@ public class AddProductFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.hasChildren()) {
+                        EditText[] editTexts = new EditText[]{editProductName, editProductPrice, duration, maxDis, minTar, minDis,
+                                editTextShipCost, editTextFreeShipCondition, editTextTQ, editTextProdDesc};
+
+                        for (EditText item : editTexts) {
+                            item.setInputType(0);
+                            item.setTextIsSelectable(true);
+                            item.setFocusable(false);
+                        }
+
+                        checkBoxFreeShipment.setClickable(false);
+                        imgView.setClickable(false);
+                        productType.setEnabled(false);
+
                         buttonAddProduct.setEnabled(false);
                         buttonCancelProduct.setEnabled(false);
                     } else {
@@ -203,21 +240,12 @@ public class AddProductFragment extends Fragment {
                 }
             });
         }
+
         else if (arguments.getString("ProdID") == null) {
             buttonAddProduct.setText("Add");
             buttonCancelProduct.setText("Cancel");
 
             editTextFreeShipCondition.setEnabled(false);
-            checkBoxFreeShipment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        editTextFreeShipCondition.setEnabled(true);
-                    } else {
-                        editTextFreeShipCondition.setEnabled(false);
-                    }
-                }
-            });
 
             buttonAddProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -268,10 +296,18 @@ public class AddProductFragment extends Fragment {
                             pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
                             pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
 
-                    if (result && checkNull) {
-                        addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
-                                pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
-                                pro_productType, pro_s_ID, pro_targetQuantity);
+                    if (checkBoxFreeShipment.isChecked()) {
+                        if (result && checkNull) {
+                            addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
+                                    pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
+                                    pro_productType, pro_s_ID, pro_targetQuantity);
+                        }
+                    } else if (!checkBoxFreeShipment.isChecked()) {
+                        if (result) {
+                            addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
+                                    pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
+                                    pro_productType, pro_s_ID, pro_targetQuantity);
+                        }
                     }
 
                 }
@@ -289,6 +325,7 @@ public class AddProductFragment extends Fragment {
             });
         }
 
+        //OnChangeListener to change MaxSellPrice & MinSellPrice as minDisc, maxDis & productPrice has change
         if (!editProductPrice.getText().toString().equals("$0.00")) {
             maxDis.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -384,13 +421,6 @@ public class AddProductFragment extends Fragment {
                 public void afterTextChanged(Editable s) {}
             });
         }
-
-        imgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filePath =  chooseImage();
-            }
-        });
     }
 
     private void addProd (final String pro_name, final String pro_description, final String pro_retailPrice, final String pro_maxOrderQtySellPrice, final String pro_minOrderQtySellPrice,
@@ -400,6 +430,7 @@ public class AddProductFragment extends Fragment {
         storage= FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product");
+
         prodID = arguments.getString("ProdID");
         if (prodID == null) {
             prodId = databaseProduct.push().getKey();
@@ -465,142 +496,76 @@ public class AddProductFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            final DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-            dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                    String pro_image = dataSnapshot.child("pro_mImageUrl").getValue().toString();
-                    if(filePath != null) {
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-                        progressDialog.setTitle("Uploading...");
-                        progressDialog.show();
+        }
+        else if (prodID != null) {
+            if (filePath == null) {
+                String imagePath = imageUrl;
+                productClass productClass = new productClass(prodID, imagePath, pro_name, pro_description, pro_retailPrice,
+                        pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
+                        pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID, pro_targetQuantity);
 
-                        final StorageReference ref = storageReference.child("images/"+ prodID + "." + getFileExtension(filePath));
-                        final UploadTask uploadTask = ref.putFile(filePath);
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                db.setValue(productClass);
+            }
+            else if (filePath != null) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                //Remove Old filepath
+                StorageReference storageReference = storage.getReferenceFromUrl(imageUrl);
+                storageReference.delete();
+
+                final ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setTitle("Uploading...");
+                progressDialog.show();
+
+                final StorageReference ref = storageReference.child("images/"+ prodID + "." + getFileExtension(filePath));
+                final UploadTask uploadTask = ref.putFile(filePath);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                    @Override
-                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                        if (!task.isSuccessful()) {
-                                            throw task.getException();
-                                        }
-                                        // Continue with the task to get the download URL
-                                        return ref.getDownloadUrl();
-                                    }
-                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            progressDialog.dismiss();
-                                            imageUrl = task.getResult().toString();
-
-                                            DatabaseReference pro_image = dbProduct.child("pro_mImageUrl");
-                                            pro_image.setValue(imageUrl);
-                                        }
-                                    }
-                                });
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                // Continue with the task to get the download URL
+                                return ref.getDownloadUrl();
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                        .getTotalByteCount());
-                                progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    imageUrl = task.getResult().toString();
+
+                                    productClass productClass = new productClass(prodID, imageUrl, pro_name, pro_description, pro_retailPrice,
+                                            pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount,
+                                            pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy, pro_productType, pro_s_ID, pro_targetQuantity);
+
+                                    DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
+                                    db.setValue(productClass);
+                                }
                             }
                         });
-                    } else {
-                        if (pro_image == null) {
-                            Toast.makeText(getContext(), "No image chosen", Toast.LENGTH_SHORT).show();
-                        }
                     }
-
-                    if (!pro_name.isEmpty()) {
-                        DatabaseReference pro_na = dbProduct.child("pro_name");
-                        pro_na.setValue(pro_name);
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
-                    if (!pro_description.isEmpty()) {
-                        DatabaseReference pro_desc = dbProduct.child("pro_description");
-                        pro_desc.setValue(pro_description);
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                .getTotalByteCount());
+                        progressDialog.setMessage("Uploaded "+(int)progress+"%");
                     }
-
-                    if (!pro_retailPrice.isEmpty()) {
-                        DatabaseReference pro_rp = dbProduct.child("pro_retailPrice");
-                        pro_rp.setValue(pro_retailPrice);
-                    }
-
-                    if(!pro_maxOrderDiscount.isEmpty()) {
-                        DatabaseReference pro_mDisc = dbProduct.child("pro_maxOrderDiscount");
-                        pro_mDisc.setValue(pro_maxOrderDiscount);
-                    }
-
-                    if(!pro_minOrderAccepted.isEmpty()) {
-                        DatabaseReference pro_mOrder = dbProduct.child("pro_minOrderAccepted");
-                        pro_mOrder.setValue(pro_minOrderAccepted);
-                    }
-
-                    if(!pro_minOrderDiscount.isEmpty()) {
-                        DatabaseReference pro_mOrderDisc = dbProduct.child("pro_minOrderDiscount");
-                        pro_mOrderDisc.setValue(pro_minOrderDiscount);
-                    }
-
-                    if (!pro_durationForGroupPurchase.isEmpty()) {
-                        DatabaseReference pro_duration = dbProduct.child("pro_durationForGroupPurchase");
-                        pro_duration.setValue(pro_durationForGroupPurchase);
-                    }
-
-                    if (!pro_targetQuantity.isEmpty()) {
-                        DatabaseReference pro_tq = dbProduct.child("pro_targetQuantity");
-                        pro_tq.setValue(pro_targetQuantity);
-                    }
-
-                    if(!pro_shippingCost.isEmpty()) {
-                        DatabaseReference pro_shipCost = dbProduct.child("pro_shippingCost");
-                        pro_shipCost.setValue(pro_shippingCost);
-                    }
-
-                    DatabaseReference pro_Type = dbProduct.child("pro_productType");
-                    pro_Type.setValue(pro_productType);
-
-                    if (dataSnapshot.hasChild("pro_freeShippingAt")) {
-                        if (!pro_freeShippingAt.isEmpty()) {
-                            DatabaseReference pro_freeShip = dbProduct.child("pro_freeShippingAt");
-                            pro_freeShip.setValue(pro_freeShippingAt);
-                        }
-                    }
-
-                    DatabaseReference pro_maxSellPrice = dbProduct.child("pro_maxOrderQtySellPrice");
-                    pro_maxSellPrice.setValue(pro_maxOrderQtySellPrice);
-
-                    DatabaseReference pro_minSellPrice = dbProduct.child("pro_minOrderQtySellPrice");
-                    pro_minSellPrice.setValue(pro_minOrderQtySellPrice);
-
-                    //Redirecting user back to productListing Screen
-                    Fragment newFragment = new fragment_main();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, newFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-
-                    Toast.makeText(getContext(), "Product Successfully Updated", Toast.LENGTH_SHORT).show();
-
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {}
-            });
+                });
+            }
         }
-
-
     }
 
     public void setSpinText(Spinner spin, String text) {
@@ -676,20 +641,33 @@ public class AddProductFragment extends Fragment {
         dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String pro_description = dataSnapshot.child("pro_description").getValue().toString();
+                String pro_durationForGroupPurchase = dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString();
+                String pro_mImageUrl = dataSnapshot.child("pro_mImageUrl").getValue().toString();
+                String pro_maxOrderDiscount = dataSnapshot.child("pro_maxOrderDiscount").getValue().toString();
+                String pro_minOrderAccepted = dataSnapshot.child("pro_minOrderAccepted").getValue().toString();
+                String pro_minOrderDiscount = dataSnapshot.child("pro_minOrderDiscount").getValue().toString();
+                String pro_name = dataSnapshot.child("pro_name").getValue().toString();
+                String pro_productType = dataSnapshot.child("pro_productType").getValue().toString();
+                String pro_retailPrice = dataSnapshot.child("pro_retailPrice").getValue().toString();
+                String pro_shippingCost = dataSnapshot.child("pro_shippingCost").getValue().toString();
+                String pro_targetQuantity = dataSnapshot.child("pro_targetQuantity").getValue().toString();
+
+                imageUrl = pro_mImageUrl;
+
                 Picasso.get()
-                        .load(dataSnapshot.child("pro_mImageUrl").getValue().toString())
+                        .load(pro_mImageUrl)
                         .into(imgView);
-                editProductName.setText(dataSnapshot.child("pro_name").getValue().toString());
-                setSpinText(productType, dataSnapshot.child("pro_productType").getValue().toString());
-                duration.setText(dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString());
-                editTextProdDesc.setText(dataSnapshot.child("pro_description").getValue().toString());
-                editTextTQ.setText(dataSnapshot.child("pro_targetQuantity").getValue().toString());
-                editProductPrice.setText(dataSnapshot.child("pro_retailPrice").getValue().toString());
-                maxDis.setText(dataSnapshot.child("pro_maxOrderDiscount").getValue().toString());
-                minTar.setText(dataSnapshot.child("pro_minOrderAccepted").getValue().toString());
-                minDis.setText(dataSnapshot.child("pro_minOrderDiscount").getValue().toString());
-                String shipCost = dataSnapshot.child("pro_shippingCost").getValue().toString();
-                editTextShipCost.setText(shipCost);
+                editProductName.setText(pro_name);
+                setSpinText(productType, pro_productType);
+                duration.setText(pro_durationForGroupPurchase);
+                editTextProdDesc.setText(pro_description);
+                editTextTQ.setText(pro_targetQuantity);
+                editProductPrice.setText(pro_retailPrice);
+                maxDis.setText(pro_maxOrderDiscount);
+                minTar.setText(pro_minOrderAccepted);
+                minDis.setText(pro_minOrderDiscount);
+                editTextShipCost.setText(pro_shippingCost);
 
                 if (dataSnapshot.hasChild("pro_freeShippingAt")) {
                     String freeShipping = dataSnapshot.child("pro_freeShippingAt").getValue().toString();
@@ -698,12 +676,11 @@ public class AddProductFragment extends Fragment {
                     editTextFreeShipCondition.setText(freeShipping);
                 } else if (!dataSnapshot.hasChild("pro_freeShippingAt")) {
                     checkBoxFreeShipment.setChecked(false);
-                    editTextFreeShipCondition.setEnabled(true);
+                    editTextFreeShipCondition.setEnabled(false);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
-
 }

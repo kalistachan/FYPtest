@@ -161,15 +161,6 @@ public class registerActivity extends AppCompatActivity {
                     cus_postalCode = inputPostalCode.getText().toString();
                 }
 
-//                if (checkLength(inputCCNum,16,16)) {
-//                    ccnum = inputCCNum.getText().toString().trim();
-//                    if (ProfileFragment.isCCValid(Long.parseLong(ccnum))) {
-//                        ccnum = inputCCNum.getText().toString().trim();
-//                    } else {
-//                        inputCCNum.setError("Invalid credit card number");
-//                    }
-//                }
-
                 if (ProfileFragment.isCCValid(Long.parseLong(inputCCNum.getText().toString().trim()))) {
                     ccnum = inputCCNum.getText().toString().trim();
                 } else {
