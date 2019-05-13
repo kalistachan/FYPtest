@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.color.colorPrimaryDark)
                 .withSelectionListEnabledForSingleProfile(false)
+                .withTextColor(Color.parseColor("black"))
                 .build();
         //account_header
         getCusName(id);
@@ -486,13 +487,12 @@ public class MainActivity extends AppCompatActivity {
                     sendNotification(productID, productName, today, "dismiss");
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
-                    removeProduct(productID);
+                    //removeProduct(productID);
                     String Subject = "A group for your product had been dismissed";
                     String Body = "Product group for " + productName + " had been dismiss on " + today;
                     emailSeller(productID, Subject, Body);
 
                 } else if (counter >= minOrderQty && counter < maxOrderQty) {
-                    Log.d("12345", "CheckOut for Min Order");
                     checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
                 }
             }
@@ -503,8 +503,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice, final String freeShipping,
-                                  final String shippingFee, final String orderedQty, final String customerID) {
+    private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice,
+                                  final String freeShipping, final String shippingFee, final String orderedQty, final String customerID) {
         String Subject = "A group for your product has been checkout";
         String Body = "Product group for " + productName + " has been checkout on " + today;
 
@@ -524,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
                 dismissGroupDetail(productID);
             }
 
-        } else if (freeShipping == null){
+        } else {
             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
             sendNotification(productID, productName, today, "checkout");
             dismissGroupDetail(productID);
@@ -550,34 +550,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
-        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History");
+        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
-        String oh_os_ID = "processing";
-        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID,
-                oh_os_ID, orderQty, checkoutDate, orderedPrice, shippingCost);
-        dbOrderHistory.child(customerID).child(oh_ID).setValue(orderHistoryClass);
-        //addLoyaltyPoint(customerID, orderedPrice);
+        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+        dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
+        addLoyaltyPoint(customerID, orderedPrice, orderQty);
     }
 
-    private void addLoyaltyPoint(final String customerID, final String orderedPrice) {
+    private void addLoyaltyPoint(final String customerID, final String orderedPrice, final int orderQty) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DatabaseReference dbAddValue = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+                DatabaseReference updateLoyaltyPoint = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
                 int loyaltyPoint = Integer.parseInt(dataSnapshot.getValue().toString());
-                int amountPaid = Integer.parseInt(orderedPrice);
-                loyaltyPoint = loyaltyPoint + amountPaid;
-                dbAddValue.setValue(loyaltyPoint);
+                double qty = orderQty;
+                double amountPaid = Double.parseDouble(orderedPrice) * qty;
+                int calculateLoyaltyPointEarn = (int)amountPaid;
+                loyaltyPoint = loyaltyPoint + calculateLoyaltyPointEarn;
+                updateLoyaltyPoint.setValue(loyaltyPoint);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-        int loyaltyPoint = (int)Integer.parseInt(orderedPrice);
-        db.setValue(loyaltyPoint);
-
     }
 
     public void sendNotification (final String productID, final String productName, final String today, final String condition){
@@ -594,8 +591,8 @@ public class MainActivity extends AppCompatActivity {
                         noti_Title = "A group you are in has been dismissed";
                         noti_Description = "Product group for " + productName + " has been dismiss at " + today + " due to insufficient order";
                     } else if (condition.equalsIgnoreCase("checkout")) {
-                        noti_Title = "A group you are in had been checkout";
-                        noti_Description = "Product group for " + productName + " had been checkout at " + today;
+                        noti_Title = "A group you are in has been checkout";
+                        noti_Description = "Product group for " + productName + " has been checkout on " + today;
                     }
 
                     ProductListingFragment.sendNotification(productID, noti_Title, noti_Description, today, customerID);
@@ -634,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void blacklistCard(String cardID) {
+    private void blacklistCard(String cardID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
         String bcc_ID = db.push().getKey();
 
@@ -644,5 +641,9 @@ public class MainActivity extends AppCompatActivity {
 
         blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardID);
         db.child(cardID).setValue(blacklistedCreditCardClass);
+    }
+
+    private void payWithLoyaltyPoint(final String customerID) {
+
     }
 }

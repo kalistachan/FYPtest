@@ -41,7 +41,8 @@
                 android:padding="6dp"
                 android:text="Email:"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -58,7 +59,8 @@
                 android:inputType="textEmailAddress"
                 android:padding="6dp"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,7 +80,8 @@
                 android:padding="6dp"
                 android:text="Password:"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -95,20 +98,22 @@
                 android:inputType="textPassword"
                 android:padding="6dp"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText,RtlHardcoded" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
             android:gravity="end"
             android:text="Forgot your password?"
             android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:ignore="HardcodedText,RtlHardcoded" />
 
         <Button
             android:id="@+id/buttonLogin"
@@ -121,7 +126,8 @@
             android:background="@drawable/orangebuttons"
             android:gravity="center"
             android:text="Login"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/buttonRegister"
@@ -134,7 +140,8 @@
             android:background="@drawable/orangebuttons"
             android:gravity="center"
             android:text="Register Now"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

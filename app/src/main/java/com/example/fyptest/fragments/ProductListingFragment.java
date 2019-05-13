@@ -121,7 +121,7 @@ public class ProductListingFragment extends Fragment {
         final SeekBar seek = new SeekBar(context);
 
         DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
-        dbGroupDetail.addValueEventListener(new ValueEventListener() {
+        dbGroupDetail.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //if (dataSnapshot.hasChildren()) {
@@ -131,7 +131,7 @@ public class ProductListingFragment extends Fragment {
                     }
                     final int finalCount = counter;
                     DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-                    dbProduct.addValueEventListener(new ValueEventListener() {
+                    dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
@@ -357,8 +357,6 @@ public class ProductListingFragment extends Fragment {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                         String qtyOrdered = snapshot.child("gd_qty").getValue().toString();
-
-                                        Log.d("12345", "Checkout For Max");
 
                                         if (freeShipping != null) {
                                             float freeShipment = Float.parseFloat(freeShipping);
