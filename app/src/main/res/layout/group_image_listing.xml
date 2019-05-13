@@ -80,6 +80,7 @@
         android:id="@+id/groupbtn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/orangebuttons"
@@ -89,7 +90,8 @@
         android:text="Leave Group"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
 
 
 </android.support.constraint.ConstraintLayout>

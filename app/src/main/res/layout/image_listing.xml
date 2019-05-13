@@ -89,7 +89,9 @@
         android:text="Button 1"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/btn2"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prodNameViewName"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btn2"
