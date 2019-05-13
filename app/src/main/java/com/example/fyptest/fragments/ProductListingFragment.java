@@ -420,8 +420,8 @@ public class ProductListingFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild(ccID)) {
-                            button.setVisibility(View.INVISIBLE);
-
+//                            button.setVisibility(View.INVISIBLE);
+                            button.setEnabled(false);
                             DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
                             db.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
