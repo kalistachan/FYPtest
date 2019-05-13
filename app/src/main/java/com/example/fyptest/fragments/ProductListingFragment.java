@@ -421,6 +421,29 @@ public class ProductListingFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild(ccID)) {
                             button.setVisibility(View.INVISIBLE);
+
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+                            db.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                                            Log.d("12345", Boolean.toString(snapshotAgain.hasChild(userID)));
+                                            if (snapshotAgain.hasChild(userID)) {
+                                                String productID = snapshot.child("gd_pg_pro_ID").getValue().toString();
+                                                String groupID = snapshot.child("gd_ID").getValue().toString();
+                                                DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupID);
+                                                dbGroupDetail.removeValue();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
                     @Override
