@@ -163,8 +163,8 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         float fRetailPrice = Float.parseFloat(retailPrice);
         float value = 100;
         float fMinDisc = Float.parseFloat(minDisc) / value;
-        float minSellPrice = fRetailPrice * fMinDisc;
-        String floatToStringMinPrice = "S$" + Float.toString(minSellPrice);
+        float minSellPrice = fRetailPrice - (fRetailPrice * fMinDisc);
+        String floatToStringMinPrice = String.format("%.2f",(minSellPrice));
         return floatToStringMinPrice;
     }
 

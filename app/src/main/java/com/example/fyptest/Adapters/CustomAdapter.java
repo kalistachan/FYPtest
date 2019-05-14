@@ -55,6 +55,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView prodTextName;
         TextView prodTextPrice;
+        TextView prodTextRetail;
         ImageView imageView;
         Button grpBtn;
         Button watchBtn;
@@ -64,6 +65,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
 
             this.prodTextName = itemView.findViewById(R.id.prodNameViewName);
             this.prodTextPrice = itemView.findViewById(R.id.prodPriceViewName);
+            this.prodTextRetail = itemView.findViewById(R.id.prodRetail);
             this.imageView = itemView.findViewById(R.id.image_view_upload);
             this.grpBtn = itemView.findViewById(R.id.btn1);
             this.watchBtn = itemView.findViewById(R.id.btn2);
@@ -96,7 +98,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         holder.prodTextName.setText(prodName);
-        holder.prodTextPrice.setText(uploadCurrent.getPro_maxOrderQtySellPrice());
+        holder.prodTextPrice.setText("$" + (uploadCurrent.getPro_maxOrderQtySellPrice()));
+        holder.prodTextRetail.setText("$" + (uploadCurrent.getPro_retailPrice()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

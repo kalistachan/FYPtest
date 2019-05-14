@@ -72,6 +72,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         final String freeShipping = uploadCurrent.getPro_freeShippingAt();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
         final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
+        String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +80,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             }
         });
         viewHolder.prodNameViewName.setText(prodName);
-        viewHolder.prodPriceViewName.setText("$" + retailPrice);
+        viewHolder.prodPriceViewName.setText("$" + minPrice);
         viewHolder.shipPriceView.setText("$" + shippingFee);
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
@@ -124,6 +125,15 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
 
     private interface FirebaseCallback {
         void onCallback1(List<String> itemList);
+    }
+
+    private String getMinPrice(String retailPrice, String minDisc) {
+        float fRetailPrice = Float.parseFloat(retailPrice);
+        float value = 100;
+        float fMinDisc = Float.parseFloat(minDisc) / value;
+        float minSellPrice = fRetailPrice - (fRetailPrice * fMinDisc);
+        String floatToStringMinPrice = String.format("%.2f",(minSellPrice));
+        return floatToStringMinPrice;
     }
 
     private void readData (final watchListAdapter.FirebaseCallback firebaseCallback) {
