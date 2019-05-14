@@ -49,7 +49,7 @@
         android:layout_marginTop="14dp"
         android:gravity="start"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
 
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
         app:layout_constraintStart_toEndOf="@+id/prodRetail"
         app:layout_constraintTop_toTopOf="@+id/prodRetail"
@@ -73,7 +73,7 @@
         android:layout_marginTop="16dp"
         android:foreground="@drawable/red_line"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/targetQty" />
 
@@ -85,6 +85,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:textColor="@color/black"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
         app:layout_constraintTop_toBottomOf="@+id/prodRetail"
