@@ -103,7 +103,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         holder.prodTextName.setText(prodName);
         holder.prodTextPrice.setText("$" + (uploadCurrent.getPro_maxOrderQtySellPrice()));
         holder.prodTextRetail.setText("$" + (uploadCurrent.getPro_retailPrice()));
-        holder.targetQty.setText(uploadCurrent.getPro_targetQuantity());
+
         holder.timeRemain.setText(uploadCurrent.getPro_durationForGroupPurchase() + " days left");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +127,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             dbGroupDetail.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    int count = 0;
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        count = count + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                                         if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                             holder.grpBtn.setText("View Group");
                                             removeFromWatchList(prodID, userIdentity);
@@ -144,6 +146,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Join Group", 1, userIdentity, mContext);
                                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                                         }
+                                        double a = count * 0.9;
+                                        int i = (int)(a + 0.5);
+                                        String sCount = Integer.toString(count);
+                                        String construct = sCount + " / " + uploadCurrent.getPro_targetQuantity();
+                                        holder.targetQty.setText(construct);
                                     }
                                 }
                                 @Override
@@ -154,6 +161,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             });
                             break;
                         } else {
+                            holder.targetQty.setText("0 / " + uploadCurrent.getPro_targetQuantity());
                             pl.checkBlacklistedCard(holder.grpBtn, userIdentity);
                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);

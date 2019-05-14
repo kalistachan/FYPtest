@@ -73,7 +73,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
         app:layout_constraintStart_toEndOf="@+id/prodRetail"
-        app:layout_constraintTop_toTopOf="@+id/prodRetail" />
+        app:layout_constraintTop_toTopOf="@+id/prodRetail"  />
 
     <TextView
         android:id="@+id/timeRemain"
