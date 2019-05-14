@@ -82,6 +82,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         viewHolder.prodNameViewName.setText(prodName);
         viewHolder.prodRetail.setText("$" + retailPrice);
         viewHolder.prodPriceViewName.setText("$" + minPrice);
+        viewHolder.targetQty.setText(targetQty);
         viewHolder.timeRemain.setText((timeRemain) + " days left");
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
@@ -177,7 +178,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image_view_upload;
-        TextView prodNameViewName, prodPriceViewName, shipPriceView, timeRemain, prodRetail;
+        TextView prodNameViewName, prodPriceViewName, targetQty, timeRemain, prodRetail;
         Button btnRemove, btnAdd;
 
 
@@ -187,6 +188,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             image_view_upload = itemView.findViewById(R.id.image_view_upload);
             prodNameViewName = itemView.findViewById(R.id.prodNameViewName);
             prodPriceViewName = itemView.findViewById(R.id.prodPriceViewName);
+            targetQty = itemView.findViewById(R.id.targetQty);
             prodRetail = itemView.findViewById(R.id.prodRetail);
             timeRemain = itemView.findViewById(R.id.timeRemain);
             btnRemove = itemView.findViewById(R.id.btnRemove);
