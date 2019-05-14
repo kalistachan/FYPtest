@@ -5,8 +5,7 @@
     android:id="@+id/searchCriteriaLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/lightyellow"
-    android:paddingBottom="8dp">
+    android:background="@color/lightyellow">
 
     <TextView
         android:id="@+id/textViewCategory"
@@ -73,9 +72,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.SearchFragment"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="4dp">
+        tools:context=".fragments.SearchFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
