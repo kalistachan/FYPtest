@@ -70,7 +70,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         final String maxOrderQtySellPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
         final String shippingFee = uploadCurrent.getPro_shippingCost();
         final String freeShipping = uploadCurrent.getPro_freeShippingAt();
-        final String targetQty = uploadCurrent.getPro_targetQuantity();
+        final String targetQuantity = uploadCurrent.getPro_targetQuantity();
         final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         viewHolder.prodNameViewName.setText(prodName);
         viewHolder.prodRetail.setText("$" + retailPrice);
         viewHolder.prodPriceViewName.setText("$" + minPrice);
-        viewHolder.targetQty.setText(targetQty);
         viewHolder.timeRemain.setText((timeRemain) + " days left");
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
@@ -93,9 +92,27 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(List<String> itemList) {
+                DatabaseReference gpDetails = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+                gpDetails.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int counter = 0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                        }
+                        String buildText = Integer.toString(counter) + " / " + targetQuantity;
+
+                        viewHolder.targetQty.setText(buildText);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 if (!itemList.isEmpty()) {
                     for (String producdID : itemList) {
                         if (producdID.equalsIgnoreCase(prodID)) {
+
                             pl.checkBlacklistedCard(viewHolder.btnAdd, userIdentity);
                             setToCreateOrJoinGroup(viewHolder.btnAdd, prodID, prodName , "Join Group", 1, userIdentity, context, position);
                             break;
