@@ -8,7 +8,10 @@
     <color name="color4GBTheme">#E8DC0C</color>
     <color name="red">#d50000</color>
     <color name="green">#00c853</color>
-    <color name="orange">#EDC814</color>
+    <color name="orange">#FDC726</color>
+    <color name="darkorange">#D8A91D</color>
     <color name="white">#ffffff</color>
-    <color name="yellow">#D0E2D153</color>
+    <color name="yellow">#FAE531</color>
+    <color name="darkyellow">#D6C31B</color>
+
 </resources>

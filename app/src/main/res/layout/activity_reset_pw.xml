@@ -75,7 +75,7 @@
 
     <Button
         android:id="@+id/submit"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
@@ -91,7 +91,7 @@
 
     <Button
         android:id="@+id/back2login"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
