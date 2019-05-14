@@ -2,9 +2,11 @@ package com.example.fyptest.Seller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -41,6 +43,7 @@ import com.example.fyptest.Seller.MainFragmentAdapter;
 import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProfileFragment;
+import com.example.fyptest.registerActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -211,10 +214,13 @@ public class AddProductFragment extends Fragment {
                                         pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,
                                         pro_Status, pro_productType, pro_s_ID, pro_targetQuantity});
 
-                                if (result) {
+                                boolean confirmationDesc = confirmationDialog();
+                                if ((result) && confirmationDesc == true){
                                     addProd(pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice, pro_minOrderQtySellPrice, pro_maxOrderDiscount,
                                             pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_freeShippingAt, pro_durationForGroupPurchase, pro_Status, pro_aproveBy,
                                             pro_productType, pro_s_ID, pro_targetQuantity);
+                                } else if (confirmationDesc == false) {
+                                    fillAddProdContent();
                                 }
                             }
                         });
@@ -687,4 +693,30 @@ public class AddProductFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
+
+    private Boolean confirmationDialog() {
+        final boolean[] decision = new boolean[1];
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("Confirmation");
+        alert.setMessage("Are you sure you want to update your product details?");
+        alert.setIcon(android.R.drawable.ic_dialog_alert);
+        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                decision[0] = true;
+                dialog.dismiss();
+            }});
+        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                decision[0] = false;
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertdialog = alert.create();
+        alertdialog.show();
+
+        return decision[0];
+    }
+
 }
