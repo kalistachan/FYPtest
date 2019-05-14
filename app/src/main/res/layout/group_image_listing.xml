@@ -56,20 +56,21 @@
         android:id="@+id/prodPriceViewName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:gravity="start"
         android:textColor="@color/black"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView42"
-        app:layout_constraintStart_toEndOf="@+id/textView42"
-        app:layout_constraintTop_toTopOf="@+id/textView42" />
+        app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
+        app:layout_constraintStart_toEndOf="@+id/prodRetail"
+        app:layout_constraintTop_toTopOf="@+id/prodRetail" />
 
     <TextView
-        android:id="@+id/textView42"
+        android:id="@+id/prodRetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="$"
+        android:foreground="@drawable/red_line"
         android:textColor="@color/black"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"

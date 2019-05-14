@@ -56,6 +56,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         TextView prodTextName;
         TextView prodTextPrice;
         TextView prodTextRetail;
+        TextView targetQty;
+        TextView timeRemain;
         ImageView imageView;
         Button grpBtn;
         Button watchBtn;
@@ -66,10 +68,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             this.prodTextName = itemView.findViewById(R.id.prodNameViewName);
             this.prodTextPrice = itemView.findViewById(R.id.prodPriceViewName);
             this.prodTextRetail = itemView.findViewById(R.id.prodRetail);
+            this.targetQty = itemView.findViewById(R.id.targetQty);
+            this.timeRemain = itemView.findViewById(R.id.timeRemain);
             this.imageView = itemView.findViewById(R.id.image_view_upload);
             this.grpBtn = itemView.findViewById(R.id.btn1);
             this.watchBtn = itemView.findViewById(R.id.btn2);
-
         }
     }
 
@@ -100,6 +103,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         holder.prodTextName.setText(prodName);
         holder.prodTextPrice.setText("$" + (uploadCurrent.getPro_maxOrderQtySellPrice()));
         holder.prodTextRetail.setText("$" + (uploadCurrent.getPro_retailPrice()));
+        holder.targetQty.setText(uploadCurrent.getPro_targetQuantity());
+        holder.timeRemain.setText(uploadCurrent.getPro_durationForGroupPurchase() + " days left");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

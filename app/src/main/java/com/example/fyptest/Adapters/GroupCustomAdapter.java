@@ -70,9 +70,11 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         final String targetQty = uploadCurrent.getPro_targetQuantity();
+        String prodRetail = "$" + uploadCurrent.getPro_retailPrice();
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());
         holder.prodPriceView.setText(minPrice);
         holder.prodTextName.setText(prodName);
+        holder.prodRetailPrice.setText(prodRetail);
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
@@ -164,7 +166,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         float value = 100;
         float fMinDisc = Float.parseFloat(minDisc) / value;
         float minSellPrice = fRetailPrice - (fRetailPrice * fMinDisc);
-        String floatToStringMinPrice = String.format("%.2f",(minSellPrice));
+        String floatToStringMinPrice = "$" + String.format("%.2f",(minSellPrice));
         return floatToStringMinPrice;
     }
 
@@ -172,6 +174,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
         TextView prodTextName;
         TextView targetQty;
         TextView timeRemain;
+        TextView prodRetailPrice;
         ImageView imageView;
         TextView prodPriceView;
         Button leaveBtn;
@@ -185,6 +188,7 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
             imageView = itemView.findViewById(R.id.image_view_upload);
             prodPriceView = itemView.findViewById(R.id.prodPriceViewName);
             leaveBtn = itemView.findViewById(R.id.groupbtn1);
+            prodRetailPrice = itemView.findViewById(R.id.prodRetail);
 
         }
     }
