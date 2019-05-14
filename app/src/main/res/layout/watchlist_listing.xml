@@ -42,11 +42,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/targetQty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="14dp"
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/prodNameViewName" />
+
+    <TextView
         android:id="@+id/prodPriceViewName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="$0.00"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
@@ -59,35 +70,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:foreground="@drawable/red_line"
+        android:textColor="@color/black"
         android:textSize="14sp"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/shippingFee"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload" />
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/targetQty" />
 
     <TextView
-        android:id="@+id/shipPriceView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="8dp"
-        android:text="$0.00"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/shippingFee"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/shippingFee"
+        android:id="@+id/timeRemain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Shipping Fee :"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintTop_toBottomOf="@+id/prodRetail"
         tools:ignore="HardcodedText,MissingConstraints" />
 
     <Button
