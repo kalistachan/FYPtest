@@ -342,6 +342,8 @@ public class AddProductFragment extends Fragment {
                             float maxSellPrice = retailPrice - (retailPrice * maxDisc);
                             String floatToString = String.format("%.2f", maxSellPrice);
                             textViewMaxPrice.setText(floatToString);
+                            String retailToString = String.format("%.2f", retailPrice);
+                            editProductPrice.setText(retailToString);
                         } else {
                             editProductPrice.setHint("0.00");
                             textViewMaxPrice.setText("0.00");
@@ -370,6 +372,8 @@ public class AddProductFragment extends Fragment {
                             float minSellPrice = retailPrice - retailPrice * minDisc;
                             String floatToString = String.format("%.2f", minSellPrice);
                             textViewMinPrice.setText(floatToString);
+                            String retailToString = String.format("%.2f", retailPrice);
+                            editProductPrice.setText(retailToString);
                         } else {
                             editProductPrice.setHint("0.00");
                             textViewMinPrice.setText("0.00");

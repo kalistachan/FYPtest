@@ -45,14 +45,26 @@
         android:id="@+id/prodPriceViewName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="4dp"
         android:text="$0.00"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/shippingFee"
-        app:layout_constraintStart_toEndOf="@+id/image_view_upload"
+        app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
+        app:layout_constraintStart_toEndOf="@+id/prodRetail"
+        app:layout_constraintTop_toTopOf="@+id/prodRetail"
         tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/prodRetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:foreground="@drawable/red_line"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/shippingFee"
+        app:layout_constraintStart_toEndOf="@+id/image_view_upload" />
 
     <TextView
         android:id="@+id/shipPriceView"

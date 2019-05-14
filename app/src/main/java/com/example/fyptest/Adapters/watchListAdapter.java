@@ -80,6 +80,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             }
         });
         viewHolder.prodNameViewName.setText(prodName);
+        viewHolder.prodRetail.setText("$" + retailPrice);
         viewHolder.prodPriceViewName.setText("$" + minPrice);
         viewHolder.shipPriceView.setText("$" + shippingFee);
         Picasso.get()
@@ -176,7 +177,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image_view_upload;
-        TextView prodNameViewName, prodPriceViewName, shipPriceView, shippingFee;
+        TextView prodNameViewName, prodPriceViewName, shipPriceView, shippingFee, prodRetail;
         Button btnRemove, btnAdd;
 
 
@@ -186,6 +187,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
             image_view_upload = itemView.findViewById(R.id.image_view_upload);
             prodNameViewName = itemView.findViewById(R.id.prodNameViewName);
             prodPriceViewName = itemView.findViewById(R.id.prodPriceViewName);
+            prodRetail = itemView.findViewById(R.id.prodRetail);
             shipPriceView = itemView.findViewById(R.id.shipPriceView);
             shippingFee = itemView.findViewById(R.id.shippingFee);
             btnRemove = itemView.findViewById(R.id.btnRemove);
