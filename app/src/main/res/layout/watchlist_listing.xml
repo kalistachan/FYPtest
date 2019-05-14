@@ -5,10 +5,12 @@
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/layoutborder"
-    android:layout_marginTop="1dp"
-    android:orientation="vertical"
-    tools:layout_editor_absoluteY="1dp">
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="4dp"
+    android:outlineProvider="bounds"
+    android:elevation="5dp"
+    android:background="@drawable/layoutborder">
 
     <ImageView
         android:id="@+id/image_view_upload"
@@ -97,11 +99,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/orangebuttons"
-        android:minHeight="30dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:minHeight="26dp"
         android:text="Group"
-        android:textSize="12sp"
+        android:textSize="10sp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/btnRemove"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="HardcodedText" />
@@ -113,11 +114,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/yellowbuttons"
-        android:minHeight="30sp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:minHeight="26sp"
+        android:elevation="10dp"
         android:text="Remove"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="HardcodedText" />

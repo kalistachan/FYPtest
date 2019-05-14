@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="1dp"
-    android:background="@drawable/layoutborder"
-    android:orientation="vertical">
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="4dp"
+    android:outlineProvider="bounds"
+    android:elevation="5dp"
+    android:background="@drawable/layoutborder">
 
     <ImageView
         android:id="@+id/image_view_upload"
@@ -74,7 +76,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/prodRetail"
         app:layout_constraintStart_toEndOf="@+id/prodRetail"
-        app:layout_constraintTop_toTopOf="@+id/prodRetail"  />
+        app:layout_constraintTop_toTopOf="@+id/prodRetail" />
 
     <TextView
         android:id="@+id/timeRemain"
@@ -99,11 +101,9 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/orangebuttons"
         android:elevation="10dp"
-        android:minHeight="30dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:minHeight="26sp"
         android:text="Button 1"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/btn2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/prodNameViewName"
@@ -117,11 +117,9 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/yellowbuttons"
         android:elevation="10dp"
-        android:minHeight="30sp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:minHeight="26sp"
         android:text="Button 2"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="HardcodedText" />

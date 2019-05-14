@@ -87,7 +87,7 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                         String quantityPurchase = snapshot.child("oh_totalQuantity").getValue().toString();
                         float oh_shippingFee = Float.parseFloat(snapshot.child("oh_shippingFee").getValue().toString());
                         float amountPaid = (Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase)) + oh_shippingFee;
-                        String intToStringForPrice = Float.toString(amountPaid);
+                        String intToStringForPrice = String.format("%.2f", amountPaid);
 
 //                        if (amountPaid >= Float.parseFloat(freeShippingCondition)) {
 //                            String shippingFee = "$0.00";
@@ -105,7 +105,7 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                         imageViewHolder.quantity.setText("x" + quantityPurchase);
                         imageViewHolder.orderStatusTextView.setText(snapshot.child("oh_os").getValue().toString());
 
-                        if (!snapshot.child("oh_os").getValue().toString().equalsIgnoreCase("delivered")) {
+                        if (!snapshot.child("oh_os").getValue().toString().equalsIgnoreCase("Delivered")) {
                             imageViewHolder.lineBeforeBtn.setVisibility(View.GONE);
                             imageViewHolder.btnTrackOrder.setVisibility(View.GONE);
                         } else {
@@ -114,7 +114,7 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                                 @Override
                                 public void onClick(View v) {
                                     DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Order History").child(userIdentity).child(orderHistoryID).child("oh_os");
-                                    String oh_os = "completed";
+                                    String oh_os = "Completed";
                                     dbProduct.setValue(oh_os);
                                 }
                             });

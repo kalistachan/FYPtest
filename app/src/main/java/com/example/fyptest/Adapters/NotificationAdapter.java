@@ -57,7 +57,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         imageViewHolder.textViewTitle.setText(title);
         imageViewHolder.textViewContent.setText(content);
 
-        if (title.equalsIgnoreCase("A group has been created for the item in your Watchlist")) {
+        if (title.equalsIgnoreCase("A group was created for an item in your Watchlist")) {
             imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

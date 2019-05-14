@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
                 String productName = dataSnapshot.child("pro_name").getValue().toString();
                 NotificationManager notify = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 Notification popUp = new Notification.Builder(context)
-                        .setContentText("A product group for your watchlist item, " + productName + ", had been created!")
+                        .setContentText("A group for your Watchlist item ," + productName + ", was created!")
                         .setContentTitle("Join The Group Now!")
                         .setSmallIcon(R.drawable.ic_logo_v1)
                         .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
@@ -488,8 +488,8 @@ public class MainActivity extends AppCompatActivity {
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
                     //removeProduct(productID);
-                    String Subject = "A group for your product had been dismissed";
-                    String Body = "Product group for " + productName + " had been dismiss on " + today;
+                    String Subject = "A group you are currently in has been dismissed";
+                    String Body = "Product group for '" + productName + "' has been dismissed on " + today;
                     emailSeller(productID, Subject, Body);
 
                 } else if (counter >= minOrderQty && counter < maxOrderQty) {
@@ -505,8 +505,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice,
                                   final String freeShipping, final String shippingFee, final String orderedQty, final String customerID) {
-        String Subject = "A group for your product has been checkout";
-        String Body = "Product group for " + productName + " has been checkout on " + today;
+        String Subject = "Checkout successful for one of your groups";
+        String Body = "Checkout was successfully processed for '" + productName + "' on " + today;
 
         if (freeShipping != null) {
             float freeShipment = Float.parseFloat(freeShipping);
@@ -552,7 +552,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
-        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
         dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
         addLoyaltyPoint(customerID, orderedPrice, orderQty);
     }
@@ -588,11 +588,11 @@ public class MainActivity extends AppCompatActivity {
                     String noti_Title = "";
                     String noti_Description = "";
                     if (condition.equalsIgnoreCase("dismiss")) {
-                        noti_Title = "A group you are in has been dismissed";
-                        noti_Description = "Product group for " + productName + " has been dismiss at " + today + " due to insufficient order";
+                        noti_Title = "A group you are currently in has been dismissed";
+                        noti_Description = "Product group for '" + productName + "' has been dismissed on " + today + " due to insufficient order";
                     } else if (condition.equalsIgnoreCase("checkout")) {
-                        noti_Title = "A group you are in has been checkout";
-                        noti_Description = "Product group for " + productName + " has been checkout on " + today;
+                        noti_Title = "Checkout successful for one of your groups";
+                        noti_Description = "Checkout was successfully processed for '" + productName + "' on " + today;
                     }
 
                     ProductListingFragment.sendNotification(productID, noti_Title, noti_Description, today, customerID);

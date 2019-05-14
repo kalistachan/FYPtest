@@ -49,9 +49,9 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         final String productID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         final String prodDesc = uploadCurrent.getPro_description();
-        final String prodPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
+        final String prodPrice = "$" + uploadCurrent.getPro_maxOrderQtySellPrice();
         final String targetQty = "0/" + uploadCurrent.getPro_targetQuantity();
-        final String duration = uploadCurrent.getPro_durationForGroupPurchase() + " days Required";
+        final String duration = uploadCurrent.getPro_durationForGroupPurchase() + " days";
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())
                 .fit()
