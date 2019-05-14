@@ -146,12 +146,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Join Group", 1, userIdentity, mContext);
                                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                                         }
-                                        double a = count * 0.9;
-                                        int i = (int)(a + 0.5);
-                                        String sCount = Integer.toString(count);
-                                        String construct = sCount + " / " + uploadCurrent.getPro_targetQuantity();
-                                        holder.targetQty.setText(construct);
                                     }
+                                    String sCount = Integer.toString(count);
+                                    String construct = sCount + " / " + uploadCurrent.getPro_targetQuantity();
+                                    holder.targetQty.setText(construct);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {

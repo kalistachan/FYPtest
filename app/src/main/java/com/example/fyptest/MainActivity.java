@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         //Catching Value thrown from login
         prefs = getSharedPreferences("IDs", MODE_PRIVATE);
         id = prefs.getString("userID", "UNKNOWN");
-        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+       // Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
         readData(new FirebaseCallback() {
             @Override
