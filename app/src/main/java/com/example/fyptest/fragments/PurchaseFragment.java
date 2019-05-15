@@ -84,29 +84,32 @@ public class PurchaseFragment extends Fragment {
     private void displayProduct() {
         readData(new FirebaseCallback() {
             @Override
-            public void onCallback(List<String> itemList) {
+            public void onCallback(final List<String> itemList) {
                 if (!productsID.isEmpty()) {
-                    for (final String item : itemList) {
-                        dbProduct.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                products.clear();
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    dbProduct.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            products.clear();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                for (final String item : itemList) {
                                     if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
+                                        Log.d("12345", "true");
                                         productClass productClass = dataSnapshot.child(item).getValue(productClass.class);
                                         products.add(productClass);
+                                        Log.d("12345", Integer.toString(products.size()));
                                     }
                                 }
-                                adapter = new purchasesAdapter(getActivity(), products);
-                                recycler_view_Purchase.setAdapter(adapter);
+
                             }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.d("Debug: onCancelled (dbWatchList)", databaseError.getMessage());
-                            }
-                        });
-                    }
+                            adapter = new purchasesAdapter(getActivity(), products);
+                            recycler_view_Purchase.setAdapter(adapter);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 } else {
                     adapter = new purchasesAdapter(getActivity(), products);
                     recycler_view_Purchase.setAdapter(adapter);
@@ -116,7 +119,7 @@ public class PurchaseFragment extends Fragment {
     }
 
     private void readData (final PurchaseFragment.FirebaseCallback firebaseCallback){
-        dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbOrderHistory.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(userIdentity)) {
