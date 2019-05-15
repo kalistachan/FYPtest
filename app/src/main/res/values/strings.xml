@@ -8,11 +8,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="FAQs"><u>FAQs</u></string>
 
-    <array name="durationValue">
-        <item>Days</item>
-        <item>Weeks</item>
-    </array>
-
     <array name="productType">
         <item></item>
         <item>Cosmetic</item>
