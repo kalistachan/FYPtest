@@ -75,7 +75,7 @@
         android:layout_below="@+id/view6"
         android:layout_alignStart="@id/textViewContactUs"
         android:layout_marginStart="8dp"
-        android:text="4GB@MAIL.UOW.AU"
+        android:text="fourgroupbuying@gmail.com"
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textViewContactNo"
