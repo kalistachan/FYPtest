@@ -417,34 +417,45 @@ public class ProductListingFragment extends Fragment {
     }
 
     public void checkBlacklistedCard(final Button button, final String userID) {
-        DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
-        dbCC.addValueEventListener(new ValueEventListener() {
+        DatabaseReference dbCus = FirebaseDatabase.getInstance().getReference("User").child(userID).child("userType");
+        dbCus.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final String ccID = dataSnapshot.child("cc_ID").getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue().toString().equalsIgnoreCase("customer")) {
+                    DatabaseReference dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(userID);
+                    dbCC.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final String ccID = dataSnapshot.child("cc_ID").getValue().toString();
 
-                final DatabaseReference dbBL = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
-                dbBL.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(ccID)) {
-//                            button.setVisibility(View.INVISIBLE);
-                            button.setEnabled(false);
-                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
-                            db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            final DatabaseReference dbBL = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
+                            dbBL.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
-                                            Log.d("12345", Boolean.toString(snapshotAgain.hasChild(userID)));
-                                            if (snapshotAgain.hasChild(userID)) {
-                                                String productID = snapshot.child("gd_pg_pro_ID").getValue().toString();
-                                                String groupID = snapshot.child("gd_ID").getValue().toString();
-                                                DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupID);
-                                                dbGroupDetail.removeValue();
-                                                break;
+                                    if (dataSnapshot.hasChild(ccID)) {
+                                        button.setEnabled(false);
+                                        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail");
+                                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                                                        Log.d("12345", Boolean.toString(snapshotAgain.hasChild(userID)));
+                                                        if (snapshotAgain.hasChild(userID)) {
+                                                            String productID = snapshot.child("gd_pg_pro_ID").getValue().toString();
+                                                            String groupID = snapshot.child("gd_ID").getValue().toString();
+                                                            DatabaseReference dbGroupDetail = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID).child(groupID);
+                                                            dbGroupDetail.removeValue();
+                                                            break;
+                                                        }
+                                                    }
+                                                }
                                             }
-                                        }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
                                 }
                                 @Override
@@ -453,12 +464,12 @@ public class ProductListingFragment extends Fragment {
                                 }
                             });
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -162,7 +162,7 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     public void swapToSearchFragment(String queryText) {
-        SearchFragment newSearchFragment = new SearchFragment();
+        AdminSearchFragment newSearchFragment = new AdminSearchFragment();
         Bundle arguments = new Bundle();
         arguments.putString("query" , queryText);
         newSearchFragment.setArguments(arguments);

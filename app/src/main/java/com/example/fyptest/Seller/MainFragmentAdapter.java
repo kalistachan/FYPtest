@@ -38,7 +38,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     private SharedPreferences preferences;
     private String userIdentity;
 
-    MainFragmentAdapter(Context applicationContext, List<productClass> productList) {
+    public MainFragmentAdapter(Context applicationContext, List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
 
@@ -130,7 +130,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         return productList.size();
     }
 
-    class ImageViewHolder extends RecyclerView.ViewHolder {
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView textViewProductStatus, textViewProductName, textViewPrice, durationValue, textViewTargetQuantity, shippingFee, freeShippingFee;
         ImageView imageView;
         Button btnRemove;

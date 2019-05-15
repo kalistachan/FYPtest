@@ -146,11 +146,6 @@ public class SellerMainActivity extends AppCompatActivity {
                 fragment.setArguments(arguments);
                 loadFragment(fragment);
                 return true;
-
-            /*case R.id.toolbar_logo:
-                fragment = new fragment_main();
-                loadFragment(fragment);
-                return true;*/
         }
         return false;
     }
@@ -164,7 +159,7 @@ public class SellerMainActivity extends AppCompatActivity {
     }
 
     public void swapToSearchFragment(String queryText) {
-        SearchFragment newSearchFragment = new SearchFragment();
+        SellerSearchFragment newSearchFragment = new SellerSearchFragment();
         Bundle arguments = new Bundle();
         arguments.putString("query" , queryText);
         newSearchFragment.setArguments(arguments);

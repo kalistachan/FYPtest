@@ -32,7 +32,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
     private String userIdentity;
 
 
-    AdminAdapter(Context applicationContext, List<productClass> productList) {
+    public AdminAdapter(Context applicationContext, List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
 
@@ -87,11 +87,11 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         return productList.size();
     }
 
-    class ImageViewHolder extends  RecyclerView.ViewHolder{
+    public class ImageViewHolder extends  RecyclerView.ViewHolder{
         ImageView image_view_upload;
         TextView textViewProductName, textViewProductPrice, textViewTargetQty, textViewDuration, textViewProductDescription;
 
-        ImageViewHolder(View itemView) {
+        public ImageViewHolder(View itemView) {
             super(itemView);
             this.image_view_upload = (ImageView) itemView.findViewById(R.id.image_view_upload);
             this.textViewProductName = (TextView) itemView.findViewById(R.id.textViewProductName);
