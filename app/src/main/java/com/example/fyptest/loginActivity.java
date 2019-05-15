@@ -3,6 +3,7 @@ package com.example.fyptest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,9 +30,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
     Button buttonLogin, buttonRegister;
     TextView forgotPassword;
 
-    SharedPreferences prefs;
     Toast toast;
-
     int counter;
 
     @Override
@@ -46,11 +45,6 @@ public class loginActivity extends AppCompatActivity implements Serializable {
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
         final String[] password = new String[1];
-
-        prefs = getSharedPreferences("IDs", MODE_PRIVATE);
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.clear();
-        edit.apply();
 
         if (getIntent().getSerializableExtra("IntentSource") != null) {
             String result = getIntent().getSerializableExtra("IntentSource").toString();
@@ -92,6 +86,12 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                             e.printStackTrace();
                                         }
                                         final String decryptedPassword = password[0];
+
+                                        SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+                                        SharedPreferences.Editor edit = prefs.edit();
+                                        edit.clear();
+                                        edit.apply();
+
                                         if (pw.equalsIgnoreCase(decryptedPassword)) {
                                             String role = snapshot.child("userType").getValue().toString();
                                             String id = snapshot.child("userID").getValue().toString();

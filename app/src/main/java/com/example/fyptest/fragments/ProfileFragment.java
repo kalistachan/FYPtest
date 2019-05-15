@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getContext(), loginActivity.class));
         }
 
+
         dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr);
         dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr);
         dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr);

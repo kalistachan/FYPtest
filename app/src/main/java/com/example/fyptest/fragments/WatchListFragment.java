@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.BottomNavigationMenu;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +47,8 @@ public class WatchListFragment extends Fragment {
     //Storing list used for later callbacks
     List<productClass> productList;
     List<String> watchListProd;
+
+    BottomNavigationView navigation;
 
     public WatchListFragment() {
     }
