@@ -442,6 +442,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         freeShipping = null;
                                     }
+                                    Log.d("12345", "First level Check");
                                     calculateCurrentOrderedQuantity(productID, minTarget, maxTarget, todayDate, pro_minOrderQtySellPrice, shippingFee, freeShipping, productName);
                                 }
                                 @Override
@@ -464,18 +465,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty, final int maxOrderQty, final String today,
                                                  final String orderedPrice, final String shippingFee, final String freeShipping, final String productName) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+        final DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int counter = 0;
-                String customerID = "";
-                String orderedQty = "";
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
-                    customerID = snapshot.child("gd_cus_ID").getValue().toString();
-                    orderedQty = snapshot.child("gd_qty").getValue().toString();
                 }
+                Log.d("12345", "second level of check : " + counter + " / " + minOrderQty);
                 if (counter < minOrderQty) {
                     sendNotification(productID, productName, today, "dismiss");
                     dismissGroupDetail(productID);
@@ -485,8 +483,22 @@ public class MainActivity extends AppCompatActivity {
                     String Body = "Product group for '" + productName + "' has been dismissed on " + today;
                     emailSeller(productID, Subject, Body);
 
-                } else if (counter >= minOrderQty && counter < maxOrderQty) {
-                    checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
+                } else if (counter > minOrderQty && counter < maxOrderQty) {
+                    DatabaseReference dbGroupProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
+                    dbGroupProduct.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String customerID = snapshot.child("gd_cus_ID").getValue().toString();
+                                String orderedQty = snapshot.child("gd_qty").getValue().toString();
+                                checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
             @Override
@@ -498,33 +510,54 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice,
                                   final String freeShipping, final String shippingFee, final String orderedQty, final String customerID) {
-        String Subject = "Checkout successful for one of your groups";
-        String Body = "Checkout was successfully processed for '" + productName + "' on " + today;
+        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
+        dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean duplicatedCheckout = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String oh_pro_ID = snapshot.child("oh_pro_ID").getValue().toString();
+                    if (oh_pro_ID.equalsIgnoreCase(productID)) {
+                        duplicatedCheckout = true;
+                        break;
+                    }
+                }
+                if (!duplicatedCheckout) {
+                    String Subject = "Checkout successful for one of your groups";
+                    String Body = "Checkout was successfully processed for '" + productName + "' on " + today;
 
-        if (freeShipping != null) {
-            float freeShipment = Float.parseFloat(freeShipping);
-            float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
+                    if (freeShipping != null) {
+                        float freeShipment = Float.parseFloat(freeShipping);
+                        float netPrice = (Float.parseFloat(orderedPrice)) * (Float.parseFloat(orderedQty));
 
-            if (netPrice >= freeShipment) {
-                String noShippingFee = "0";
-                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
-                sendNotification(productID, productName, today, "checkout");
-                dismissGroupDetail(productID);
+                        if (netPrice >= freeShipment) {
+                            String noShippingFee = "0";
+                            Log.d("12345", "Third level Check. Checkout 1 : " + customerID);
+                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
+                            sendNotification(productID, productName, today, "checkout");
 
-            } else if (netPrice < freeShipment){
-                checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                sendNotification(productID, productName, today, "checkout");
-                dismissGroupDetail(productID);
+                        } else if (netPrice < freeShipment){
+                            Log.d("12345", "Third level Check. Checkout 2 : " + customerID);
+                            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                            sendNotification(productID, productName, today, "checkout");
+                        }
+
+                    } else {
+                        Log.d("12345", "Third level Check. Checkout 3 : " + customerID);
+                        checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                        sendNotification(productID, productName, today, "checkout");
+                    }
+                    dismissGroupDetail(productID);
+                    dismissGroup(productID);
+                    emailSeller(productID, Subject, Body);
+                    updateProductStatus(productID, "sold");
+                }
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        } else {
-            checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-            sendNotification(productID, productName, today, "checkout");
-            dismissGroupDetail(productID);
-        }
-        dismissGroup(productID);
-        emailSeller(productID, Subject, Body);
-        updateProductStatus(productID, "sold");
+            }
+        });
     }
 
     public void dismissGroupDetail(final String productID) {
@@ -546,6 +579,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+        Log.d("12345", "Forth level Check. Actual Checkout : " + customerID);
         dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
         addLoyaltyPoint(customerID, orderedPrice, orderQty);
     }
