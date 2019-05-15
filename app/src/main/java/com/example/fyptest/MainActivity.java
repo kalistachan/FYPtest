@@ -546,10 +546,10 @@ public class MainActivity extends AppCompatActivity {
                         sendNotification(productID, productName, today, "checkout");
                         emailCustomer(customerID, SubjectForCustomer, Body);
                     }
-                    dismissGroupDetail(productID);
-                    dismissGroup(productID);
                     emailSeller(productID, Subject, Body);
                     updateProductStatus(productID, "sold");
+                    dismissGroupDetail(productID);
+                    dismissGroup(productID);
                 }
             }
             @Override
@@ -638,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void sendNotification (final String productID, final String productName, final String today, final String condition){
+    public void sendNotification(final String productID, final String productName, final String today, final String condition){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -657,6 +657,26 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     ProductListingFragment.sendNotification(productID, noti_Title, noti_Description, today, customerID);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void removeNotification(final String productID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Notification");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.hasChild(productID)) {
+                        String customerID = snapshot.getKey();
+                        DatabaseReference dbRemove = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(productID);
+                        dbRemove.removeValue();
+                    }
                 }
             }
             @Override

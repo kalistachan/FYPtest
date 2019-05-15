@@ -266,7 +266,7 @@ public class ProductListingFragment extends Fragment {
         final String string_pgDateCreated = df.format(c.getTime());
 
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-        dbProduct.addValueEventListener(new ValueEventListener() {
+        dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String pro_durationForGroupPurchase = dataSnapshot.child("pro_durationForGroupPurchase").getValue().toString();
@@ -390,10 +390,10 @@ public class ProductListingFragment extends Fragment {
                                             ma.emailCustomer(customerID, SubjectForCustomer, Body);
                                         }
                                     }
-                                    ma.dismissGroupDetail(productID);
-                                    ma.dismissGroup(productID);
                                     ma.emailSeller(productID, Subject, Body);
                                     ma.updateProductStatus(productID, "sold");
+                                    ma.dismissGroupDetail(productID);
+                                    ma.dismissGroup(productID);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
