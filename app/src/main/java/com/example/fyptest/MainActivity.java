@@ -442,7 +442,6 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         freeShipping = null;
                                     }
-                                    Log.d("12345", "First level Check");
                                     calculateCurrentOrderedQuantity(productID, minTarget, maxTarget, todayDate, pro_minOrderQtySellPrice, shippingFee, freeShipping, productName);
                                 }
                                 @Override
@@ -473,12 +472,11 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                 }
-                Log.d("12345", "second level of check : " + counter + " / " + minOrderQty);
                 if (counter < minOrderQty) {
                     sendNotification(productID, productName, today, "dismiss");
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
-                    //removeProduct(productID);
+                    removeProduct(productID);
                     String Subject = "A group you are currently in has been dismissed";
                     String Body = "Product group for '" + productName + "' has been dismissed on " + today;
                     emailSeller(productID, Subject, Body);
@@ -523,8 +521,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (!duplicatedCheckout) {
-                    String Subject = "Checkout successful for one of your groups";
-                    String Body = "Checkout was successfully processed for '" + productName + "' on " + today;
+                    String Subject = "Checkout successful for one of your product";
+                    String SubjectForCustomer = "A product group you are in has been checkout";
+                    String Body = "Product group for " + productName + " has been checkout on " + today;
 
                     if (freeShipping != null) {
                         float freeShipment = Float.parseFloat(freeShipping);
@@ -532,20 +531,20 @@ public class MainActivity extends AppCompatActivity {
 
                         if (netPrice >= freeShipment) {
                             String noShippingFee = "0";
-                            Log.d("12345", "Third level Check. Checkout 1 : " + customerID);
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
                             sendNotification(productID, productName, today, "checkout");
+                            emailCustomer(customerID, SubjectForCustomer, Body);
 
                         } else if (netPrice < freeShipment){
-                            Log.d("12345", "Third level Check. Checkout 2 : " + customerID);
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                             sendNotification(productID, productName, today, "checkout");
+                            emailCustomer(customerID, SubjectForCustomer, Body);
                         }
 
                     } else {
-                        Log.d("12345", "Third level Check. Checkout 3 : " + customerID);
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
+                        emailCustomer(customerID, SubjectForCustomer, Body);
                     }
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
@@ -570,18 +569,36 @@ public class MainActivity extends AppCompatActivity {
         dbProductGroup.removeValue();
     }
 
+    private void removeProduct(final String productID) {
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
+        dbProduct.removeValue();
+    }
+
     public void updateProductStatus(final String productID, final String status) {
         DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID).child("pro_Status");
         dbProduct.setValue(status);
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
+        //Updating Order History
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
-        Log.d("12345", "Forth level Check. Actual Checkout : " + customerID);
         dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
-        addLoyaltyPoint(customerID, orderedPrice, orderQty);
+
+        //Deducting Loyalty Point before adding
+        float itemPrice = Float.parseFloat(orderedPrice);
+        float shipment = Float.parseFloat(shippingCost);
+        Float netPayment = (itemPrice * orderQty) + shipment;
+        deductingPaymentWithLoyaltyPoint(customerID, netPayment);
+
+        if (true) {
+            //Adding new loyalty after payment
+            addLoyaltyPoint(customerID, orderedPrice, orderQty);
+        } else {
+            blacklistCard(customerID);
+        }
+
     }
 
     private void addLoyaltyPoint(final String customerID, final String orderedPrice, final int orderQty) {
@@ -595,6 +612,23 @@ public class MainActivity extends AppCompatActivity {
                 double amountPaid = Double.parseDouble(orderedPrice) * qty;
                 int calculateLoyaltyPointEarn = (int)amountPaid;
                 loyaltyPoint = loyaltyPoint + calculateLoyaltyPointEarn;
+                updateLoyaltyPoint.setValue(loyaltyPoint);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void deductLoyaltyPoint(final String customerID,final int amount) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatabaseReference updateLoyaltyPoint = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+                int loyaltyPoint = Integer.parseInt(dataSnapshot.getValue().toString());
+                loyaltyPoint = loyaltyPoint - amount;
                 updateLoyaltyPoint.setValue(loyaltyPoint);
             }
             @Override
@@ -658,19 +692,62 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void blacklistCard(String cardID) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
-        String bcc_ID = db.push().getKey();
+    public void emailCustomer(final String customerID, final String Subject, final String Body) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("User").child(customerID).child("email");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String email = dataSnapshot.getValue().toString();
+                resetPWActivity.sendMailRelatedToProduct(email, Subject, Body);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        String todayDate = df.format(c.getTime());
+            }
+        });
 
-        blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardID);
-        db.child(cardID).setValue(blacklistedCreditCardClass);
     }
 
-    private void payWithLoyaltyPoint(final String customerID) {
+    private void blacklistCard(String customerID) {
+        DatabaseReference dbCCInfo = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(customerID).child("cc_ID");
+        dbCCInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String cardID = dataSnapshot.getValue().toString();
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
+                String bcc_ID = db.push().getKey();
 
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                String todayDate = df.format(c.getTime());
+
+                blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardID);
+                db.child(cardID).setValue(blacklistedCreditCardClass);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void deductingPaymentWithLoyaltyPoint(final String customerID, final Float netPayment) {
+        DatabaseReference dbCustomerInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(customerID).child("cus_loyaltyPoint");
+        dbCustomerInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int currentLoyaltyPoint = Integer.parseInt(dataSnapshot.getValue().toString());
+                double deduction = netPayment * 0.1;
+                int getWholeNumber = (int)deduction;
+                if (currentLoyaltyPoint >= getWholeNumber) {
+                    //Deduct Loyalty Point
+                    deductLoyaltyPoint(customerID, getWholeNumber);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

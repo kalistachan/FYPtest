@@ -362,6 +362,10 @@ public class ProductListingFragment extends Fragment {
                                     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                                     String todayDate = df.format(c.getTime());
 
+                                    String Subject = "A group for your product has been checkout";
+                                    String SubjectForCustomer = "A product group you are in has been checkout";
+                                    String Body = "Product group for " + productName + " has been checkout on " + todayDate;
+
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                         String qtyOrdered = snapshot.child("gd_qty").getValue().toString();
@@ -374,24 +378,19 @@ public class ProductListingFragment extends Fragment {
                                                 String noShippingFee = "0";
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, noShippingFee);
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
-                                                ma.dismissGroupDetail(productID);
-
+                                                ma.emailCustomer(customerID, SubjectForCustomer, Body);
                                             } else {
                                                 ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                                 ma.sendNotification(productID, productName, todayDate, "checkout");
-                                                ma.dismissGroupDetail(productID);
-
+                                                ma.emailCustomer(customerID, SubjectForCustomer, Body);
                                             }
                                         } else {
                                             ma.checkout(productID, customerID, Integer.parseInt(qtyOrdered), todayDate, pro_maxOrderQtySellPrice, shippingFee);
                                             ma.sendNotification(productID, productName, todayDate, "checkout");
-                                            ma.dismissGroupDetail(productID);
-
+                                            ma.emailCustomer(customerID, SubjectForCustomer, Body);
                                         }
                                     }
-                                    String Subject = "A group for your product has been checkout";
-                                    String Body = "Product group for " + productName + " has been checkout on " + todayDate;
-
+                                    ma.dismissGroupDetail(productID);
                                     ma.dismissGroup(productID);
                                     ma.emailSeller(productID, Subject, Body);
                                     ma.updateProductStatus(productID, "sold");
