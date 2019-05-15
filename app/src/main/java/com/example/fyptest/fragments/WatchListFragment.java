@@ -48,8 +48,6 @@ public class WatchListFragment extends Fragment {
     List<productClass> productList;
     List<String> watchListProd;
 
-    BottomNavigationView navigation;
-
     public WatchListFragment() {
     }
 
