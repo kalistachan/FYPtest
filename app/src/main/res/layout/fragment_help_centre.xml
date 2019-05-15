@@ -17,6 +17,7 @@
         android:layout_marginTop="8dp"
         android:text="FAQs"
         android:textColor="@color/black"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,6 +54,7 @@
         android:layout_marginStart="8dp"
         android:text="Contact Us"
         android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textViewEmail"
         app:layout_constraintStart_toStartOf="parent" />
@@ -77,6 +79,7 @@
         android:layout_marginStart="8dp"
         android:text="fourgroupbuying@gmail.com"
         android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textViewContactNo"
         app:layout_constraintStart_toStartOf="parent" />
@@ -91,6 +94,7 @@
         android:layout_marginBottom="8dp"
         android:text="+65 67755776"
         android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
