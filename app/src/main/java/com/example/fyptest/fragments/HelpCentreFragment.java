@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.example.fyptest.Adapters.FAQ_Adapter;
 import com.example.fyptest.Adapters.NotificationAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.faqClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,8 +61,14 @@ public class HelpCentreFragment extends Fragment {
         this.recycler_view_FAQ.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Identifying User
-        this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", null);
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
+
 
         //Connect Database
         this.infoList = new ArrayList<>();

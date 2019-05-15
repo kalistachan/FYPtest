@@ -1,6 +1,7 @@
 package com.example.fyptest.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
 import com.example.fyptest.fragments.GroupFragment;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,8 +40,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.notificationItem = notificationItem;
         this.context = context;
 
-        this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            context.startActivity(new Intent(context, loginActivity.class));
+        }
     }
 
     @Override

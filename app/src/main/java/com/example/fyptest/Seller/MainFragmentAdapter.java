@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,24 +32,23 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapter.ImageViewHolder> {
-    Context mContext;
-    List<productClass> productList;
+    private Context mContext;
+    private List<productClass> productList;
 
-    SharedPreferences preferences;
-    String userIdentity;
+    private SharedPreferences preferences;
+    private String userIdentity;
 
-    public MainFragmentAdapter(Context applicationContext,  List<productClass> productList) {
+    MainFragmentAdapter(Context applicationContext, List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
 
-        if (mContext.getSharedPreferences("IDs", MODE_PRIVATE) != null) {
+        //Identifying User
+        try {
             this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-            if (preferences.getString("userID", "UNKNOWN") != null) {
-                this.userIdentity = preferences.getString("userID", "UNKNOWN");
-            } else {
-                Intent intent = new Intent(mContext, loginActivity.class);
-                mContext.startActivities(new Intent[]{intent});
-            }
+            this.userIdentity = preferences.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            mContext.startActivity(new Intent(mContext, loginActivity.class));
         }
 
     }
@@ -130,7 +130,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         return productList.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView textViewProductStatus, textViewProductName, textViewPrice, durationValue, textViewTargetQuantity, shippingFee, freeShippingFee;
         ImageView imageView;
         Button btnRemove;
@@ -149,12 +149,12 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         }
     }
 
-    public static void removeProduct(String productID) {
+    static void removeProduct(String productID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Product").child(productID);
         db.removeValue();
     }
 
-    public void swapToProductView(Context mContext, String prodID) {
+    private void swapToProductView(Context mContext, String prodID) {
         Activity activity = (FragmentActivity) mContext;
         AddProductFragment AddProductFragment = new AddProductFragment();
         Bundle arguments = new Bundle();

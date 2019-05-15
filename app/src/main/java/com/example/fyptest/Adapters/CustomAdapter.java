@@ -2,6 +2,7 @@ package com.example.fyptest.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.example.fyptest.database.watchlistClass;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProductView;
 import com.example.fyptest.fragments.WatchListFragment;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,13 +42,13 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewHolder> {
-    Context mContext;
-    List<productClass> productList;
-    ArrayList<String> itemList;
-    SharedPreferences pref;
-    String userIdentity;
+    private Context mContext;
+    private List<productClass> productList;
+    private ArrayList<String> itemList;
+    private SharedPreferences pref;
+    private String userIdentity;
 
-    DatabaseReference dbGroupDetail;
+    private DatabaseReference dbGroupDetail;
 
     ProductListingFragment pl;
 
@@ -83,8 +85,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
         this.itemList = new ArrayList<>();
         this.value = new boolean[1];
 
-        this.pref = applicationContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.pref = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            mContext.startActivity(new Intent(mContext, loginActivity.class));
+        }
 
         this.pl = new ProductListingFragment();
     }

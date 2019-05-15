@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,17 +36,12 @@ public class SellerMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_main);
 
-//        preferences = getSharedPreferences("IDs", MODE_PRIVATE);
-//        userIdentity = preferences.getString("userID", "UNKNOWN");
-
-        if (getSharedPreferences("IDs", MODE_PRIVATE) != null) {
+        //Identifying User
+        try {
             this.preferences = getSharedPreferences("IDs", MODE_PRIVATE);
-            if (preferences.getString("userID", "UNKNOWN") != null) {
-                this.userIdentity = preferences.getString("userID", "UNKNOWN");
-            } else if (preferences.getString("userID", "UNKNOWN") == null){
-                startActivity(new Intent(this, loginActivity.class));
-            }
-        } else if (getSharedPreferences("IDs", MODE_PRIVATE) == null) {
+            this.userIdentity = preferences.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
             startActivity(new Intent(this, loginActivity.class));
         }
 

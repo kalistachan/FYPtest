@@ -2,6 +2,7 @@ package com.example.fyptest.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProductListingFragment;
 import com.example.fyptest.fragments.ProductView;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,8 +50,16 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     public watchListAdapter(Context context, List<productClass> productList) {
         this.productList = productList;
         this.context = context;
-        this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+
+        //Identifying User
+        try {
+            this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            context.startActivity(new Intent(context, loginActivity.class));
+        }
+
         this.pl = new ProductListingFragment();
         this.itemList = new ArrayList<>();
     }
@@ -66,10 +76,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         final String prodID = uploadCurrent.getPro_ID();
         final String prodName = uploadCurrent.getPro_name();
         final String retailPrice = uploadCurrent.getPro_retailPrice();
-        final String minOrderQtySellPrice = uploadCurrent.getPro_minOrderQtySellPrice();
-        final String maxOrderQtySellPrice = uploadCurrent.getPro_maxOrderQtySellPrice();
-        final String shippingFee = uploadCurrent.getPro_shippingCost();
-        final String freeShipping = uploadCurrent.getPro_freeShippingAt();
         final String targetQuantity = uploadCurrent.getPro_targetQuantity();
         final String timeRemain = uploadCurrent.getPro_durationForGroupPurchase();
         String minPrice = getMinPrice(uploadCurrent.getPro_retailPrice(), uploadCurrent.getPro_minOrderDiscount());

@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.fyptest.Adapters.purchasesAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,8 +63,13 @@ public class PurchaseFragment extends Fragment {
         this.context = getActivity();
 
         //Identifying User
-        this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", null);
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", null);
+        } catch (Exception e) {
+             Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(context, loginActivity.class));
+        }
 
         //DB Reference
         this.dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History");

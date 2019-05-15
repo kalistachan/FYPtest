@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.example.fyptest.database.groupDetailClass;
 import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,8 +70,14 @@ public class ProductListingFragment extends Fragment {
 
         this.mContext = getContext();
 
-        this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = prefs.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = prefs.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
         return groupView;
     }
 
@@ -386,7 +394,7 @@ public class ProductListingFragment extends Fragment {
 
                                     ma.dismissGroup(productID);
                                     ma.emailSeller(productID, Subject, Body);
-                                    //ma.removeProduct(productID);
+                                    ma.updateProductStatus(productID, "sold");
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {

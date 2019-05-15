@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static android.R.layout.simple_spinner_item;
 import static android.content.Context.MODE_PRIVATE;
@@ -59,11 +62,19 @@ public class SearchFragment extends Fragment {
 
         this.mContext = getContext();
 
-        this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = prefs.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.prefs = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = prefs.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
+
         category = groupView.findViewById(R.id.spinnerCategory);
         sortBy = groupView.findViewById(R.id.spinnerSortBy);
         submitBtn = groupView.findViewById(R.id.buttonSubmit);
+
         mSearch = new ArrayList<>();
         mAfterSort = new ArrayList<>();
         return groupView;

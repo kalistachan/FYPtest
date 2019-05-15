@@ -2,6 +2,7 @@ package com.example.fyptest.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.example.fyptest.R;
 import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.database.productGroupClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,8 +65,14 @@ public class NotificationsFragment extends Fragment {
         this.recycler_view_Notification.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Identifying User
-        this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", null);
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
+
         this.watchListProd = new ArrayList<>();
         this.notificationItem = new ArrayList<>();
         this.productGroupItem = new ArrayList<>();

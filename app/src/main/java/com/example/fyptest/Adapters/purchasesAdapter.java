@@ -1,6 +1,7 @@
 package com.example.fyptest.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.fyptest.R;
 import com.example.fyptest.database.orderHistoryClass;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,8 +48,14 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
         this.orderHistoryList = new ArrayList<>();
         this.itemList = new ArrayList<>();
 
-        this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.preferences = context.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            context.startActivity(new Intent(context, loginActivity.class));
+        }
     }
 
     @Override
@@ -89,16 +97,6 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
                         float amountPaid = (Float.parseFloat(productCheckoutPrice) * Float.parseFloat(quantityPurchase)) + oh_shippingFee;
                         String intToStringForPrice = String.format("%.2f", amountPaid);
 
-//                        if (amountPaid >= Float.parseFloat(freeShippingCondition)) {
-//                            String shippingFee = "$0.00";
-//                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
-//                            imageViewHolder.totalPaidPrice.setText(intToStringForPrice);
-//                        } else {
-//                            imageViewHolder.viewShippingFeePrice.setText(shippingFee);
-//                            float finalCost = amountPaid + Float.parseFloat(shippingFee);
-//                            String intToStringForfinalCost = Float.toString(finalCost);
-//                            imageViewHolder.totalPaidPrice.setText(intToStringForfinalCost);
-//                        }
                         imageViewHolder.totalPaidPrice.setText("$" + intToStringForPrice);
                         imageViewHolder.viewShippingFeePrice.setText("$" + String.format("%.2f",(oh_shippingFee)));
                         imageViewHolder.prodPriceViewName.setText("$" + productCheckoutPrice);

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,11 +56,13 @@ public class AdminMainActivity extends AppCompatActivity {
         ft.replace(R.id.frame_container, new AdminMainFragment());
         ft.commit();
 
-        preferences = getSharedPreferences("IDs", MODE_PRIVATE);
-        if (preferences.getString("userID", "UNKNOWN") == null) {
+        //Identifying User
+        try {
+            this.preferences = getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
             startActivity(new Intent(AdminMainActivity.this, loginActivity.class));
-        } else if (preferences.getString("userID", "UNKNOWN") != null) {
-            userIdentity = preferences.getString("userID", "UNKNOWN");
         }
 
         toolbar = findViewById(R.id.admin_toolbar);

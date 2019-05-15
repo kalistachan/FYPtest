@@ -175,8 +175,7 @@ public class AddSellerFragment extends Fragment {
     }
 
     private boolean validate(String[] text) {
-        for (int i = 0; i < text.length; i++) {
-            String currentText = text[i];
+        for (String currentText : text) {
             if (currentText.length() <= 0) {
                 return false;
             }

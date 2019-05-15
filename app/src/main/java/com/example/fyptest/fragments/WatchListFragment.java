@@ -1,6 +1,7 @@
 package com.example.fyptest.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.fyptest.Adapters.watchListAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class WatchListFragment extends Fragment {
     //Get user Identity
@@ -60,8 +64,13 @@ public class WatchListFragment extends Fragment {
         this.recycler_view_WatchList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Identifying User
-        this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", null);
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
 
         //DB Reference
         this.dbWatchList = FirebaseDatabase.getInstance().getReference("Watch List");

@@ -58,8 +58,14 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        getStr = pref.getString("userID", null);
+        //Identifying User
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.getStr = pref.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
 
         dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr);
         dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr);

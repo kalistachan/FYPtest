@@ -15,8 +15,8 @@ import com.example.fyptest.database.productClass;
 import java.util.List;
 
 public class FAQ_Adapter extends RecyclerView.Adapter<FAQ_Adapter.ImageViewHolder> {
-    Context context;
-    List<faqClass> infoList;
+    private Context context;
+    private List<faqClass> infoList;
 
     public FAQ_Adapter(Context context, List<faqClass> infoList) {
         this.context = context;
@@ -41,10 +41,10 @@ public class FAQ_Adapter extends RecyclerView.Adapter<FAQ_Adapter.ImageViewHolde
         return infoList.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    class ImageViewHolder extends RecyclerView.ViewHolder {
         TextView textViewQuestion, textViewAnswer;
 
-        public ImageViewHolder(@NonNull View itemView) {
+        ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewQuestion = (TextView) itemView.findViewById(R.id.textViewQuestion);
             textViewAnswer = (TextView) itemView.findViewById(R.id.textViewAnswer);

@@ -9,30 +9,22 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fyptest.Adapters.CustomAdapter;
 import com.example.fyptest.database.blacklistedCreditCardClass;
-import com.example.fyptest.database.notificationClass;
 import com.example.fyptest.database.orderHistoryClass;
-import com.example.fyptest.database.productClass;
-import com.example.fyptest.fragments.CategoriesFragment;
 import com.example.fyptest.fragments.GroupFragment;
 import com.example.fyptest.fragments.HelpCentreFragment;
 import com.example.fyptest.fragments.NotificationsFragment;
@@ -41,7 +33,6 @@ import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.SearchFragment;
 import com.example.fyptest.fragments.WatchListFragment;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,8 +53,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,10 +99,14 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.frame_container, new ProductListingFragment());
         ft.commit();
 
-        //Catching Value thrown from login
-        prefs = getSharedPreferences("IDs", MODE_PRIVATE);
-        id = prefs.getString("userID", "UNKNOWN");
-       // Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+        //Identifying User
+        try {
+            this.prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+            this.id = prefs.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(context, loginActivity.class));
+        }
 
         readData(new FirebaseCallback() {
             @Override
@@ -531,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
         }
         dismissGroup(productID);
         emailSeller(productID, Subject, Body);
-        //removeProduct(productID);
+        updateProductStatus(productID, "sold");
     }
 
     public void dismissGroupDetail(final String productID) {
@@ -544,9 +537,9 @@ public class MainActivity extends AppCompatActivity {
         dbProductGroup.removeValue();
     }
 
-    public void removeProduct(final String productID) {
-        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
-        dbProduct.removeValue();
+    public void updateProductStatus(final String productID, final String status) {
+        DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID).child("pro_Status");
+        dbProduct.setValue(status);
     }
 
     public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {

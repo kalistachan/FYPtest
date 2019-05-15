@@ -1,6 +1,8 @@
 package com.example.fyptest.fragments;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.fyptest.Adapters.GroupCustomAdapter;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,8 +60,14 @@ public class GroupFragment extends Fragment {
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        this.pref = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = pref.getString("userID", "UNKNOWN");
+        //Identifying User
+        try {
+            this.pref = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
+            this.userIdentity = pref.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
 
         this.grpList = new ArrayList<>();
         this.grpProdID = new ArrayList<>();

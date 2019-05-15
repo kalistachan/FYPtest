@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProductView;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,17 +42,24 @@ import java.util.concurrent.TimeUnit;
 import static android.content.Context.MODE_PRIVATE;
 
 public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.ImageViewHolder> {
-    Context mContext;
-    List<productClass> groupList;
-    SharedPreferences preferences;
-    String userIdentity;
-    DatabaseReference dbGroupDetail;
+    private Context mContext;
+    private List<productClass> groupList;
+    private SharedPreferences preferences;
+    private String userIdentity;
+    private DatabaseReference dbGroupDetail;
 
     public GroupCustomAdapter(Context applicationContext, List<productClass> groupList) {
         this.mContext = applicationContext;
         this.groupList = groupList;
-        this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", "UNKNOWN");
+
+        //Identifying User
+        try {
+            this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", "UNKNOWN");
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            mContext.startActivity(new Intent(mContext, loginActivity.class));
+        }
     }
 
     @Override

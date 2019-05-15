@@ -43,6 +43,7 @@ import com.example.fyptest.Seller.MainFragmentAdapter;
 import com.example.fyptest.Seller.fragment_main;
 import com.example.fyptest.database.productClass;
 import com.example.fyptest.fragments.ProfileFragment;
+import com.example.fyptest.loginActivity;
 import com.example.fyptest.registerActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -93,6 +94,15 @@ public class AddProductFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_product, container, false);
         arguments = getArguments();
 
+        //Identifying User
+        try {
+            this.prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = prefs.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
+
         this.imgView = (ImageView) view.findViewById(R.id.imgView);
         this.productType = (Spinner) view.findViewById(R.id.productType);
         this.checkBoxFreeShipment = (CheckBox) view.findViewById(R.id.checkBoxFreeShipment);
@@ -114,10 +124,6 @@ public class AddProductFragment extends Fragment {
 
         this.buttonAddProduct = (Button) view.findViewById(R.id.buttonAddProduct);
         this.buttonCancelProduct = (Button) view.findViewById(R.id.buttonCancelProduct);
-
-        //Get User Identity
-        prefs = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
-        userIdentity = prefs.getString("userID", null);
 
         return view;
     }

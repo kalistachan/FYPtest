@@ -2,11 +2,13 @@ package com.example.fyptest.Admin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,19 +25,25 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHolder> {
-    Context mContext;
-    List<productClass> productList;
+    private Context mContext;
+    private List<productClass> productList;
 
-    SharedPreferences preferences;
-    String userIdentity;
+    private SharedPreferences preferences;
+    private String userIdentity;
 
 
-    public AdminAdapter(Context applicationContext,  List<productClass> productList) {
+    AdminAdapter(Context applicationContext, List<productClass> productList) {
         this.mContext = applicationContext;
         this.productList = productList;
 
-        this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", null);
+        //Identifying User
+        try {
+            this.preferences = mContext.getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            mContext.startActivity(new Intent(mContext, loginActivity.class));
+        }
     }
 
     @Override
@@ -78,11 +87,11 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         return productList.size();
     }
 
-    public class ImageViewHolder extends  RecyclerView.ViewHolder{
+    class ImageViewHolder extends  RecyclerView.ViewHolder{
         ImageView image_view_upload;
         TextView textViewProductName, textViewProductPrice, textViewTargetQty, textViewDuration, textViewProductDescription;
 
-        public ImageViewHolder(View itemView) {
+        ImageViewHolder(View itemView) {
             super(itemView);
             this.image_view_upload = (ImageView) itemView.findViewById(R.id.image_view_upload);
             this.textViewProductName = (TextView) itemView.findViewById(R.id.textViewProductName);
@@ -93,7 +102,7 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.ImageViewHol
         }
     }
 
-    public void swapToProductView(Context mContext, String prodID) {
+    private void swapToProductView(Context mContext, String prodID) {
         Activity activity = (FragmentActivity) mContext;
         ManagePendingProduct AddProductFragment = new ManagePendingProduct();
         Bundle arguments = new Bundle();

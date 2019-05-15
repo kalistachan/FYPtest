@@ -1,12 +1,14 @@
 package com.example.fyptest.Seller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.R;
 import com.example.fyptest.database.productClass;
+import com.example.fyptest.loginActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class fragment_main extends Fragment {
     SharedPreferences preferences;
@@ -46,8 +51,14 @@ public class fragment_main extends Fragment {
 
         this.context = getContext();
 
-        this.preferences = getContext().getSharedPreferences("IDs", Context.MODE_PRIVATE);
-        this.userIdentity = preferences.getString("userID", null);
+        //Identifying User
+        try {
+            this.preferences = getContext().getSharedPreferences("IDs", MODE_PRIVATE);
+            this.userIdentity = preferences.getString("userID", null);
+        } catch (Exception e) {
+            Log.d("Error in PurchaseFragment : ", e.toString());
+            startActivity(new Intent(getContext(), loginActivity.class));
+        }
 
         this.productList = new ArrayList<>();
         this.dbProduct = FirebaseDatabase.getInstance().getReference("Product");
