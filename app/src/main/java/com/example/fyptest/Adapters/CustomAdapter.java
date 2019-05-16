@@ -125,6 +125,28 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                 .centerCrop()
                 .into(holder.imageView);
 
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(prodID);
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    int counter = 0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        counter = counter + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
+                    }
+                    String text = counter + " / " + uploadCurrent.getPro_targetQuantity();
+                    holder.targetQty.setText(text);
+                } else {
+                    String text = 0 + " / " + uploadCurrent.getPro_targetQuantity();
+                    holder.targetQty.setText(text);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         readData(new FirebaseCallback() {
             @Override
             public void onCallback1(List<String> itemList) {
@@ -135,9 +157,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             dbGroupDetail.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    int count = 0;
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        count = count + Integer.parseInt(snapshot.child("gd_qty").getValue().toString());
                                         if (snapshot.child("gd_cus_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
                                             holder.grpBtn.setText("View Group");
                                             removeFromWatchList(prodID, userIdentity);
@@ -155,9 +175,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
                                         }
                                     }
-                                    String sCount = Integer.toString(count);
-                                    String construct = sCount + " / " + uploadCurrent.getPro_targetQuantity();
-                                    holder.targetQty.setText(construct);
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -167,7 +184,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
                             });
                             break;
                         } else {
-                            holder.targetQty.setText("0 / " + uploadCurrent.getPro_targetQuantity());
                             pl.checkBlacklistedCard(holder.grpBtn, userIdentity);
                             setToCreateOrJoinGroup(holder.grpBtn, prodID, prodName , "Create Group", 2, userIdentity, mContext);
                             changeWatchButton(holder.watchBtn, userIdentity, prodID, mContext);
