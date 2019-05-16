@@ -120,6 +120,7 @@ public class ProductListingFragment extends Fragment {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
         LinearLayout linear = new LinearLayout(context);
         final int seekMin = 1;
+        final int[] seekMax = new int[1];
 
         linear.setOrientation(LinearLayout.VERTICAL);
         qtyText = new TextView(context);
@@ -145,11 +146,13 @@ public class ProductListingFragment extends Fragment {
                             int target = Integer.parseInt(dataSnapshot.child("pro_targetQuantity").getValue().toString());
                             int condition = target - finalCount;
                             if (condition >= 10) {
-                                seek.setMax(10);
-                                qtyText.setText(seekMin + "/" + seek.getMax());
+                                seek.setMax(9);
+                                seekMax[0] = 10;
+                                qtyText.setText(seekMin + "/" + seekMax[0]);
                             } else if (condition < 10) {
-                                seek.setMax(condition);
-                                qtyText.setText(seekMin + "/" + seek.getMax());
+                                seek.setMax(condition-1);
+                                seekMax[0] = condition;
+                                qtyText.setText(seekMin + "/" + seekMax[0]);
                             }
                         }
                         @Override
@@ -177,7 +180,7 @@ public class ProductListingFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 qtyChosenVal = seekMin + progress;
                 if (qtyChosenVal > seekBar.getMax()) {
-                    qtyChosenVal = seekBar.getMax();
+                    qtyChosenVal = seekMax[0];
                 }
             }
 
@@ -187,7 +190,7 @@ public class ProductListingFragment extends Fragment {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
-                qtyText.setText(qtyChosenVal + "/" + seekBar.getMax());
+                qtyText.setText(qtyChosenVal + "/" + seekMax[0]);
             }
         });
 
