@@ -78,8 +78,10 @@ public class fragment_main extends Fragment {
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.child("pro_s_ID").getValue().toString().equalsIgnoreCase(userIdentity)) {
-                        productClass product = snapshot.getValue(productClass.class);
-                        productList.add(product);
+                        if (!snapshot.child("pro_Status").getValue().toString().equalsIgnoreCase("sold")) {
+                            productClass product = snapshot.getValue(productClass.class);
+                            productList.add(product);
+                        }
                     }
                 }
                 adapter = new MainFragmentAdapter(getActivity(), productList);

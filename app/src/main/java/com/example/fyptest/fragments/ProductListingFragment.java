@@ -235,7 +235,7 @@ public class ProductListingFragment extends Fragment {
         return resultDate;
     }
 
-    private void removeFromWatchList(String prodID, String gdCusID) {
+    public static void removeFromWatchList(String prodID, String gdCusID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List").child(gdCusID).child(prodID);
         db.removeValue();
     }

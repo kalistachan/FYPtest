@@ -567,6 +567,28 @@ public class MainActivity extends AppCompatActivity {
     public void dismissGroup(final String productID) {
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group").child(productID);
         dbProductGroup.removeValue();
+        removeNotification(productID);
+        checkWatchlist(productID);
+    }
+
+    private void checkWatchlist(final String productID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Watch List");
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.hasChild(productID)) {
+                        Log.d("12345", snapshot.getKey());
+                        String customerID = snapshot.getKey();
+                        ProductListingFragment.removeFromWatchList(productID, customerID);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void removeProduct(final String productID) {
@@ -598,7 +620,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             blacklistCard(customerID);
         }
-
     }
 
     private void addLoyaltyPoint(final String customerID, final String orderedPrice, final int orderQty) {
@@ -672,10 +693,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.hasChild(productID)) {
-                        String customerID = snapshot.getKey();
-                        DatabaseReference dbRemove = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(productID);
-                        dbRemove.removeValue();
+                    for (DataSnapshot snapshotAgain : snapshot.getChildren()) {
+                        if (snapshotAgain.child("noti_prodID").getValue().toString().equalsIgnoreCase(productID)) {
+                            if (snapshotAgain.child("noti_Title").getValue().toString().equalsIgnoreCase("A group has been created for the item in your Watchlist")) {
+                                String customerID = snapshot.getKey();
+                                DatabaseReference dbRemove = FirebaseDatabase.getInstance().getReference("Notification").child(customerID).child(productID);
+                                dbRemove.removeValue();
+                            }
+                        }
                     }
                 }
             }

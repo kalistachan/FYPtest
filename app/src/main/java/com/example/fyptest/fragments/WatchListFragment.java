@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -48,12 +50,9 @@ public class WatchListFragment extends Fragment {
     List<productClass> productList;
     List<String> watchListProd;
 
-    public WatchListFragment() {
-    }
+    BottomNavigationView navigation;
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public WatchListFragment() {
     }
 
     @Override
