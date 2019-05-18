@@ -5,184 +5,271 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:scrollbars="none">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/profileForm"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="ScrollViewSize">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            app:srcCompat="@drawable/ic_account_circle_black_100dp"
-            tools:ignore="ContentDescription,VectorDrawableCompat" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_account_circle_black_100dp" />
 
-        <View style="@style/Divider"/>
-
-        <TextView
-            android:id="@+id/profileTitle1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Personal Information"
-            android:textSize="20dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:textColor="@color/black"
-            tools:ignore="HardcodedText,SpUsage"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="8dp"/>
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
-            android:id="@+id/contactNo"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Number"
-            android:inputType="number"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
-            android:id="@+id/Password"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
-            android:id="@+id/confirmPassword"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Confirm Password"
-            android:inputType="textPassword"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
-            android:id="@+id/address"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="Address"
-            android:inputType="text"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <EditText
-            android:id="@+id/postalCode"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:inputType="number"
-            android:hint="Postal Code"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
-
-        <View style="@style/Divider"/>
-
-        <TextView
-            android:id="@+id/profileTitle2"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Credit Card Information"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="8dp" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/layoutborder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
-        <EditText
-            android:id="@+id/ccNum"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
+            <TextView
+                android:id="@+id/profileTitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Personal Information"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,SpUsage" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileTitle1"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/contactNo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Number"
+                android:inputType="number"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/Password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contactNo"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/confirmPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Password"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Address"
+                android:inputType="text"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/confirmPassword"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/postalCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:hint="Postal Code"
+                android:inputType="number"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/address"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Card Number"
-            android:inputType="number"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/layoutborder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-        <EditText
-            android:id="@+id/ccExpiryDate"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="Expiry Date"
-            android:inputType="date"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
-        <EditText
-            android:id="@+id/ccCVV"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="2dp"
-            android:hint="CVV"
-            android:inputType="number"
-            android:textSize="16dp"
-            tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+            <TextView
+                android:id="@+id/profileTitle2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Credit Card Information"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
 
-        <View style="@style/Divider"/>
+            <EditText
+                android:id="@+id/ccNum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Card Number"
+                android:inputType="number"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileTitle2"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/ccExpiryDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Expiry Date"
+                android:inputType="date"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ccNum"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+            <EditText
+                android:id="@+id/ccCVV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:hint="CVV"
+                android:inputType="number"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ccExpiryDate"
+                tools:ignore="Autofill,HardcodedText,SpUsage,TextFields" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
 
             <Button
                 android:id="@+id/updateBtn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_gravity="center"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
+                android:elevation="10dp"
                 android:background="@drawable/orangebuttons"
                 android:text="Update"
                 tools:ignore="ButtonStyle,HardcodedText" />
 
             <Button
                 android:id="@+id/logoutBtn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
+                android:elevation="10dp"
                 android:background="@drawable/yellowbuttons"
                 android:text="Logout"
                 tools:ignore="ButtonStyle,HardcodedText" />
-
         </LinearLayout>
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

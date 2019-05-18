@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         //account_header
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.color.colorPrimaryDark)
+                .withHeaderBackground(R.color.color4GBTheme)
                 .withSelectionListEnabledForSingleProfile(false)
                 .withTextColor(Color.parseColor("black"))
                 .build();
