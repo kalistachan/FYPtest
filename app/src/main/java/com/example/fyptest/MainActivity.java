@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikepenz.iconics.utils.Utils;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -101,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Identifying User
         try {
-            this.prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+            this.prefs = MainActivity.this.getSharedPreferences("IDs", MODE_PRIVATE);
             this.id = prefs.getString("userID", null);
         } catch (Exception e) {
             Log.d("Error in PurchaseFragment : ", e.toString());
-            startActivity(new Intent(context, loginActivity.class));
+            MainActivity.this.startActivity(new Intent(context, loginActivity.class));
         }
 
         readData(new FirebaseCallback() {

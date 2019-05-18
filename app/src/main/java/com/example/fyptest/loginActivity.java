@@ -87,7 +87,7 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                         }
                                         final String decryptedPassword = password[0];
 
-                                        SharedPreferences prefs = getSharedPreferences("IDs", MODE_PRIVATE);
+                                        SharedPreferences prefs = loginActivity.this.getSharedPreferences("IDs", MODE_PRIVATE);
                                         SharedPreferences.Editor edit = prefs.edit();
                                         edit.clear();
                                         edit.apply();
@@ -97,17 +97,17 @@ public class loginActivity extends AppCompatActivity implements Serializable {
                                             String id = snapshot.child("userID").getValue().toString();
                                             if (role.equalsIgnoreCase("customer")) {
                                                 //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
+                                                edit.putString("userID", id).apply();
                                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
                                                 break;
                                             } else if (role.equalsIgnoreCase("seller")) {
                                                 //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
+                                                edit.putString("userID", id).apply();
                                                 startActivity(new Intent(loginActivity.this, SellerMainActivity.class));
                                                 break;
                                             } else if (role.equalsIgnoreCase("admin")) {
                                                 //Directing user to their main screen
-                                                prefs.edit().putString("userID", id).apply();
+                                                edit.putString("userID", id).apply();
                                                 startActivity(new Intent(loginActivity.this, AdminMainActivity.class));
                                                 break;
                                             }
