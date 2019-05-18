@@ -44,7 +44,6 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
     SharedPreferences preferences;
     String userIdentity;
 
-    CustomAdapter ca;
     ProductListingFragment pl;
 
     public watchListAdapter(Context context, List<productClass> productList) {
@@ -137,7 +136,7 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItemFromRecycleView(position);
+                removeItemFromRecycleView(position, productList);
                 removeFromWatchList(prodID);
             }
         });
@@ -193,9 +192,13 @@ public class watchListAdapter extends RecyclerView.Adapter<watchListAdapter.Imag
         db.removeValue();
     }
 
-    private void removeItemFromRecycleView(int position) {
-        productList.remove(position);
-        notifyItemRemoved(position);
+    private void removeItemFromRecycleView(int position, List<productClass> list) {
+        if (position > -1) {
+            list.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, list.size());
+            notifyDataSetChanged();
+        }
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {

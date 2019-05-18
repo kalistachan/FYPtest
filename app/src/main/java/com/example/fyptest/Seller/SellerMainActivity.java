@@ -62,8 +62,6 @@ public class SellerMainActivity extends AppCompatActivity {
 
         btnLogout = (Button) findViewById(R.id.btnLogout);
 
-        Toast.makeText(this, userIdentity, Toast.LENGTH_LONG).show();
-
         //Set to view main screen on application start-up
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame_container, new fragment_main());

@@ -155,8 +155,6 @@ public class GroupCustomAdapter extends RecyclerView.Adapter<GroupCustomAdapter.
                 if (timeRemain != null) {
                     if (Integer.parseInt(timeRemain) > 0) {
                         holder.timeRemain.setText(timeRemain + " days left");
-                    } else if (Integer.parseInt(timeRemain) == 0){
-                        //Checkout & Remove from group database
                     }
                 }
             }
