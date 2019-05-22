@@ -755,11 +755,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void blacklistCard(String customerID) {
-        DatabaseReference dbCCInfo = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(customerID).child("cc_ID");
+        DatabaseReference dbCCInfo = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(customerID).child("cc_Num");
         dbCCInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String cardID = dataSnapshot.getValue().toString();
+                String cardNum = dataSnapshot.getValue().toString();
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference("Blacklisted Card");
                 String bcc_ID = db.push().getKey();
 
@@ -767,8 +767,8 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
                 String todayDate = df.format(c.getTime());
 
-                blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardID);
-                db.child(cardID).setValue(blacklistedCreditCardClass);
+                blacklistedCreditCardClass blacklistedCreditCardClass = new blacklistedCreditCardClass(bcc_ID, todayDate, cardNum);
+                db.child(cardNum).setValue(blacklistedCreditCardClass);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

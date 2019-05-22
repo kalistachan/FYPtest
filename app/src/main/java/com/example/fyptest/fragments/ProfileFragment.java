@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.fyptest.MainActivity;
 import com.example.fyptest.R;
+import com.example.fyptest.database.creditCardClass;
 import com.example.fyptest.loginActivity;
 import com.example.fyptest.registerActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +43,7 @@ import static com.example.fyptest.R.id.cus_register;
 public class ProfileFragment extends Fragment {
 
     SharedPreferences pref;
-    String getStr;
+    String getStr, cardNumber;
 
     DatabaseReference dbUser, dbCusInfo, dbCC;
 
@@ -102,6 +103,7 @@ public class ProfileFragment extends Fragment {
                     if (isEmailValid(email)) {
                         dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr).child("email");
                         dbUser.setValue(getEmail);
+                        clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                     }
                 }
 
@@ -109,6 +111,7 @@ public class ProfileFragment extends Fragment {
                     if (isPhoneNumValid(contactNo)) {
                         dbUser = FirebaseDatabase.getInstance().getReference("User").child(getStr).child("contactNum");
                         dbUser.setValue(getContactNo);
+                        clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                     }
                 }
 
@@ -130,6 +133,7 @@ public class ProfileFragment extends Fragment {
                                                     public void onClick(DialogInterface dialog, int whichButton) {
                                                         try {
                                                             dbUser.setValue(registerActivity.encrypt(getPassword));
+                                                            clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
@@ -160,71 +164,105 @@ public class ProfileFragment extends Fragment {
                 if (!getAddress.isEmpty()) {
                     dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_shippingAddress");
                     dbCusInfo.setValue(getAddress);
+                    clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                 }
 
                 if (!getPostalCode.isEmpty()) {
                     if (checkLength(postalCode,6,6)) {
                         dbCusInfo = FirebaseDatabase.getInstance().getReference("Customer Information").child(getStr).child("cus_postalCode");
                         dbCusInfo.setValue(getPostalCode);
+                        clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                     }
                 }
 
-                if (!getCCExpiryDate.isEmpty()) {
+                if (!getCCExpiryDate.isEmpty() && getCCCVV.isEmpty() && getCCNum.isEmpty()) {
                     dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_ExpiryDate");
                     dbCC.setValue(getCCExpiryDate);
+                    clearForm((ViewGroup) view.findViewById(R.id.profileForm));
+                }
+
+                if (!getCCCVV.isEmpty() && getCCNum.isEmpty() && getCCExpiryDate.isEmpty()) {
+                    if (checkLength(ccCVV,3,3)) {
+                        dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_CVNum");
+                        dbCC.setValue(getCCCVV);
+                        clearForm((ViewGroup) view.findViewById(R.id.profileForm));
+                    }
                 }
 
                 if (!getCCNum.isEmpty()) {
                     if (checkLength(ccNum,16,16)) {
-                        if (isCCValid(Long.parseLong(getCCNum)) == false) {
+                        if (!isCCValid(Long.parseLong(getCCNum))) {
                             ccNum.setError("Invalid credit card number");
-                        } else {
-                            dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_Num");
-                            dbCC.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    try {
-                                        if (!dataSnapshot.getValue().toString().equals(registerActivity.encrypt(getCCNum))) {
-                                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                                            alert.setTitle("Confirmation");
-                                            alert.setMessage("Are you sure you want to change your credit card number?");
-                                            alert.setIcon(android.R.drawable.ic_dialog_alert);
-                                            alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                                        try {
-                                                            dbCC.setValue(registerActivity.encrypt(getCCNum));
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        dialog.dismiss();
-                                                    }});
-                                            alert.setNegativeButton(android.R.string.no, null);
-
-                                            AlertDialog alertdialog = alert.create();
-                                            alertdialog.show();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                        } else if (isCCValid(Long.parseLong(getCCNum))) {
+                            if (getCCNum.equalsIgnoreCase(cardNumber)) {
+                                ccNum.setError("Same credit card found, please insert a new card number");
+                            } else if (!getCCNum.equalsIgnoreCase(cardNumber)){
+                                boolean Code = false;
+                                String CSV = "";
+                                if (!getCCCVV.isEmpty()) {
+                                    if (checkLength(ccCVV,3,3)) {
+                                        CSV = getCCCVV;
+                                        Code = true;
                                     }
+                                } else if (getCCCVV.isEmpty()) {
+                                    ccCVV.setError("Field cannot be null");
                                 }
+                                final String cc_CVNum = CSV;
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    return;
+                                boolean date = false;
+                                String ExpiryDate = "";
+                                if (!getCCExpiryDate.isEmpty()) {
+                                    ExpiryDate = getCCExpiryDate;
+                                    date = true;
+                                } else if (getCCExpiryDate.isEmpty()) {
+                                    ccExpiryDate.setError("Field cannot be null");
                                 }
-                            });
+                                final String cc_ExpiryDate = ExpiryDate;
+
+                                if (Code && date) {
+                                    dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr);
+                                    dbCC.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            try {
+                                                if (!dataSnapshot.getValue().toString().equals(registerActivity.encrypt(getCCNum))) {
+                                                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                                                    alert.setTitle("Confirmation");
+                                                    alert.setMessage("Are you sure you want to change your credit card number?");
+                                                    alert.setIcon(android.R.drawable.ic_dialog_alert);
+                                                    alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                            try {
+                                                                String cc_ID = dbCC.push().getKey();
+                                                                String cc_Num = registerActivity.encrypt(getCCNum);
+                                                                creditCardClass creditCardClass = new creditCardClass(cc_ID, cc_Num, cc_ExpiryDate, cc_CVNum, getStr);
+                                                                dbCC.setValue(creditCardClass);
+                                                                clearForm((ViewGroup) view.findViewById(R.id.profileForm));
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                            dialog.dismiss();
+                                                        }});
+                                                    alert.setNegativeButton(android.R.string.no, null);
+
+                                                    AlertDialog alertdialog = alert.create();
+                                                    alertdialog.show();
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            return;
+                                        }
+                                    });
+                                }
+                            }
                         }
                     }
                 }
-
-                if (!getCCCVV.isEmpty()) {
-                    if (checkLength(ccCVV,3,3)) {
-                        dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_CVNum");
-                        dbCC.setValue(getCCCVV);
-                    }
-                }
-
-                clearForm((ViewGroup) view.findViewById(R.id.profileForm));
             }
         });
 
@@ -278,10 +316,9 @@ public class ProfileFragment extends Fragment {
         dbCC.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String decryptedCCNum;
                 try {
-                    decryptedCCNum = registerActivity.decrypt(dataSnapshot.child("cc_Num").getValue().toString());
-                    ccNum.setHint(decryptedCCNum.substring(0, 6) + "xxxxxx" + decryptedCCNum.substring(12, 16));
+                    cardNumber = registerActivity.decrypt(dataSnapshot.child("cc_Num").getValue().toString());
+                    ccNum.setHint(cardNumber.substring(0, 6) + "xxxxxx" + cardNumber.substring(12, 16));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
