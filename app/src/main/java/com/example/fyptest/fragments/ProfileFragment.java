@@ -184,7 +184,13 @@ public class ProfileFragment extends Fragment {
                 if (!getCCCVV.isEmpty() && getCCNum.isEmpty() && getCCExpiryDate.isEmpty()) {
                     if (checkLength(ccCVV,3,3)) {
                         dbCC = FirebaseDatabase.getInstance().getReference("Credit Card Detail").child(getStr).child("cc_CVNum");
-                        dbCC.setValue(getCCCVV);
+                        String encrypCSV = "";
+                        try {
+                            encrypCSV = registerActivity.encrypt(getCCCVV);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dbCC.setValue(encrypCSV);
                         clearForm((ViewGroup) view.findViewById(R.id.profileForm));
                     }
                 }
@@ -201,7 +207,13 @@ public class ProfileFragment extends Fragment {
                                 String CSV = "";
                                 if (!getCCCVV.isEmpty()) {
                                     if (checkLength(ccCVV,3,3)) {
-                                        CSV = getCCCVV;
+                                        String encrypCSV = "";
+                                        try {
+                                            encrypCSV = registerActivity.encrypt(getCCCVV);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        CSV = encrypCSV;
                                         Code = true;
                                     }
                                 } else if (getCCCVV.isEmpty()) {
