@@ -299,7 +299,13 @@ public class AddProductFragment extends Fragment {
                         pro_freeShippingAt = null;
                     }
 
-                    if (checkNull(editTextTQ)) { pro_targetQuantity = editTextTQ.getText().toString().trim();}
+                    if (checkNull(editTextTQ)) {
+                        if (Integer.parseInt(editTextTQ.getText().toString()) < 100 || Integer.parseInt(editTextTQ.getText().toString()) > 1000) {
+                            editTextTQ.setError("Invalid Quantity");
+                        } else {
+                            pro_targetQuantity = editTextTQ.getText().toString().trim();
+                        }
+                    }
 
                     boolean result = validate(new String[] {pro_name, pro_description, pro_retailPrice, pro_maxOrderQtySellPrice,
                             pro_minOrderQtySellPrice, pro_maxOrderDiscount, pro_minOrderAccepted, pro_minOrderDiscount, pro_shippingCost, pro_durationForGroupPurchase,

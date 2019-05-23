@@ -477,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
                     sendNotification(productID, productName, today, "dismiss");
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
-                    removeProduct(productID);
+                    updateProductStatus(productID, "dismissed");
                     String Subject = "A group you are currently in has been dismissed";
                     String Body = "Product group for '" + productName + "' has been dismissed on " + today;
                     emailSeller(productID, Subject, Body);
@@ -602,12 +602,30 @@ public class MainActivity extends AppCompatActivity {
         dbProduct.setValue(status);
     }
 
-    public void checkout(String productID, String customerID, int orderQty, String checkoutDate, String orderedPrice, String shippingCost) {
+    public void checkout(final String productID, final String customerID, final int orderQty, final String checkoutDate, final String orderedPrice, final String shippingCost) {
         //Updating Order History
-        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
-        String oh_ID = dbOrderHistory.push().getKey();
-        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
-        dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
+        final DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
+        dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean duplicateCheckout = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.hasChild(productID)) {
+                        duplicateCheckout = true;
+                        break;
+                    }
+                }
+                if (!duplicateCheckout) {
+                    String oh_ID = dbOrderHistory.push().getKey();
+                    orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+                    dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         //Deducting Loyalty Point before adding
         float itemPrice = Float.parseFloat(orderedPrice);

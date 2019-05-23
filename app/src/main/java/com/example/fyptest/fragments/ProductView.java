@@ -93,7 +93,7 @@ public class ProductView extends Fragment {
 
     public void recyclerViewListClicked(final String prodID, final String userID){
         databaseProduct = FirebaseDatabase.getInstance().getReference("Product").child(prodID);
-        databaseProduct.addValueEventListener(new ValueEventListener() {
+        databaseProduct.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Picasso.get()

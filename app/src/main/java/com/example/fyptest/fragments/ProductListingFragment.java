@@ -233,9 +233,9 @@ public class ProductListingFragment extends Fragment {
             e.printStackTrace();
         }
         c.add(Calendar.DAY_OF_YEAR,numberofDays);
-        dateFormat=new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        Date newDate=new Date(c.getTimeInMillis());
-        String resultDate=dateFormat.format(newDate);
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Date newDate = new Date(c.getTimeInMillis());
+        String resultDate = dateFormat.format(newDate);
         return resultDate;
     }
 
