@@ -4,514 +4,405 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".registerActivity">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/cus_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color4GBTheme"
-        android:orientation="vertical"
-        tools:ignore="ExtraText">
-
+        android:background="@color/color4GBTheme">
 
         <ImageView
             android:id="@+id/registerlogo"
             android:layout_width="148dp"
             android:layout_height="65dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logo"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center"
             android:text="Registration"
             android:textColor="@color/black"
             android:textSize="30sp"
-            tools:ignore="HardcodedText"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/registerlogo"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Email:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+        <EditText
+            android:id="@+id/inputEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:gravity="center|start"
+            android:hint="Enter your email address"
+            android:inputType="textEmailAddress"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvEmail"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvEmail"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center|start"
+            android:text="Password:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPassword"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvPassword"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvConfirmPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Confirm Password:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPassword"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputPassword2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Re-enter your password"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvConfirmPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvConfirmPassword"
+            app:layout_constraintTop_toTopOf="@+id/tvConfirmPassword"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="First Name:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvConfirmPassword"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputFirstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your first name"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFirstName"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvFirstName"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Last Name:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvFirstName"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputLastName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your last name"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvLastName"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvLastName"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Phone No.:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLastName"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputContactNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your phone number"
+            android:inputType="phone"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPhone"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvPhone"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Address:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPhone"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputShippingAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your address"
+            android:inputType="textPostalAddress"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAddress"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvAddress"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvPostal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Postal Code:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputPostalCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your postal code"
+            android:inputType="number"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPostal"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvPostal"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvCardNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Card Number:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPostal"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/inputCCNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your credit card number"
+            android:inputType="number"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCardNum"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvCardNum"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="Expiry Date:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCardNum"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/inputExpiryDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Select expiry date"
+            android:inputType="datetime"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvExpiry"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvExpiry"
+            tools:ignore="HardcodedText,TextFields" />
+
+
+        <TextView
+            android:id="@+id/tvCVV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            android:gravity="center|start"
+            android:text="CVV:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvExpiry" />
+
+        <EditText
+            android:id="@+id/inputCVV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:ems="10"
+            android:hint="Enter your CVV"
+            android:inputType="number"
+            android:padding="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCVV"
+            app:layout_constraintEnd_toEndOf="@+id/inputPassword2"
+            app:layout_constraintStart_toStartOf="@+id/inputPassword2"
+            app:layout_constraintTop_toTopOf="@+id/tvCVV" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Email:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:gravity="center|start"
-                android:hint="Enter your email address"
-                android:inputType="textEmailAddress"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvPassword"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Password:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your password"
-                android:inputType="textPassword"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvConfirmPassword"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Confirm Password:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputPassword2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Re-enter your password"
-                android:inputType="textPassword"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvFirstName"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="First Name:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your first name"
-                android:inputType="textPersonName"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvLastName"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Last Name:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputLastName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your last name"
-                android:inputType="textPersonName"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvPhone"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Phone No.:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputContactNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your phone number"
-                android:inputType="phone"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvAddress"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Address:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputShippingAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your address"
-                android:inputType="textPostalAddress"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvPostal"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Postal Code:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputPostalCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your postal code"
-                android:inputType="number"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvCardNum"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Card Number:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/inputCCNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your credit card number"
-                android:inputType="number"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvExpiry"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="Expiry Date:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/inputExpiryDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Select expiry date"
-                android:inputType="datetime"
-                android:padding="5dp"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText,TextFields" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="25dp"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/tvCVV"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="CVV:"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/inputCVV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Enter your CVV"
-                android:inputType="number"
-                android:padding="5dp"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCVV">
 
             <Button
                 android:id="@+id/bottomBack2Login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/orangebuttons"
                 android:text="Back to Login"
                 android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/tvCVV"
                 tools:ignore="HardcodedText" />
 
             <Button
@@ -519,18 +410,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/orangebuttons"
                 android:text="Submit"
                 android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/bottomBack2Login"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/bottomBack2Login"
                 tools:ignore="HardcodedText" />
+
         </LinearLayout>
-    </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
