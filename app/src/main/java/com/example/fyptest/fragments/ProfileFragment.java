@@ -198,7 +198,7 @@ public class ProfileFragment extends Fragment {
                 if (!getCCNum.isEmpty()) {
                     if (checkLength(ccNum,16,16)) {
                         if (!isCCValid(Long.parseLong(getCCNum))) {
-                            ccNum.setError("Invalid credit card number");
+                            ccNum.setError("Invalid card number");
                         } else if (isCCValid(Long.parseLong(getCCNum))) {
                             if (getCCNum.equalsIgnoreCase(cardNumber)) {
                                 ccNum.setError("Same credit card found, please insert a new card number");
