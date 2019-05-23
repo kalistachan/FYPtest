@@ -1,149 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/backgroundgradient"
     tools:context=".loginActivity">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/loginlogo"
+        android:layout_width="296dp"
+        android:layout_height="159dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo"
+        tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="60dp"
+        android:layout_weight="1"
+        android:gravity="center|start"
+        android:padding="6dp"
+        android:text="Email:"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginlogo"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:background="@color/white"
+        android:ems="10"
+        android:gravity="center|start"
+        android:hint="Please enter your email"
+        android:inputType="textEmailAddress"
+        android:padding="6dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvEmail"
+        app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextPassword"
+        app:layout_constraintTop_toTopOf="@+id/tvEmail"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/tvPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:gravity="center|start"
+        android:padding="6dp"
+        android:text="Password:"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="8"
+        android:background="@color/white"
+        android:ems="10"
+        android:gravity="center|start"
+        android:hint="Please enter your password"
+        android:inputType="textPassword"
+        android:padding="6dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvPassword"
+        app:layout_constraintTop_toTopOf="@+id/tvPassword"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="end"
+        android:text="Forgot your password?"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/editTextPassword"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <Button
+        android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/login_form"
-        android:background="@drawable/backgroundgradient"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/orangebuttons"
+        android:gravity="center"
+        android:text="Login"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forgotPassword"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/orangebuttons"
+        android:gravity="center"
+        android:text="Register Now"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
+        tools:ignore="HardcodedText" />
 
 
-        <ImageView
-            android:id="@+id/loginlogo"
-            android:layout_width="296dp"
-            android:layout_height="159dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            app:srcCompat="@drawable/logo"
-            tools:ignore="ContentDescription,VectorDrawableCompat" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="60dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:padding="6dp"
-                android:text="Email:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText,RtlHardcoded" />
-
-            <EditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:gravity="center|start"
-                android:hint="Please enter your email"
-                android:inputType="textEmailAddress"
-                android:padding="6dp"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText,RtlHardcoded" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvPassword"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:padding="6dp"
-                android:text="Password:"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText,RtlHardcoded" />
-
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="8"
-                android:background="@color/white"
-                android:ems="10"
-                android:gravity="center|start"
-                android:hint="Please enter your password"
-                android:inputType="textPassword"
-                android:padding="6dp"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText,RtlHardcoded" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/forgotPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
-            android:gravity="end"
-            android:text="Forgot your password?"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
-
-        <Button
-            android:id="@+id/buttonLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/orangebuttons"
-            android:gravity="center"
-            android:text="Login"
-            android:textColor="@color/black"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/orangebuttons"
-            android:gravity="center"
-            android:text="Register Now"
-            android:textColor="@color/black"
-            tools:ignore="HardcodedText" />
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
