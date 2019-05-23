@@ -1,77 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".resetPWActivity"
     android:orientation="vertical"
-    android:background="@color/color4GBTheme">
+    android:background="@drawable/backgroundgradient">
 
 
     <ImageView
         android:id="@+id/registerlogo"
         android:layout_width="148dp"
         android:layout_height="65dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo"
         tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/tvTitle2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="Reset Password"
         android:textColor="@color/black"
         android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerlogo"
         tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:text="Please enter your registration email."
         android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle2" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="1"
+        android:gravity="center|start"
+        android:text="Email:"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <TextView
-            android:id="@+id/email"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="Email:"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/enteredEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="25dp"
-            android:layout_weight="8"
-            android:background="@color/white"
-            android:ems="10"
-            android:hint="Please enter your registration email"
-            android:inputType="textEmailAddress"
-            android:padding="5dp"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+    <EditText
+        android:id="@+id/enteredEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="8"
+        android:background="@color/white"
+        android:ems="10"
+        android:hint="Please enter your registration email"
+        android:inputType="textEmailAddress"
+        android:padding="5dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/email"
+        app:layout_constraintTop_toTopOf="@+id/email" />
 
     <Button
         android:id="@+id/submit"
@@ -79,15 +88,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/orangebuttons"
         android:text="Submit"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/enteredEmail" />
 
     <Button
         android:id="@+id/back2login"
@@ -106,4 +114,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submit" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
