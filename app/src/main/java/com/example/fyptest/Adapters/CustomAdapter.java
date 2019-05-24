@@ -91,7 +91,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ImageViewH
             this.userIdentity = pref.getString("userID", "UNKNOWN");
         } catch (Exception e) {
             Log.d("Error in PurchaseFragment : ", e.toString());
-            mContext.startActivity(new Intent(mContext, loginActivity.class));
         }
 
         this.pl = new ProductListingFragment();

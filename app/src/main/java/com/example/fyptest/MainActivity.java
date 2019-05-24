@@ -166,30 +166,9 @@ public class MainActivity extends AppCompatActivity {
                 .withOnlyMainProfileImageVisible(true)
                 .withTextColor(Color.parseColor("black"))
                 .build();
+
         //account_header
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(id).child("cus_loyaltyPoint");
-//        db.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                getCusName(id);
-//            }
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                getCusName(id);
-//            }
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//                getCusName(id);
-//            }
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        getCusName(id);
 
         new DrawerBuilder().withActivity(this);
 
@@ -645,36 +624,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkout(final String productID, final String customerID, final int orderQty, final String checkoutDate, final String orderedPrice, final String shippingCost) {
         //Updating Order History
-        final DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
-        dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    boolean founnd = false;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.child("oh_pro_ID").getValue().toString().equalsIgnoreCase(productID)){
-                            founnd = true;
-                            break;
-                        }
-                    }
-                    if (!founnd) {
-                        String oh_ID = dbOrderHistory.push().getKey();
-                        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
-                        Log.d("12345", "Updating order history");
-                        dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
-                    }
-                } else {
-                    String oh_ID = dbOrderHistory.push().getKey();
-                    orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
-                    Log.d("12345", "Updating order history");
-                    dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
+        String oh_ID = dbOrderHistory.push().getKey();
+        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+        Log.d("12345", "Updating order history");
+        dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
 
         //Deducting Loyalty Point before adding
         float itemPrice = Float.parseFloat(orderedPrice);
