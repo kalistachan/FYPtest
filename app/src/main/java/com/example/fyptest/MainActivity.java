@@ -630,6 +630,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d("12345", "Updating order history");
         dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
 
+        //Check Duplication
+        dbOrderHistory.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String check = "";
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("oh_pro_ID").getValue().toString().equalsIgnoreCase(check)) {
+                        String oh_ID = snapshot.child("oh_ID").getValue().toString();
+                        DatabaseReference dbRemove = FirebaseDatabase.getInstance().getReference("Order History").child(customerID).child(oh_ID);
+                        dbRemove.removeValue();
+                    } else {
+                        check = snapshot.child("oh_pro_ID").getValue().toString();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
         //Deducting Loyalty Point before adding
         float itemPrice = Float.parseFloat(orderedPrice);
         float shipment = Float.parseFloat(shippingCost);
