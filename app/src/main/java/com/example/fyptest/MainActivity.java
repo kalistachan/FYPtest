@@ -168,7 +168,30 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         //account_header
-        getCusName(id);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(id);
+        db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                getCusName(id);
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                getCusName(id);
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         new DrawerBuilder().withActivity(this);
 
@@ -344,6 +367,7 @@ public class MainActivity extends AppCompatActivity {
                     if (productSnapshot.child("cus_ID").getValue().toString().equalsIgnoreCase(idPass)) {
                         custName[0] = productSnapshot.child("cus_fName").getValue().toString() + " " + productSnapshot.child("cus_lName").getValue().toString();
                         loyaltyPts[0] = productSnapshot.child("cus_loyaltyPoint").getValue().toString();
+                        headerResult.clear();
                         headerResult.addProfiles(
                                 new ProfileDrawerItem().withName(custName[0]).withEmail(loyaltyPts[0] + " Loyalty Points Earned")
                         );
@@ -418,7 +442,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkProductGroupDuration() {
-        Log.d("12345", "Calling : checkProductGroupDuration");
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
         dbProductGroup.addValueEventListener(new ValueEventListener() {
             @Override
@@ -435,7 +458,6 @@ public class MainActivity extends AppCompatActivity {
                         Date today = df.parse(todayDate);
 
                         if (dateEnd.before(today) || dateEnd.equals(today)) {
-                            Log.d("12345", "Checking : Date");
                             DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
                             dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -476,7 +498,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty, final int maxOrderQty, final String today,
                                                  final String orderedPrice, final String shippingFee, final String freeShipping, final String productName) {
-        Log.d("12345", "Performing : calculateCurrentOrderedQuantity");
         final DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -496,16 +517,13 @@ public class MainActivity extends AppCompatActivity {
                     emailSeller(productID, Subject, Body);
 
                 } else if (counter > minOrderQty && counter < maxOrderQty) {
-                    Log.d("12345", "Checking : Counter");
                     DatabaseReference dbGroupProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
                     dbGroupProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.d("12345", "checkForCheckout");
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                 String orderedQty = snapshot.child("gd_qty").getValue().toString();
-                                Log.d("12345", "Calling : checkForCheckout");
                                 checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
                             }
                         }
@@ -525,7 +543,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice,
                                   final String freeShipping, final String shippingFee, final String orderedQty, final String customerID) {
-        Log.d("12345", "Performing : checkForCheckout");
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -549,20 +566,17 @@ public class MainActivity extends AppCompatActivity {
 
                         if (netPrice >= freeShipment) {
                             String noShippingFee = "0";
-                            Log.d("12345", "Calling : checkout option 1");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
 
                         } else if (netPrice < freeShipment){
-                            Log.d("12345", "Calling : checkout option 2");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
                         }
 
                     } else {
-                        Log.d("12345", "Calling : checkout option 3");
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
                         emailCustomer(customerID, SubjectForCustomer, Body);
@@ -627,7 +641,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
-        Log.d("12345", "Updating order history");
         dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
 
         //Check Duplication
