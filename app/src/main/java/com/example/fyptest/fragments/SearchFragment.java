@@ -176,14 +176,13 @@ public class SearchFragment extends Fragment {
 
         Query query = rootRef.orderByChild("pro_name").startAt(inputQuery).endAt(inputQuery + "\uf8ff");
 
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     searchProductDetails(inputQuery);
-                } else if (dataSnapshot.exists()){
-                    searchProductDetails(inputQuery);
+                } else {
                     userRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
