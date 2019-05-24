@@ -176,12 +176,11 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                 getCusName(id);
             }
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                getCusName(id);
             }
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
