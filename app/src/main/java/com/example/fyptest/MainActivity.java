@@ -158,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
                 .withSelectionListEnabledForSingleProfile(false)
                 .withSelectionListEnabled(false)
                 .withThreeSmallProfileImages(false)
+                .withProfileImagesClickable(false)
+                .withOnlyMainProfileImageVisible(true)
                 .withTextColor(Color.parseColor("black"))
                 .build();
         //account_header
