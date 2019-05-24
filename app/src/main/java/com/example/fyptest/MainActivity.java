@@ -475,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (counter < minOrderQty) {
                     sendNotification(productID, productName, today, "dismiss");
+                    loadFragment(new ProductListingFragment());
                     dismissGroupDetail(productID);
                     dismissGroup(productID);
                     updateProductStatus(productID, "dismissed");
@@ -533,17 +534,20 @@ public class MainActivity extends AppCompatActivity {
                         if (netPrice >= freeShipment) {
                             String noShippingFee = "0";
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
+                            loadFragment(new ProductListingFragment());
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
 
                         } else if (netPrice < freeShipment){
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                            loadFragment(new ProductListingFragment());
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
                         }
 
                     } else {
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
+                        loadFragment(new ProductListingFragment());
                         sendNotification(productID, productName, today, "checkout");
                         emailCustomer(customerID, SubjectForCustomer, Body);
                     }
