@@ -75,8 +75,6 @@ public class purchasesAdapter extends RecyclerView.Adapter<purchasesAdapter.Imag
         final productClass uploadCurrent = productList.get(i);
         final String prodName = uploadCurrent.getPro_name();
         final String prodID = uploadCurrent.getPro_ID();
-        final String freeShippingCondition = uploadCurrent.getPro_freeShippingAt();
-        final String shippingFee = uploadCurrent.getPro_shippingCost();
         imageViewHolder.prodNameViewName.setText(prodName);
         Picasso.get()
                 .load(uploadCurrent.getPro_mImageUrl())

@@ -93,17 +93,15 @@ public class PurchaseFragment extends Fragment {
             @Override
             public void onCallback(final List<String> itemList) {
                 if (!productsID.isEmpty()) {
-                    dbProduct.addValueEventListener(new ValueEventListener() {
+                    dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             products.clear();
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 for (final String item : itemList) {
                                     if (snapshot.child("pro_ID").getValue().toString().equalsIgnoreCase(item)) {
-                                        Log.d("12345", "true");
                                         productClass productClass = dataSnapshot.child(item).getValue(productClass.class);
                                         products.add(productClass);
-                                        Log.d("12345", Integer.toString(products.size()));
                                     }
                                 }
 

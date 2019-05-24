@@ -9,13 +9,16 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
+import android.support.media.ExifInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +36,7 @@ import com.example.fyptest.fragments.ProfileFragment;
 import com.example.fyptest.fragments.PurchaseFragment;
 import com.example.fyptest.fragments.SearchFragment;
 import com.example.fyptest.fragments.WatchListFragment;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -158,10 +162,34 @@ public class MainActivity extends AppCompatActivity {
                 .withSelectionListEnabledForSingleProfile(false)
                 .withSelectionListEnabled(false)
                 .withThreeSmallProfileImages(false)
+                .withProfileImagesClickable(false)
+                .withOnlyMainProfileImageVisible(true)
                 .withTextColor(Color.parseColor("black"))
                 .build();
         //account_header
-        getCusName(id);
+//        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Customer Information").child(id).child("cus_loyaltyPoint");
+//        db.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                getCusName(id);
+//            }
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                getCusName(id);
+//            }
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//                getCusName(id);
+//            }
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         new DrawerBuilder().withActivity(this);
 
@@ -411,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkProductGroupDuration() {
+        Log.d("12345", "Calling : checkProductGroupDuration");
         DatabaseReference dbProductGroup = FirebaseDatabase.getInstance().getReference("Product Group");
         dbProductGroup.addValueEventListener(new ValueEventListener() {
             @Override
@@ -427,6 +456,7 @@ public class MainActivity extends AppCompatActivity {
                         Date today = df.parse(todayDate);
 
                         if (dateEnd.before(today) || dateEnd.equals(today)) {
+                            Log.d("12345", "Checking : Date");
                             DatabaseReference dbProduct = FirebaseDatabase.getInstance().getReference("Product").child(productID);
                             dbProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -467,6 +497,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void calculateCurrentOrderedQuantity(final String productID, final int minOrderQty, final int maxOrderQty, final String today,
                                                  final String orderedPrice, final String shippingFee, final String freeShipping, final String productName) {
+        Log.d("12345", "Performing : calculateCurrentOrderedQuantity");
         final DatabaseReference db = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -486,6 +517,7 @@ public class MainActivity extends AppCompatActivity {
                     emailSeller(productID, Subject, Body);
 
                 } else if (counter > minOrderQty && counter < maxOrderQty) {
+                    Log.d("12345", "Checking : Counter");
                     DatabaseReference dbGroupProduct = FirebaseDatabase.getInstance().getReference("Group Detail").child(productID);
                     dbGroupProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -494,6 +526,7 @@ public class MainActivity extends AppCompatActivity {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                 String orderedQty = snapshot.child("gd_qty").getValue().toString();
+                                Log.d("12345", "Calling : checkForCheckout");
                                 checkForCheckout(productID, productName, today, orderedPrice, freeShipping, shippingFee, orderedQty, customerID);
                             }
                         }
@@ -513,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForCheckout(final String productID, final String productName, final String today, final String orderedPrice,
                                   final String freeShipping, final String shippingFee, final String orderedQty, final String customerID) {
+        Log.d("12345", "Performing : checkForCheckout");
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -536,20 +570,20 @@ public class MainActivity extends AppCompatActivity {
 
                         if (netPrice >= freeShipment) {
                             String noShippingFee = "0";
-                            Log.d("12345", "checkout");
+                            Log.d("12345", "Calling : checkout option 1");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
 
                         } else if (netPrice < freeShipment){
-                            Log.d("12345", "checkout");
+                            Log.d("12345", "Calling : checkout option 2");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
                         }
 
                     } else {
-                        Log.d("12345", "checkout");
+                        Log.d("12345", "Calling : checkout option 3");
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
                         sendNotification(productID, productName, today, "checkout");
                         emailCustomer(customerID, SubjectForCustomer, Body);
@@ -615,16 +649,24 @@ public class MainActivity extends AppCompatActivity {
         dbOrderHistory.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean duplicateCheckout = false;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.hasChild(productID)) {
-                        duplicateCheckout = true;
-                        break;
+                if (dataSnapshot.hasChildren()) {
+                    boolean founnd = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.child("oh_pro_ID").getValue().toString().equalsIgnoreCase(productID)){
+                            founnd = true;
+                            break;
+                        }
                     }
-                }
-                if (!duplicateCheckout) {
+                    if (!founnd) {
+                        String oh_ID = dbOrderHistory.push().getKey();
+                        orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+                        Log.d("12345", "Updating order history");
+                        dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
+                    }
+                } else {
                     String oh_ID = dbOrderHistory.push().getKey();
                     orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
+                    Log.d("12345", "Updating order history");
                     dbOrderHistory.child(oh_ID).setValue(orderHistoryClass);
                 }
             }
