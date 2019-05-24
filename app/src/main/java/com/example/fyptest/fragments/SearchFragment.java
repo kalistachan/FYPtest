@@ -182,7 +182,8 @@ public class SearchFragment extends Fragment {
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     searchProductDetails(inputQuery);
-                } else {
+                } else if (dataSnapshot.exists()){
+                    searchProductDetails(inputQuery);
                     userRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
