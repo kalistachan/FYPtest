@@ -156,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.color.color4GBTheme)
                 .withSelectionListEnabledForSingleProfile(false)
+                .withSelectionListEnabled(false)
+                .withThreeSmallProfileImages(false)
                 .withTextColor(Color.parseColor("black"))
                 .build();
         //account_header
@@ -488,6 +490,7 @@ public class MainActivity extends AppCompatActivity {
                     dbGroupProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Log.d("12345", "checkForCheckout");
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String customerID = snapshot.child("gd_cus_ID").getValue().toString();
                                 String orderedQty = snapshot.child("gd_qty").getValue().toString();
@@ -533,21 +536,21 @@ public class MainActivity extends AppCompatActivity {
 
                         if (netPrice >= freeShipment) {
                             String noShippingFee = "0";
+                            Log.d("12345", "checkout");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, noShippingFee);
-                            loadFragment(new ProductListingFragment());
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
 
                         } else if (netPrice < freeShipment){
+                            Log.d("12345", "checkout");
                             checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                            loadFragment(new ProductListingFragment());
                             sendNotification(productID, productName, today, "checkout");
                             emailCustomer(customerID, SubjectForCustomer, Body);
                         }
 
                     } else {
+                        Log.d("12345", "checkout");
                         checkout(productID, customerID, Integer.parseInt(orderedQty), today, orderedPrice, shippingFee);
-                        loadFragment(new ProductListingFragment());
                         sendNotification(productID, productName, today, "checkout");
                         emailCustomer(customerID, SubjectForCustomer, Body);
                     }

@@ -395,7 +395,6 @@ public class ProductListingFragment extends Fragment {
                                         }
                                     }
                                     ma.emailSeller(productID, Subject, Body);
-                                    ma.loadFragment(new ProductListingFragment());
                                     ma.updateProductStatus(productID, "sold");
                                     ma.dismissGroupDetail(productID);
                                     ma.dismissGroup(productID);
