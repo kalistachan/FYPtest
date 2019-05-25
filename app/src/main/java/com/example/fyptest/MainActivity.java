@@ -637,6 +637,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkout(final String productID, final String customerID, final int orderQty, final String checkoutDate, final String orderedPrice, final String shippingCost) {
         //Updating Order History
+        loadFragment(new ProductListingFragment());
         DatabaseReference dbOrderHistory = FirebaseDatabase.getInstance().getReference("Order History").child(customerID);
         String oh_ID = dbOrderHistory.push().getKey();
         orderHistoryClass orderHistoryClass = new orderHistoryClass(oh_ID, productID, customerID, "Processing", orderQty, checkoutDate, orderedPrice, shippingCost);
